@@ -3,7 +3,7 @@ import sequelize from "../../config/db";
 
 export interface SeniorHealthProblemAilmentAttributes {
   seniorId: number;
-  seniorHealthProblemAilmentId: number;
+  healthProblemAilmentId: number;
 }
 
 export interface SeniorHealthProblemAilmentCreationAttributes
@@ -14,7 +14,7 @@ class SeniorHealthProblemAilment
   implements SeniorHealthProblemAilmentAttributes
 {
   public seniorId!: number;
-  public seniorHealthProblemAilmentId!: number;
+  public healthProblemAilmentId!: number;
 }
 
 SeniorHealthProblemAilment.init(
@@ -27,11 +27,11 @@ SeniorHealthProblemAilment.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    seniorHealthProblemAilmentId: {
+    healthProblemAilmentId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniorHealthProblemAilments", key: "id" },
+      references: { model: "healthProblemAilments", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,7 +39,7 @@ SeniorHealthProblemAilment.init(
   {
     sequelize,
     modelName: "SeniorHealthProblemAilment",
-    tableName: "seniorHealthProblemAilment",
+    tableName: "seniorhealthProblemAilment",
     timestamps: false,
   }
 );

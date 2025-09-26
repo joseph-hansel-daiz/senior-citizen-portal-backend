@@ -7,6 +7,7 @@ import { sequelize } from "./models";
 // Routes
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/users.routes";
+import optionsRoutes from "./routes/options.routes";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // Mount routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
+app.use("/options", optionsRoutes);
 
 const PORT = process.env.PORT || 8000;
 
