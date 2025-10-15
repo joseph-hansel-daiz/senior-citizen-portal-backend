@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { AuthRequest } from "./requireAuthentication";
+import type { AuthRequest } from "@/middleware";
 
 export default function requireAdmin(
   req: AuthRequest,

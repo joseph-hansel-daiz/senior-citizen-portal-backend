@@ -1,98 +1,93 @@
 import { Request, Response } from "express";
-import {
-  Cohabitant,
-  LivingCondition,
-  HighestEducationalAttainment,
-  SpecializationTechnicalSkill,
-  CommunityInvolvement,
-  IncomeAssistanceSource,
-  MonthlyIncome,
-  RealImmovableProperty,
-  PersonalMovableProperty,
-  ProblemsNeedsCommonlyEncountered,
-  HealthProblemAilment,
-  DentalConcern,
-  VisualConcern,
-  AuralConcern,
-  SocialEmotionalConcern,
-  AreaOfDifficulty,
-  Barangay,
-} from "../models";
+import { optionService } from "@/services";
 
-async function sendList(res: Response, model: any) {
+async function handleOptionRequest(
+  res: Response,
+  serviceCall: () => Promise<any>
+) {
   try {
-    const items = await model.findAll();
+    const items = await serviceCall();
     return res.json(items);
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error fetching options:", err);
     return res.status(500).json({ error: "Failed to fetch options" });
   }
 }
 
 export const listCohabitants = async (_req: Request, res: Response) =>
-  sendList(res, Cohabitant);
+  handleOptionRequest(res, () => optionService.getCohabitants());
 
 export const listLivingConditions = async (_req: Request, res: Response) =>
-  sendList(res, LivingCondition);
+  handleOptionRequest(res, () => optionService.getLivingConditions());
 
 export const listHighestEducationalAttainments = async (
   _req: Request,
   res: Response
-) => sendList(res, HighestEducationalAttainment);
+) =>
+  handleOptionRequest(res, () =>
+    optionService.getHighestEducationalAttainments()
+  );
 
 export const listSpecializationTechnicalSkills = async (
   _req: Request,
   res: Response
-) => sendList(res, SpecializationTechnicalSkill);
+) =>
+  handleOptionRequest(res, () =>
+    optionService.getSpecializationTechnicalSkills()
+  );
 
 export const listCommunityInvolvements = async (_req: Request, res: Response) =>
-  sendList(res, CommunityInvolvement);
+  handleOptionRequest(res, () => optionService.getCommunityInvolvements());
 
 export const listIncomeAssistanceSources = async (
   _req: Request,
   res: Response
-) => sendList(res, IncomeAssistanceSource);
+) => handleOptionRequest(res, () => optionService.getIncomeAssistanceSources());
 
 export const listMonthlyIncomes = async (_req: Request, res: Response) =>
-  sendList(res, MonthlyIncome);
+  handleOptionRequest(res, () => optionService.getMonthlyIncomes());
 
 export const listRealImmovableProperties = async (
   _req: Request,
   res: Response
-) => sendList(res, RealImmovableProperty);
+) => handleOptionRequest(res, () => optionService.getRealImmovableProperties());
 
 export const listPersonalMovableProperties = async (
   _req: Request,
   res: Response
-) => sendList(res, PersonalMovableProperty);
+) =>
+  handleOptionRequest(res, () => optionService.getPersonalMovableProperties());
 
 export const listProblemsNeedsCommonlyEncountered = async (
   _req: Request,
   res: Response
-) => sendList(res, ProblemsNeedsCommonlyEncountered);
+) =>
+  handleOptionRequest(res, () =>
+    optionService.getProblemsNeedsCommonlyEncountered()
+  );
 
 export const listHealthProblemAilments = async (_req: Request, res: Response) =>
-  sendList(res, HealthProblemAilment);
+  handleOptionRequest(res, () => optionService.getHealthProblemAilments());
 
 export const listDentalConcerns = async (_req: Request, res: Response) =>
-  sendList(res, DentalConcern);
+  handleOptionRequest(res, () => optionService.getDentalConcerns());
 
 export const listVisualConcerns = async (_req: Request, res: Response) =>
-  sendList(res, VisualConcern);
+  handleOptionRequest(res, () => optionService.getVisualConcerns());
 
 export const listAuralConcerns = async (_req: Request, res: Response) =>
-  sendList(res, AuralConcern);
+  handleOptionRequest(res, () => optionService.getAuralConcerns());
 
 export const listSocialEmotionalConcerns = async (
   _req: Request,
   res: Response
-) => sendList(res, SocialEmotionalConcern);
+) => handleOptionRequest(res, () => optionService.getSocialEmotionalConcerns());
 
 export const listAreaOfDifficulties = async (_req: Request, res: Response) =>
-  sendList(res, AreaOfDifficulty);
+  handleOptionRequest(res, () => optionService.getAreaOfDifficulties());
 
 export const listBarangays = async (_req: Request, res: Response) =>
-  sendList(res, Barangay);
+  handleOptionRequest(res, () => optionService.getBarangays());
 
 export default {
   listCohabitants,

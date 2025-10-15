@@ -1,30 +1,21 @@
 import { Router } from "express";
-import {
-  list,
-  detail,
-  profile,
-  updateProfile,
-  register,
-} from "../controllers/user.controller";
-import auth from "../middleware/requireAuthentication";
-import requireAdmin from "../middleware/requireAdmin";
-import upload from "../middleware/upload";
-import requireAuthentication from "../middleware/requireAuthentication";
+import { userController } from "@/controllers";
+import { requireAuthentication, requireAdmin, upload } from "@/middleware";
 
 const router = Router();
 
-router.use(auth);
+router.use(requireAuthentication);
 
 router.post(
   "/register",
   requireAuthentication,
   requireAdmin,
   upload.single("logo"),
-  register
+  userController.register
 );
-router.get("/me", requireAuthentication, profile);
-router.put("/me", requireAuthentication, updateProfile);
-router.get("/", requireAuthentication, requireAdmin, list);
-router.get("/:id", requireAuthentication, requireAdmin, detail);
+router.get("/me", requireAuthentication, userController.profile);
+router.put("/me", requireAuthentication, userController.updateProfile);
+router.get("/", requireAuthentication, requireAdmin, userController.list);
+router.get("/:id", requireAuthentication, requireAdmin, userController.detail);
 
 export default router;

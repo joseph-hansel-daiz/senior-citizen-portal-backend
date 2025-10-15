@@ -2,12 +2,12 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { sequelize } from "./models";
+import { sequelize } from "@/models";
 
 // Routes
-import authRoutes from "./routes/auth.routes";
-import userRoutes from "./routes/users.routes";
-import optionsRoutes from "./routes/options.routes";
+import authRoutes from "@/routes/auth.routes";
+import userRoutes from "@/routes/users.routes";
+import optionsRoutes from "@/routes/options.routes";
 
 dotenv.config();
 

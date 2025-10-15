@@ -1,41 +1,24 @@
 import { Router } from "express";
 
-import {
-  listAreaOfDifficulties,
-  listAuralConcerns,
-  listCohabitants,
-  listCommunityInvolvements,
-  listDentalConcerns,
-  listHealthProblemAilments,
-  listHighestEducationalAttainments,
-  listIncomeAssistanceSources,
-  listLivingConditions,
-  listMonthlyIncomes,
-  listPersonalMovableProperties,
-  listProblemsNeedsCommonlyEncountered,
-  listRealImmovableProperties,
-  listSocialEmotionalConcerns,
-  listSpecializationTechnicalSkills,
-  listVisualConcerns,
-} from "../controllers/option.controller";
+import { optionController } from "@/controllers";
 
 const router = Router();
 
-router.get("/area-of-difficulties", listAreaOfDifficulties);
-router.get("/aural-concerns", listAuralConcerns);
-router.get("/cohabitants", listCohabitants);
-router.get("/community-involvements", listCommunityInvolvements);
-router.get("/dental-concerns", listDentalConcerns);
-router.get("/health-problems", listHealthProblemAilments);
-router.get("/educational-attainments", listHighestEducationalAttainments);
-router.get("/income-sources", listIncomeAssistanceSources);
-router.get("/living-conditions", listLivingConditions);
-router.get("/monthly-incomes", listMonthlyIncomes);
-router.get("/personal-properties", listPersonalMovableProperties);
-router.get("/problems-needs", listProblemsNeedsCommonlyEncountered);
-router.get("/real-properties", listRealImmovableProperties);
-router.get("/social-emotional-concerns", listSocialEmotionalConcerns);
-router.get("/technical-skills", listSpecializationTechnicalSkills);
-router.get("/visual-concerns", listVisualConcerns);
+router.get("/area-of-difficulties", optionController.listAreaOfDifficulties);
+router.get("/aural-concerns", optionController.listAuralConcerns);
+router.get("/cohabitants", optionController.listCohabitants);
+router.get("/community-involvements", optionController.listCommunityInvolvements);
+router.get("/dental-concerns", optionController.listDentalConcerns);
+router.get("/health-problems", optionController.listHealthProblemAilments);
+router.get("/educational-attainments", optionController.listHighestEducationalAttainments);
+router.get("/income-sources", optionController.listIncomeAssistanceSources);
+router.get("/living-conditions", optionController.listLivingConditions);
+router.get("/monthly-incomes", optionController.listMonthlyIncomes);
+router.get("/personal-properties", optionController.listPersonalMovableProperties);
+router.get("/problems-needs", optionController.listProblemsNeedsCommonlyEncountered);
+router.get("/real-properties", optionController.listRealImmovableProperties);
+router.get("/social-emotional-concerns", optionController.listSocialEmotionalConcerns);
+router.get("/technical-skills", optionController.listSpecializationTechnicalSkills);
+router.get("/visual-concerns", optionController.listVisualConcerns);
 
 export default router;

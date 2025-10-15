@@ -1,4 +1,4 @@
-import sequelize from "../config/db";
+import sequelize from "@/config/db";
 import Barangay from "./barangay.model";
 
 import AreaOfDifficulty from "./options/areaOfDifficulty.model";

@@ -19,7 +19,7 @@ import {
   SocialEmotionalConcern,
   SpecializationTechnicalSkill,
   VisualConcern,
-} from "../models";
+} from "@/models";
 
 async function seed() {
   try {
