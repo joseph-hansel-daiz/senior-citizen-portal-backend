@@ -4,7 +4,7 @@ import { requireAuthentication } from "@/middleware";
 
 const router = Router();
 
-router.use(requireAuthentication);
+// router.use(requireAuthentication);
 
 // GET /seniors - List all seniors
 router.get("/", seniorController.list);
