@@ -58,9 +58,9 @@ Barangay.hasMany(User, { foreignKey: "barangayId" });
 User.belongsTo(Barangay, { foreignKey: "barangayId" });
 
 Senior.belongsTo(Barangay, { foreignKey: "barangayId" });
-Senior.belongsTo(User, { foreignKey: "createdBy" });
-Senior.belongsTo(User, { foreignKey: "updatedBy" });
-Senior.belongsTo(User, { foreignKey: "deletedBy" });
+Senior.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
+Senior.belongsTo(User, { foreignKey: "updatedBy", as: "updater" });
+Senior.belongsTo(User, { foreignKey: "deletedBy", as: "deleter" });
 
 // Senior Profile Associations
 Senior.hasOne(IdentifyingInformation, { foreignKey: "seniorId" });
