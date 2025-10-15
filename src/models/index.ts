@@ -168,11 +168,11 @@ RealImmovableProperty.belongsToMany(EconomicProfile, {
 EconomicProfile.belongsToMany(PersonalMovableProperty, {
   through: SeniorPersonalMovableProperty,
   foreignKey: "seniorId",
-  otherKey: "personalMovablePropertyId",
+  otherKey: "personalMovablePropertieId",
 });
 PersonalMovableProperty.belongsToMany(EconomicProfile, {
   through: SeniorPersonalMovableProperty,
-  foreignKey: "personalMovablePropertyId",
+  foreignKey: "personalMovablePropertieId",
   otherKey: "seniorId",
 });
 
@@ -257,11 +257,11 @@ SocialEmotionalConcern.belongsToMany(HealthProfile, {
 HealthProfile.belongsToMany(AreaOfDifficulty, {
   through: SeniorAreaOfDifficulty,
   foreignKey: "seniorId",
-  otherKey: "difficultyId",
+  otherKey: "areaOfDifficultyId",
 });
 AreaOfDifficulty.belongsToMany(HealthProfile, {
   through: SeniorAreaOfDifficulty,
-  foreignKey: "difficultyId",
+  foreignKey: "areaOfDifficultyId",
   otherKey: "seniorId",
 });
 
