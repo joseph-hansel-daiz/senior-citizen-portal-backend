@@ -26,7 +26,7 @@ SeniorAreaOfDifficulty.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "HealthProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -34,7 +34,7 @@ SeniorAreaOfDifficulty.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "areaOfDifficulties", key: "id" },
+      references: { model: "AreaOfDifficulty", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -42,8 +42,9 @@ SeniorAreaOfDifficulty.init(
   {
     sequelize,
     modelName: "SeniorAreaOfDifficulty",
-    tableName: "seniorAreaOfDifficulty",
+    tableName: "SeniorAreaOfDifficulty",
     timestamps: false,
+    underscored: false,
   }
 );
 

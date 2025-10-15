@@ -23,7 +23,7 @@ SeniorCohabitant.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "DependencyProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorCohabitant.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "cohabitants", key: "id" },
+      references: { model: "Cohabitant", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorCohabitant.init(
   {
     sequelize,
     modelName: "SeniorCohabitant",
-    tableName: "seniorCohabitant",
+    tableName: "SeniorCohabitant",
     timestamps: false,
+    underscored: false,
   }
 );
 

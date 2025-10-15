@@ -26,7 +26,7 @@ SeniorAuralConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "HealthProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -34,7 +34,7 @@ SeniorAuralConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "auralConcerns", key: "id" },
+      references: { model: "AuralConcern", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -42,8 +42,9 @@ SeniorAuralConcern.init(
   {
     sequelize,
     modelName: "SeniorAuralConcern",
-    tableName: "seniorAuralConcern",
+    tableName: "SeniorAuralConcern",
     timestamps: false,
+    underscored: false,
   }
 );
 

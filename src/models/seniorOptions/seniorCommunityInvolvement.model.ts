@@ -23,7 +23,7 @@ SeniorCommunityInvolvement.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "EducationProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorCommunityInvolvement.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "communityInvolvements", key: "id" },
+      references: { model: "CommunityInvolvement", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorCommunityInvolvement.init(
   {
     sequelize,
     modelName: "SeniorCommunityInvolvement",
-    tableName: "seniorCommunityInvolvement",
+    tableName: "SeniorCommunityInvolvement",
     timestamps: false,
+    underscored: false,
   }
 );
 

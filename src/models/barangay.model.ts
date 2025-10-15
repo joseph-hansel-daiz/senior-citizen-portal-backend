@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../config/db";
 
-export interface BarangayAttributes {
-  id: number;
-  name: string;
-}
-
-export interface BarangayCreationAttributes
-  extends Optional<BarangayAttributes, "id"> {}
-
-class Barangay
-  extends Model<BarangayAttributes, BarangayCreationAttributes>
-  implements BarangayAttributes
-{
-  public id!: number;
-  public name!: string;
+class Barangay extends Model<InferAttributes<Barangay>, InferCreationAttributes<Barangay>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 Barangay.init(
@@ -25,7 +14,8 @@ Barangay.init(
   {
     sequelize,
     modelName: "Barangay",
-    tableName: "barangays",
+    tableName: "Barangay",
+    underscored: false,
     timestamps: false,
   }
 );

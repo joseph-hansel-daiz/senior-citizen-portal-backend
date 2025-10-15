@@ -25,8 +25,9 @@ VisualConcern.init(
   {
     sequelize,
     modelName: "VisualConcern",
-    tableName: "visualConcerns",
+    tableName: "VisualConcern",
     timestamps: false,
+    underscored: false,
   }
 );
 

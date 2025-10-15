@@ -3,6 +3,18 @@ import {
   sequelize,
   User,
   Barangay,
+  Senior,
+  IdentifyingInformation,
+  FamilyComposition,
+  Children,
+  Dependent,
+  DependencyProfile,
+  EducationProfile,
+  EconomicProfile,
+  HealthProfile,
+  HelpDeskRecord,
+  HelpDeskRecordCategory,
+  SeniorStatusHistory,
   AreaOfDifficulty,
   AuralConcern,
   Cohabitant,
@@ -19,6 +31,22 @@ import {
   SocialEmotionalConcern,
   SpecializationTechnicalSkill,
   VisualConcern,
+  SeniorAreaOfDifficulty,
+  SeniorAuralConcern,
+  SeniorCohabitant,
+  SeniorCommunityInvolvement,
+  SeniorDentalConcern,
+  SeniorHealthProblemAilment,
+  SeniorHighestEducationalAttainment,
+  SeniorIncomeAssistanceSource,
+  SeniorLivingCondition,
+  SeniorMonthlyIncome,
+  SeniorPersonalMovableProperty,
+  SeniorProblemsNeedsCommonlyEncountered,
+  SeniorRealImmovableProperty,
+  SeniorSocialEmotionalConcern,
+  SeniorSpecializationTechnicalSkill,
+  SeniorVisualConcern,
 } from "@/models";
 
 async function seed() {
@@ -279,6 +307,341 @@ async function seed() {
     await AreaOfDifficulty.create({ name: "High Cost of medicine" });
     await AreaOfDifficulty.create({ name: "Lack of medicines" });
     await AreaOfDifficulty.create({ name: "Lack of medical attention" });
+
+    // Help Desk Record Categories
+    console.log("Seeding Help Desk Record Categories...");
+    await HelpDeskRecordCategory.create({ name: "Medical Assistance" });
+    await HelpDeskRecordCategory.create({ name: "Financial Aid" });
+    await HelpDeskRecordCategory.create({ name: "Social Services" });
+    await HelpDeskRecordCategory.create({ name: "Legal Assistance" });
+    await HelpDeskRecordCategory.create({ name: "Transportation" });
+    await HelpDeskRecordCategory.create({ name: "Home Care" });
+    await HelpDeskRecordCategory.create({ name: "Food Assistance" });
+    await HelpDeskRecordCategory.create({ name: "Other" });
+
+    console.log("Seeding comprehensive senior data...");
+    
+    // Create a comprehensive senior with all possible data
+    const senior = await Senior.create({
+      barangayId: 1, // Astorga
+      createdBy: 1, // Admin user
+    });
+
+    // Identifying Information
+    await IdentifyingInformation.create({
+      seniorId: senior.id,
+      lastname: "Santos",
+      firstname: "Maria",
+      middlename: "Cruz",
+      extension: "Sr.",
+      region: "Region IV-A (CALABARZON)",
+      province: "Laguna",
+      city: "San Pedro",
+      barangay: "Astorga",
+      residence: "123 Main Street",
+      street: "Purok 1",
+      birthDate: new Date("1950-03-15"),
+      birthPlace: "San Pedro, Laguna",
+      maritalStatus: "Widowed",
+      religion: "Roman Catholic",
+      sexAtBirth: "Female",
+      contactNumber: "09123456789",
+      emailAddress: "maria.santos@email.com",
+      fbMessengerName: "Maria Santos",
+      ethnicOrigin: "Filipino",
+      languageSpoken: "Tagalog, English",
+      oscaIdNo: "OSCA-2024-001",
+      gsisSssNo: "03-1234567-8",
+      tin: "123-456-789-000",
+      philhealthNo: "12-345678901-2",
+      scAssociationIdNo: "SC-001",
+      otherGovIdNo: "Senior-001",
+      employmentBusiness: "Retired Teacher",
+      hasPension: true,
+      pensionList: "GSIS Pension, SSS Pension",
+      capabilityToTravel: true,
+      createdBy: 1,
+    });
+
+    // Family Composition
+    await FamilyComposition.create({
+      seniorId: senior.id,
+      spouseLastname: "Santos",
+      spouseFirstname: "Juan",
+      spouseMiddlename: "Cruz",
+      spouseExtension: "Sr.",
+      fatherLastname: "Cruz",
+      fatherFirstname: "Pedro",
+      fatherMiddlename: "Reyes",
+      motherLastname: "Reyes",
+      motherFirstname: "Ana",
+      motherMiddlename: "Garcia",
+      createdBy: 1,
+    });
+
+    // Children
+    await Children.create({
+      seniorId: senior.id,
+      name: "Maria Santos Jr.",
+      occupation: "Nurse",
+      income: 25000.00,
+      age: 45,
+      isWorking: "Yes",
+    });
+
+    await Children.create({
+      seniorId: senior.id,
+      name: "Juan Santos Jr.",
+      occupation: "Engineer",
+      income: 35000.00,
+      age: 42,
+      isWorking: "Yes",
+    });
+
+    await Children.create({
+      seniorId: senior.id,
+      name: "Ana Santos",
+      occupation: "Teacher",
+      income: 20000.00,
+      age: 38,
+      isWorking: "Yes",
+    });
+
+    // Dependents
+    await Dependent.create({
+      seniorId: senior.id,
+      name: "Pedro Santos",
+      occupation: "Student",
+      income: 0.00,
+      age: 16,
+      isWorking: false,
+    });
+
+    await Dependent.create({
+      seniorId: senior.id,
+      name: "Maria Santos",
+      occupation: "Housewife",
+      income: 0.00,
+      age: 65,
+      isWorking: false,
+    });
+
+    // Dependency Profile
+    const dependencyProfile = await DependencyProfile.create({
+      seniorId: senior.id,
+      createdBy: 1,
+    });
+
+    // Associate with cohabitants
+    await SeniorCohabitant.create({
+      seniorId: senior.id,
+      cohabitantId: 3, // Spouse
+    });
+
+    await SeniorCohabitant.create({
+      seniorId: senior.id,
+      cohabitantId: 6, // Children
+    });
+
+    await SeniorCohabitant.create({
+      seniorId: senior.id,
+      cohabitantId: 7, // Relative
+    });
+
+    // Associate with living conditions
+    await SeniorLivingCondition.create({
+      seniorId: senior.id,
+      livingConditionId: 1, // No privacy
+    });
+
+    // Education Profile
+    const educationProfile = await EducationProfile.create({
+      seniorId: senior.id,
+      sharedSkills: "Teaching, Cooking, Sewing",
+      createdBy: 1,
+    });
+
+    // Associate with educational attainment
+    await SeniorHighestEducationalAttainment.create({
+      seniorId: senior.id,
+      highestEducationalAttainmentId: 8, // College Graduate
+    });
+
+    // Associate with technical skills
+    await SeniorSpecializationTechnicalSkill.create({
+      seniorId: senior.id,
+      specializationTechnicalSkillId: 9, // Teaching
+    });
+
+    await SeniorSpecializationTechnicalSkill.create({
+      seniorId: senior.id,
+      specializationTechnicalSkillId: 10, // Cooking
+    });
+
+    await SeniorSpecializationTechnicalSkill.create({
+      seniorId: senior.id,
+      specializationTechnicalSkillId: 13, // Tailor
+    });
+
+    // Associate with community involvement
+    await SeniorCommunityInvolvement.create({
+      seniorId: senior.id,
+      communityInvolvementId: 1, // Medical
+    });
+
+    await SeniorCommunityInvolvement.create({
+      seniorId: senior.id,
+      communityInvolvementId: 8, // Religious
+    });
+
+    await SeniorCommunityInvolvement.create({
+      seniorId: senior.id,
+      communityInvolvementId: 9, // Counselling/Referral
+    });
+
+    // Economic Profile
+    const economicProfile = await EconomicProfile.create({
+      seniorId: senior.id,
+      createdBy: 1,
+    });
+
+    // Associate with income sources
+    await SeniorIncomeAssistanceSource.create({
+      seniorId: senior.id,
+      incomeAssistanceSourceId: 2, // Own Pension
+    });
+
+    await SeniorIncomeAssistanceSource.create({
+      seniorId: senior.id,
+      incomeAssistanceSourceId: 4, // Dependent on children/relatives
+    });
+
+    // Associate with properties
+    await SeniorRealImmovableProperty.create({
+      seniorId: senior.id,
+      realImmovablePropertyId: 3, // House & Lot
+    });
+
+    await SeniorPersonalMovableProperty.create({
+      seniorId: senior.id,
+      personalMovablePropertieId: 1, // Automobile
+    });
+
+    await SeniorPersonalMovableProperty.create({
+      seniorId: senior.id,
+      personalMovablePropertieId: 7, // Mobile Phones
+    });
+
+    // Associate with monthly income
+    await SeniorMonthlyIncome.create({
+      seniorId: senior.id,
+      monthlyIncomeId: 3, // 20000 to 30000
+    });
+
+    // Associate with problems
+    await SeniorProblemsNeedsCommonlyEncountered.create({
+      seniorId: senior.id,
+      problemsNeedsCommonlyEncounteredId: 1, // Lack of incomes/resource
+    });
+
+    // Health Profile
+    const healthProfile = await HealthProfile.create({
+      seniorId: senior.id,
+      bloodType: "A+",
+      physicalDisability: "Mild arthritis in hands",
+      listMedicines: "Hypertension medication, pain relievers",
+      checkUp: true,
+      scheduleCheckUp: "Every 3 Months",
+      createdBy: 1,
+    });
+
+    // Associate with health problems
+    await SeniorHealthProblemAilment.create({
+      seniorId: senior.id,
+      healthProblemAilmentId: 1, // Hypertension
+    });
+
+    await SeniorHealthProblemAilment.create({
+      seniorId: senior.id,
+      healthProblemAilmentId: 2, // Arthritis/Gout
+    });
+
+    // Associate with dental concerns
+    await SeniorDentalConcern.create({
+      seniorId: senior.id,
+      dentalConcernId: 1, // Needs Dental Care
+    });
+
+    // Associate with visual concerns
+    await SeniorVisualConcern.create({
+      seniorId: senior.id,
+      visualConcernId: 2, // Needs eye care
+    });
+
+    // Associate with aural concerns
+    await SeniorAuralConcern.create({
+      seniorId: senior.id,
+      auralConcernId: 1, // Aural impairment
+    });
+
+    // Associate with social/emotional concerns
+    await SeniorSocialEmotionalConcern.create({
+      seniorId: senior.id,
+      socialEmotionalConcernId: 1, // Feeling neglect/rejection
+    });
+
+    await SeniorSocialEmotionalConcern.create({
+      seniorId: senior.id,
+      socialEmotionalConcernId: 3, // Feeling loneliness/isolate
+    });
+
+    // Associate with areas of difficulty
+    await SeniorAreaOfDifficulty.create({
+      seniorId: senior.id,
+      areaOfDifficultyId: 1, // High Cost of medicine
+    });
+
+    await SeniorAreaOfDifficulty.create({
+      seniorId: senior.id,
+      areaOfDifficultyId: 2, // Lack of medicines
+    });
+
+    // Help Desk Records
+    await HelpDeskRecord.create({
+      seniorId: senior.id,
+      helpDeskRecordCategory: 1, // Medical Assistance
+      details: "Request for medical check-up assistance",
+      createdBy: 1,
+    });
+
+    await HelpDeskRecord.create({
+      seniorId: senior.id,
+      helpDeskRecordCategory: 2, // Financial Aid
+      details: "Application for senior citizen discount card",
+      createdBy: 1,
+    });
+
+    await HelpDeskRecord.create({
+      seniorId: senior.id,
+      helpDeskRecordCategory: 7, // Food Assistance
+      details: "Request for food assistance program",
+      createdBy: 1,
+    });
+
+    // Senior Status History
+    await SeniorStatusHistory.create({
+      seniorId: senior.id,
+      status: "Active",
+      note: "Initial registration",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: senior.id,
+      status: "Active",
+      note: "Documents verified and approved",
+      createdBy: 1,
+    });
 
     console.log("Seeding complete!");
     process.exit(0);

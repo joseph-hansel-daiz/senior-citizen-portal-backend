@@ -23,7 +23,7 @@ SeniorSpecializationTechnicalSkill.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "EducationProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorSpecializationTechnicalSkill.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "specializationTechnicalSkills", key: "id" },
+      references: { model: "SpecializationTechnicalSkill", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorSpecializationTechnicalSkill.init(
   {
     sequelize,
     modelName: "SeniorSpecializationTechnicalSkill",
-    tableName: "seniorSpecializationTechnicalSkill",
+    tableName: "SeniorSpecializationTechnicalSkill",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -23,7 +23,7 @@ SeniorMonthlyIncome.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "EconomicProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorMonthlyIncome.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "monthlyIncomes", key: "id" },
+      references: { model: "MonthlyIncome", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorMonthlyIncome.init(
   {
     sequelize,
     modelName: "SeniorMonthlyIncome",
-    tableName: "seniorMonthlyIncome",
+    tableName: "SeniorMonthlyIncome",
     timestamps: false,
+    underscored: false,
   }
 );
 

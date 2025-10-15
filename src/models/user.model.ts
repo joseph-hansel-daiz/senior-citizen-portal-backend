@@ -1,33 +1,17 @@
 import bcrypt from "bcrypt";
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../config/db";
 
 export type UserRole = "admin" | "barangay" | "osca" | "viewOnly";
 
-export interface UserAttributes {
-  id: number;
-  username: string;
-  password: string;
-  name: string;
-  logo: Blob;              // stored as BLOB in DB
-  role: UserRole;
-  barangayId?: number | null; // FK → Barangay, required if role = "barangay"
-}
-
-export interface UserCreationAttributes
-  extends Optional<UserAttributes, "id" | "role" | "logo" | "barangayId"> {}
-
-class User
-  extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes
-{
-  public id!: number;
-  public username!: string;
-  public password!: string;
-  public name!: string;
-  public logo!: Blob;
-  public role!: UserRole;
-  public barangayId?: number | null;
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+  declare id: CreationOptional<number>;
+  declare username: string;
+  declare password: string;
+  declare name: string;
+  declare logo: CreationOptional<Blob>;              // stored as BLOB in DB
+  declare role: CreationOptional<UserRole>;
+  declare barangayId: CreationOptional<number | null>; // FK → Barangay, required if role = "barangay"
 
   async validPassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
@@ -49,7 +33,7 @@ User.init(
     barangayId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: { model: "barangays", key: "id" },
+      references: { model: "Barangay", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
     },
@@ -57,7 +41,8 @@ User.init(
   {
     sequelize,
     modelName: "User",
-    tableName: "users",
+    tableName: "User",
+    underscored: false,
     hooks: {
       beforeValidate: async (user: User) => {
         // Enforce: barangayId is required if role === 'barangay'

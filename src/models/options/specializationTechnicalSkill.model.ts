@@ -25,8 +25,9 @@ SpecializationTechnicalSkill.init(
   {
     sequelize,
     modelName: "SpecializationTechnicalSkill",
-    tableName: "specializationTechnicalSkills",
+    tableName: "SpecializationTechnicalSkill",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -23,7 +23,7 @@ SeniorRealImmovableProperty.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "EconomicProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorRealImmovableProperty.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "realImmovablePropertys", key: "id" },
+      references: { model: "RealImmovableProperty", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorRealImmovableProperty.init(
   {
     sequelize,
     modelName: "SeniorRealImmovableProperty",
-    tableName: "seniorRealImmovableProperty",
+    tableName: "SeniorRealImmovableProperty",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -25,8 +25,9 @@ PersonalMovableProperty.init(
   {
     sequelize,
     modelName: "PersonalMovableProperty",
-    tableName: "personalMovableProperties",
+    tableName: "PersonalMovableProperty",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -25,8 +25,9 @@ AuralConcern.init(
   {
     sequelize,
     modelName: "AuralConcern",
-    tableName: "auralConcerns",
+    tableName: "AuralConcern",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -26,7 +26,7 @@ SeniorDentalConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "HealthProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -34,7 +34,7 @@ SeniorDentalConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "dentalConcerns", key: "id" },
+      references: { model: "DentalConcern", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -42,8 +42,9 @@ SeniorDentalConcern.init(
   {
     sequelize,
     modelName: "SeniorDentalConcern",
-    tableName: "seniorDentalConcern",
+    tableName: "SeniorDentalConcern",
     timestamps: false,
+    underscored: false,
   }
 );
 

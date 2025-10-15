@@ -23,7 +23,7 @@ SeniorHealthProblemAilment.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "HealthProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorHealthProblemAilment.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "healthProblemAilments", key: "id" },
+      references: { model: "HealthProblemAilment", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorHealthProblemAilment.init(
   {
     sequelize,
     modelName: "SeniorHealthProblemAilment",
-    tableName: "seniorhealthProblemAilment",
+    tableName: "SeniorHealthProblemAilment",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -25,8 +25,9 @@ HighestEducationalAttainment.init(
   {
     sequelize,
     modelName: "HighestEducationalAttainment",
-    tableName: "highestEducationalAttainments",
+    tableName: "HighestEducationalAttainment",
     timestamps: false,
+    underscored: false,
   }
 );
 

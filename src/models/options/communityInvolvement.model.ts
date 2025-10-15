@@ -25,8 +25,9 @@ CommunityInvolvement.init(
   {
     sequelize,
     modelName: "CommunityInvolvement",
-    tableName: "communityInvolvements",
+    tableName: "CommunityInvolvement",
     timestamps: false,
+    underscored: false,
   }
 );
 

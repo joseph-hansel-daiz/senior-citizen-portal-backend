@@ -25,8 +25,9 @@ ProblemsNeedsCommonlyEncountered.init(
   {
     sequelize,
     modelName: "ProblemsNeedsCommonlyEncountered",
-    tableName: "problemsNeedsCommonlyEncountered",
+    tableName: "ProblemsNeedsCommonlyEncountered",
     timestamps: false,
+    underscored: false,
   }
 );
 

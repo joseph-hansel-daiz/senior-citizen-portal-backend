@@ -23,7 +23,7 @@ SeniorProblemsNeedsCommonlyEncountered.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "Senior", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorProblemsNeedsCommonlyEncountered.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "problemsNeedsCommonlyEncountered", key: "id" },
+      references: { model: "ProblemsNeedsCommonlyEncountered", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorProblemsNeedsCommonlyEncountered.init(
   {
     sequelize,
     modelName: "SeniorProblemsNeedsCommonlyEncountered",
-    tableName: "seniorProblemsNeedsCommonlyEncountered",
+    tableName: "SeniorProblemsNeedsCommonlyEncountered",
     timestamps: false,
+    underscored: false,
   }
 );
 

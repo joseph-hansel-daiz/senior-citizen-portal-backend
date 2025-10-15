@@ -25,8 +25,9 @@ RealImmovableProperty.init(
   {
     sequelize,
     modelName: "RealImmovableProperty",
-    tableName: "realImmovableProperties",
+    tableName: "RealImmovableProperty",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -25,8 +25,9 @@ LivingCondition.init(
   {
     sequelize,
     modelName: "LivingCondition",
-    tableName: "livingConditions",
+    tableName: "LivingCondition",
     timestamps: false,
+    underscored: false,
   }
 );
 

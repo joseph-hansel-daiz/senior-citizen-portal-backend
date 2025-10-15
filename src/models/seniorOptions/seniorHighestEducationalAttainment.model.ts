@@ -23,7 +23,7 @@ SeniorHighestEducationalAttainment.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "EducationProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorHighestEducationalAttainment.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "highestEducationalAttainments", key: "id" },
+      references: { model: "HighestEducationalAttainment", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorHighestEducationalAttainment.init(
   {
     sequelize,
     modelName: "SeniorHighestEducationalAttainment",
-    tableName: "seniorHighestEducationalAttainment",
+    tableName: "SeniorHighestEducationalAttainment",
     timestamps: false,
+    underscored: false,
   }
 );
 

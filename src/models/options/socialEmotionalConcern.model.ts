@@ -25,8 +25,9 @@ SocialEmotionalConcern.init(
   {
     sequelize,
     modelName: "SocialEmotionalConcern",
-    tableName: "socialEmotionalConcerns",
+    tableName: "SocialEmotionalConcern",
     timestamps: false,
+    underscored: false,
   }
 );
 

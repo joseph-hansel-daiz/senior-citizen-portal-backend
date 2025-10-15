@@ -25,8 +25,9 @@ MonthlyIncome.init(
   {
     sequelize,
     modelName: "MonthlyIncome",
-    tableName: "monthlyIncomes",
+    tableName: "MonthlyIncome",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -25,8 +25,9 @@ Cohabitant.init(
   {
     sequelize,
     modelName: "Cohabitant",
-    tableName: "cohabitants",
+    tableName: "Cohabitant",
     timestamps: false,
+    underscored: false,
   }
 );
 

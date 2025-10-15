@@ -25,8 +25,9 @@ IncomeAssistanceSource.init(
   {
     sequelize,
     modelName: "IncomeAssistanceSource",
-    tableName: "incomeAssistanceSources",
+    tableName: "IncomeAssistanceSource",
     timestamps: false,
+    underscored: false,
   }
 );
 

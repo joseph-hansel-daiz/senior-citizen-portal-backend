@@ -23,7 +23,7 @@ SeniorSocialEmotionalConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "HealthProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorSocialEmotionalConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "socialEmotionalConcerns", key: "id" },
+      references: { model: "SocialEmotionalConcern", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorSocialEmotionalConcern.init(
   {
     sequelize,
     modelName: "SeniorSocialEmotionalConcern",
-    tableName: "seniorSocialEmotionalConcern",
+    tableName: "SeniorSocialEmotionalConcern",
     timestamps: false,
+    underscored: false,
   }
 );
 

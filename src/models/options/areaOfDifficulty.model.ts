@@ -25,8 +25,9 @@ AreaOfDifficulty.init(
   {
     sequelize,
     modelName: "AreaOfDifficulty",
-    tableName: "areaOfDifficulties",
+    tableName: "AreaOfDifficulty",
     timestamps: false,
+    underscored: false,
   }
 );
 

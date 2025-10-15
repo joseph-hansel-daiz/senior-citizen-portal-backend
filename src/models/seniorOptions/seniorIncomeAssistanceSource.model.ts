@@ -23,7 +23,7 @@ SeniorIncomeAssistanceSource.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "EconomicProfile", key: "seniorId" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +31,7 @@ SeniorIncomeAssistanceSource.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "incomeAssistanceSources", key: "id" },
+      references: { model: "IncomeAssistanceSource", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +39,9 @@ SeniorIncomeAssistanceSource.init(
   {
     sequelize,
     modelName: "SeniorIncomeAssistanceSource",
-    tableName: "seniorIncomeAssistanceSource",
+    tableName: "SeniorIncomeAssistanceSource",
     timestamps: false,
+    underscored: false,
   }
 );
 

@@ -10,7 +10,10 @@ export interface SeniorVisualConcernCreationAttributes
   extends Optional<SeniorVisualConcernAttributes, never> {}
 
 class SeniorVisualConcern
-  extends Model<SeniorVisualConcernAttributes, SeniorVisualConcernCreationAttributes>
+  extends Model<
+    SeniorVisualConcernAttributes,
+    SeniorVisualConcernCreationAttributes
+  >
   implements SeniorVisualConcernAttributes
 {
   public seniorId!: number;
@@ -23,7 +26,7 @@ SeniorVisualConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "seniors", key: "id" },
+      references: { model: "health_profiles", key: "senior_id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -31,7 +34,7 @@ SeniorVisualConcern.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "visualConcerns", key: "id" },
+      references: { model: "visual_concerns", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
@@ -39,8 +42,9 @@ SeniorVisualConcern.init(
   {
     sequelize,
     modelName: "SeniorVisualConcern",
-    tableName: "seniorVisualConcern",
+    tableName: "senior_visual_concerns",
     timestamps: false,
+    underscored: true,
   }
 );
 

@@ -17,7 +17,23 @@ import RealImmovableProperty from "./options/realImmovableProperty.model";
 import SocialEmotionalConcern from "./options/socialEmotionalConcern.model";
 import SpecializationTechnicalSkill from "./options/specializationTechnicalSkill.model";
 import VisualConcern from "./options/visualConcern.model";
+
 import Senior from "./senior.model";
+
+import DeathInfo from "./death-info.model";
+import DependencyProfile from "./dependency-profile.model";
+import EconomicProfile from "./economic-profile.model";
+import EducationProfile from "./education-profile.model";
+import FamilyComposition from "./family-composition.model";
+import HealthProfile from "./health-profile.model";
+import IdentifyingInformation from "./identifying-information.model";
+import SeniorStatusHistory from "./senior-status-history.model";
+import HelpDeskRecord from "./help-desk-record.model";
+import HelpDeskRecordCategory from "./help-desk-record-category.model";
+
+import Children from "./children.model";
+import Dependent from "./dependent.model";
+
 import SeniorAreaOfDifficulty from "./seniorOptions/seniorAreaOfDifficulty.model";
 import SeniorAuralConcern from "./seniorOptions/seniorAuralConcern.model";
 import SeniorCohabitant from "./seniorOptions/seniorCohabitant.model";
@@ -34,190 +50,218 @@ import SeniorRealImmovableProperty from "./seniorOptions/seniorRealImmovableProp
 import SeniorSocialEmotionalConcern from "./seniorOptions/seniorSocialEmotionalConcern.model";
 import SeniorSpecializationTechnicalSkill from "./seniorOptions/seniorSpecializationTechnicalSkill.model";
 import SeniorVisualConcern from "./seniorOptions/seniorVisualConcern.model";
+
 import User from "./user.model";
 
-// Associations
-Barangay.hasMany(User, { foreignKey: "barangayId", as: "users" });
-User.belongsTo(Barangay, { foreignKey: "barangayId", as: "barangay" });
+// Basic Associations
+Barangay.hasMany(User, { foreignKey: "barangayId" });
+User.belongsTo(Barangay, { foreignKey: "barangayId" });
 
 Senior.belongsTo(Barangay, { foreignKey: "barangayId" });
-Senior.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
-Senior.belongsTo(User, { foreignKey: "updatedBy", as: "updater" });
-Senior.belongsTo(User, { foreignKey: "deletedBy", as: "deleter" });
+Senior.belongsTo(User, { foreignKey: "createdBy" });
+Senior.belongsTo(User, { foreignKey: "updatedBy" });
+Senior.belongsTo(User, { foreignKey: "deletedBy" });
 
-Senior.belongsToMany(Cohabitant, {
+// Senior Profile Associations
+Senior.hasOne(IdentifyingInformation, { foreignKey: "seniorId" });
+Senior.hasOne(FamilyComposition, { foreignKey: "seniorId" });
+Senior.hasOne(DependencyProfile, { foreignKey: "seniorId" });
+Senior.hasOne(EducationProfile, { foreignKey: "seniorId" });
+Senior.hasOne(EconomicProfile, { foreignKey: "seniorId" });
+Senior.hasOne(HealthProfile, { foreignKey: "seniorId" });
+Senior.hasOne(DeathInfo, { foreignKey: "seniorId" });
+Senior.hasMany(SeniorStatusHistory, { foreignKey: "seniorId" });
+Senior.hasMany(HelpDeskRecord, { foreignKey: "seniorId" });
+
+// Family Composition Associations
+Senior.hasMany(Children, { foreignKey: "seniorId" });
+Senior.hasMany(Dependent, { foreignKey: "seniorId" });
+
+// Help Desk Associations
+HelpDeskRecord.belongsTo(HelpDeskRecordCategory, {
+  foreignKey: "helpDeskRecordCategory",
+});
+HelpDeskRecordCategory.hasMany(HelpDeskRecord, {
+  foreignKey: "helpDeskRecordCategory",
+});
+
+// Dependency Profile Associations
+DependencyProfile.belongsToMany(Cohabitant, {
   through: SeniorCohabitant,
   foreignKey: "seniorId",
   otherKey: "cohabitantId",
 });
-Cohabitant.belongsToMany(Senior, {
+Cohabitant.belongsToMany(DependencyProfile, {
   through: SeniorCohabitant,
   foreignKey: "cohabitantId",
   otherKey: "seniorId",
 });
 
-Senior.belongsToMany(AreaOfDifficulty, {
-  through: SeniorAreaOfDifficulty,
-  foreignKey: "seniorId",
-  otherKey: "areaOfDifficultyId",
-});
-AreaOfDifficulty.belongsToMany(Senior, {
-  through: SeniorAreaOfDifficulty,
-  foreignKey: "areaOfDifficultyId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(CommunityInvolvement, {
-  through: SeniorCommunityInvolvement,
-  foreignKey: "seniorId",
-  otherKey: "communityInvolvementId",
-});
-CommunityInvolvement.belongsToMany(Senior, {
-  through: SeniorCommunityInvolvement,
-  foreignKey: "communityInvolvementId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(HighestEducationalAttainment, {
-  through: SeniorHighestEducationalAttainment,
-  foreignKey: "seniorId",
-  otherKey: "highestEducationalAttainmentId",
-});
-HighestEducationalAttainment.belongsToMany(Senior, {
-  through: SeniorHighestEducationalAttainment,
-  foreignKey: "highestEducationalAttainmentId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(MonthlyIncome, {
-  through: SeniorMonthlyIncome,
-  foreignKey: "seniorId",
-  otherKey: "monthlyIncomeId",
-});
-MonthlyIncome.belongsToMany(Senior, {
-  through: SeniorMonthlyIncome,
-  foreignKey: "monthlyIncomeId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(RealImmovableProperty, {
-  through: SeniorRealImmovableProperty,
-  foreignKey: "seniorId",
-  otherKey: "realImmovablePropertyId",
-});
-RealImmovableProperty.belongsToMany(Senior, {
-  through: SeniorRealImmovableProperty,
-  foreignKey: "realImmovablePropertyId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(VisualConcern, {
-  through: SeniorVisualConcern,
-  foreignKey: "seniorId",
-  otherKey: "visualConcernId",
-});
-VisualConcern.belongsToMany(Senior, {
-  through: SeniorVisualConcern,
-  foreignKey: "visualConcernId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(AuralConcern, {
-  through: SeniorAuralConcern,
-  foreignKey: "seniorId",
-  otherKey: "auralConcernId",
-});
-AuralConcern.belongsToMany(Senior, {
-  through: SeniorAuralConcern,
-  foreignKey: "auralConcernId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(DentalConcern, {
-  through: SeniorDentalConcern,
-  foreignKey: "seniorId",
-  otherKey: "dentalConcernId",
-});
-DentalConcern.belongsToMany(Senior, {
-  through: SeniorDentalConcern,
-  foreignKey: "dentalConcernId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(IncomeAssistanceSource, {
-  through: SeniorIncomeAssistanceSource,
-  foreignKey: "seniorId",
-  otherKey: "incomeAssistanceSourceId",
-});
-IncomeAssistanceSource.belongsToMany(Senior, {
-  through: SeniorIncomeAssistanceSource,
-  foreignKey: "incomeAssistanceSourceId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(PersonalMovableProperty, {
-  through: SeniorPersonalMovableProperty,
-  foreignKey: "seniorId",
-  otherKey: "personalMovablePropertyId",
-});
-PersonalMovableProperty.belongsToMany(Senior, {
-  through: SeniorPersonalMovableProperty,
-  foreignKey: "personalMovablePropertyId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(SocialEmotionalConcern, {
-  through: SeniorSocialEmotionalConcern,
-  foreignKey: "seniorId",
-  otherKey: "socialEmotionalConcernId",
-});
-SocialEmotionalConcern.belongsToMany(Senior, {
-  through: SeniorSocialEmotionalConcern,
-  foreignKey: "socialEmotionalConcernId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(HealthProblemAilment, {
-  through: SeniorHealthProblemAilment,
-  foreignKey: "seniorId",
-  otherKey: "healthProblemAilmentId",
-});
-HealthProblemAilment.belongsToMany(Senior, {
-  through: SeniorHealthProblemAilment,
-  foreignKey: "healthProblemAilmentId",
-  otherKey: "seniorId",
-});
-
-Senior.belongsToMany(LivingCondition, {
+DependencyProfile.belongsToMany(LivingCondition, {
   through: SeniorLivingCondition,
   foreignKey: "seniorId",
   otherKey: "livingConditionId",
 });
-LivingCondition.belongsToMany(Senior, {
+LivingCondition.belongsToMany(DependencyProfile, {
   through: SeniorLivingCondition,
   foreignKey: "livingConditionId",
   otherKey: "seniorId",
 });
 
-Senior.belongsToMany(ProblemsNeedsCommonlyEncountered, {
+// Education Profile Associations
+EducationProfile.belongsToMany(HighestEducationalAttainment, {
+  through: SeniorHighestEducationalAttainment,
+  foreignKey: "seniorId",
+  otherKey: "highestEducationalAttainmentId",
+});
+HighestEducationalAttainment.belongsToMany(EducationProfile, {
+  through: SeniorHighestEducationalAttainment,
+  foreignKey: "highestEducationalAttainmentId",
+  otherKey: "seniorId",
+});
+
+EducationProfile.belongsToMany(SpecializationTechnicalSkill, {
+  through: SeniorSpecializationTechnicalSkill,
+  foreignKey: "seniorId",
+  otherKey: "specializationTechnicalSkillId",
+});
+SpecializationTechnicalSkill.belongsToMany(EducationProfile, {
+  through: SeniorSpecializationTechnicalSkill,
+  foreignKey: "specializationTechnicalSkillId",
+  otherKey: "seniorId",
+});
+
+EducationProfile.belongsToMany(CommunityInvolvement, {
+  through: SeniorCommunityInvolvement,
+  foreignKey: "seniorId",
+  otherKey: "communityInvolvementId",
+});
+CommunityInvolvement.belongsToMany(EducationProfile, {
+  through: SeniorCommunityInvolvement,
+  foreignKey: "communityInvolvementId",
+  otherKey: "seniorId",
+});
+
+// Economic Profile Associations
+EconomicProfile.belongsToMany(IncomeAssistanceSource, {
+  through: SeniorIncomeAssistanceSource,
+  foreignKey: "seniorId",
+  otherKey: "incomeAssistanceSourceId",
+});
+IncomeAssistanceSource.belongsToMany(EconomicProfile, {
+  through: SeniorIncomeAssistanceSource,
+  foreignKey: "incomeAssistanceSourceId",
+  otherKey: "seniorId",
+});
+
+EconomicProfile.belongsToMany(RealImmovableProperty, {
+  through: SeniorRealImmovableProperty,
+  foreignKey: "seniorId",
+  otherKey: "realImmovablePropertyId",
+});
+RealImmovableProperty.belongsToMany(EconomicProfile, {
+  through: SeniorRealImmovableProperty,
+  foreignKey: "realImmovablePropertyId",
+  otherKey: "seniorId",
+});
+
+EconomicProfile.belongsToMany(PersonalMovableProperty, {
+  through: SeniorPersonalMovableProperty,
+  foreignKey: "seniorId",
+  otherKey: "personalMovablePropertyId",
+});
+PersonalMovableProperty.belongsToMany(EconomicProfile, {
+  through: SeniorPersonalMovableProperty,
+  foreignKey: "personalMovablePropertyId",
+  otherKey: "seniorId",
+});
+
+EconomicProfile.belongsToMany(MonthlyIncome, {
+  through: SeniorMonthlyIncome,
+  foreignKey: "seniorId",
+  otherKey: "monthlyIncomeId",
+});
+MonthlyIncome.belongsToMany(EconomicProfile, {
+  through: SeniorMonthlyIncome,
+  foreignKey: "monthlyIncomeId",
+  otherKey: "seniorId",
+});
+
+EconomicProfile.belongsToMany(ProblemsNeedsCommonlyEncountered, {
   through: SeniorProblemsNeedsCommonlyEncountered,
   foreignKey: "seniorId",
   otherKey: "problemsNeedsCommonlyEncounteredId",
 });
-ProblemsNeedsCommonlyEncountered.belongsToMany(Senior, {
+ProblemsNeedsCommonlyEncountered.belongsToMany(EconomicProfile, {
   through: SeniorProblemsNeedsCommonlyEncountered,
   foreignKey: "problemsNeedsCommonlyEncounteredId",
   otherKey: "seniorId",
 });
 
-Senior.belongsToMany(SpecializationTechnicalSkill, {
-  through: SeniorSpecializationTechnicalSkill,
+// Health Profile Associations
+HealthProfile.belongsToMany(HealthProblemAilment, {
+  through: SeniorHealthProblemAilment,
   foreignKey: "seniorId",
-  otherKey: "specializationTechnicalSkillId",
+  otherKey: "healthProblemAilmentId",
 });
-SpecializationTechnicalSkill.belongsToMany(Senior, {
-  through: SeniorSpecializationTechnicalSkill,
-  foreignKey: "specializationTechnicalSkillId",
+HealthProblemAilment.belongsToMany(HealthProfile, {
+  through: SeniorHealthProblemAilment,
+  foreignKey: "healthProblemAilmentId",
+  otherKey: "seniorId",
+});
+
+HealthProfile.belongsToMany(DentalConcern, {
+  through: SeniorDentalConcern,
+  foreignKey: "seniorId",
+  otherKey: "dentalConcernId",
+});
+DentalConcern.belongsToMany(HealthProfile, {
+  through: SeniorDentalConcern,
+  foreignKey: "dentalConcernId",
+  otherKey: "seniorId",
+});
+
+HealthProfile.belongsToMany(VisualConcern, {
+  through: SeniorVisualConcern,
+  foreignKey: "seniorId",
+  otherKey: "visualConcernId",
+});
+VisualConcern.belongsToMany(HealthProfile, {
+  through: SeniorVisualConcern,
+  foreignKey: "visualConcernId",
+  otherKey: "seniorId",
+});
+
+HealthProfile.belongsToMany(AuralConcern, {
+  through: SeniorAuralConcern,
+  foreignKey: "seniorId",
+  otherKey: "auralConcernId",
+});
+AuralConcern.belongsToMany(HealthProfile, {
+  through: SeniorAuralConcern,
+  foreignKey: "auralConcernId",
+  otherKey: "seniorId",
+});
+
+HealthProfile.belongsToMany(SocialEmotionalConcern, {
+  through: SeniorSocialEmotionalConcern,
+  foreignKey: "seniorId",
+  otherKey: "socialEmotionalConcernId",
+});
+SocialEmotionalConcern.belongsToMany(HealthProfile, {
+  through: SeniorSocialEmotionalConcern,
+  foreignKey: "socialEmotionalConcernId",
+  otherKey: "seniorId",
+});
+
+HealthProfile.belongsToMany(AreaOfDifficulty, {
+  through: SeniorAreaOfDifficulty,
+  foreignKey: "seniorId",
+  otherKey: "difficultyId",
+});
+AreaOfDifficulty.belongsToMany(HealthProfile, {
+  through: SeniorAreaOfDifficulty,
+  foreignKey: "difficultyId",
   otherKey: "seniorId",
 });
 
@@ -225,17 +269,29 @@ export {
   AreaOfDifficulty,
   AuralConcern,
   Barangay,
+  Children,
   Cohabitant,
   CommunityInvolvement,
+  DeathInfo,
   DentalConcern,
+  Dependent,
+  DependencyProfile,
+  EconomicProfile,
+  EducationProfile,
+  FamilyComposition,
   HealthProblemAilment,
+  HealthProfile,
+  HelpDeskRecord,
+  HelpDeskRecordCategory,
   HighestEducationalAttainment,
+  IdentifyingInformation,
   IncomeAssistanceSource,
   LivingCondition,
   MonthlyIncome,
   PersonalMovableProperty,
   ProblemsNeedsCommonlyEncountered,
   RealImmovableProperty,
+  Senior,
   SeniorAreaOfDifficulty,
   SeniorAuralConcern,
   SeniorCohabitant,
@@ -251,6 +307,7 @@ export {
   SeniorRealImmovableProperty,
   SeniorSocialEmotionalConcern,
   SeniorSpecializationTechnicalSkill,
+  SeniorStatusHistory,
   SeniorVisualConcern,
   sequelize,
   SocialEmotionalConcern,

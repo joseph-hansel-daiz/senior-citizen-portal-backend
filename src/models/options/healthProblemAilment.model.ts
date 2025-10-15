@@ -25,8 +25,9 @@ HealthProblemAilment.init(
   {
     sequelize,
     modelName: "HealthProblemAilment",
-    tableName: "healthProblemAilments",
+    tableName: "HealthProblemAilment",
     timestamps: false,
+    underscored: false,
   }
 );
 

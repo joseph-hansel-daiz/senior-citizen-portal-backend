@@ -1,44 +1,46 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, NonAttribute } from "sequelize";
 import sequelize from "../config/db";
 
-export interface SeniorAttributes {
-  id: number;
-  isDeleted: boolean;
-  barangayId: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
-  createdBy?: number | null;
-  updatedBy?: number | null;
-  deletedBy?: number | null;
-}
+// Import models for associations
+import Barangay from "./barangay.model";
+import User from "./user.model";
+import IdentifyingInformation from "./identifying-information.model";
+import FamilyComposition from "./family-composition.model";
+import DependencyProfile from "./dependency-profile.model";
+import EducationProfile from "./education-profile.model";
+import EconomicProfile from "./economic-profile.model";
+import HealthProfile from "./health-profile.model";
+import DeathInfo from "./death-info.model";
+import SeniorStatusHistory from "./senior-status-history.model";
+import HelpDeskRecord from "./help-desk-record.model";
 
-export interface SeniorCreationAttributes
-  extends Optional<
-    SeniorAttributes,
-    | "id"
-    | "isDeleted"
-    | "createdAt"
-    | "updatedAt"
-    | "deletedAt"
-    | "createdBy"
-    | "updatedBy"
-    | "deletedBy"
-  > {}
+class Senior extends Model<InferAttributes<Senior>, InferCreationAttributes<Senior>> {
+  declare id: CreationOptional<number>;
+  declare isDeleted: CreationOptional<boolean>;
+  declare barangayId: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+  declare deletedAt: CreationOptional<Date | null>;
+  declare createdBy: CreationOptional<number | null>;
+  declare updatedBy: CreationOptional<number | null>;
+  declare deletedBy: CreationOptional<number | null>;
 
-class Senior
-  extends Model<SeniorAttributes, SeniorCreationAttributes>
-  implements SeniorAttributes
-{
-  public id!: number;
-  public isDeleted!: boolean;
-  public barangayId!: number;
-  public createdAt?: Date;
-  public updatedAt?: Date;
-  public deletedAt?: Date | null;
-  public createdBy?: number | null;
-  public updatedBy?: number | null;
-  public deletedBy?: number | null;
+  // Associations
+  declare barangay?: NonAttribute<Barangay>;
+  declare creator?: NonAttribute<User>;
+  declare updater?: NonAttribute<User>;
+  declare deleter?: NonAttribute<User>;
+
+  // Profile Associations
+  declare identifyingInformation?: NonAttribute<IdentifyingInformation>;
+  declare familyComposition?: NonAttribute<FamilyComposition>;
+  declare dependencyProfile?: NonAttribute<DependencyProfile>;
+  declare educationProfile?: NonAttribute<EducationProfile>;
+  declare economicProfile?: NonAttribute<EconomicProfile>;
+  declare healthProfile?: NonAttribute<HealthProfile>;
+  declare deathInfo?: NonAttribute<DeathInfo>;
+  declare statusHistory?: NonAttribute<SeniorStatusHistory[]>;
+  declare helpDeskRecords?: NonAttribute<HelpDeskRecord[]>;
 }
 
 Senior.init(
@@ -56,7 +58,7 @@ Senior.init(
     barangayId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: "barangays", key: "id" },
+      references: { model: "Barangay", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "RESTRICT",
     },
@@ -75,21 +77,21 @@ Senior.init(
     createdBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: { model: "users", key: "id" },
+      references: { model: "User", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
     },
     updatedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: { model: "users", key: "id" },
+      references: { model: "User", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
     },
     deletedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: { model: "users", key: "id" },
+      references: { model: "User", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
     },
@@ -97,10 +99,10 @@ Senior.init(
   {
     sequelize,
     modelName: "Senior",
-    tableName: "seniors",
-    timestamps: true, // Sequelize will manage createdAt + updatedAt
-    paranoid: true, // enables deletedAt for soft deletes
-    underscored: true,
+    tableName: "Senior",
+    underscored: false,
+    timestamps: true,
+    paranoid: true,
   }
 );
 
