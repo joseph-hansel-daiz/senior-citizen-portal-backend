@@ -1,11 +1,13 @@
 import { HealthProfile, HealthProblemAilment, DentalConcern, VisualConcern, AuralConcern, SocialEmotionalConcern, AreaOfDifficulty, SeniorHealthProblemAilment, SeniorDentalConcern, SeniorVisualConcern, SeniorAuralConcern, SeniorSocialEmotionalConcern, SeniorAreaOfDifficulty } from "@/models";
 import type { CreationAttributes } from "sequelize";
+import { Transaction } from "sequelize";
 
 export class HealthProfileService {
   // Helper function to set health problem ailments
-  private async setHealthProblemAilments(seniorId: number, ailmentIds: number[]) {
+  private async setHealthProblemAilments(seniorId: number, ailmentIds: number[], transaction?: Transaction) {
     await SeniorHealthProblemAilment.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (ailmentIds.length > 0) {
@@ -13,15 +15,17 @@ export class HealthProfileService {
         ailmentIds.map(ailmentId => ({
           seniorId,
           healthProblemAilmentId: ailmentId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set dental concerns
-  private async setDentalConcerns(seniorId: number, concernIds: number[]) {
+  private async setDentalConcerns(seniorId: number, concernIds: number[], transaction?: Transaction) {
     await SeniorDentalConcern.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (concernIds.length > 0) {
@@ -29,15 +33,17 @@ export class HealthProfileService {
         concernIds.map(concernId => ({
           seniorId,
           dentalConcernId: concernId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set visual concerns
-  private async setVisualConcerns(seniorId: number, concernIds: number[]) {
+  private async setVisualConcerns(seniorId: number, concernIds: number[], transaction?: Transaction) {
     await SeniorVisualConcern.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (concernIds.length > 0) {
@@ -45,15 +51,17 @@ export class HealthProfileService {
         concernIds.map(concernId => ({
           seniorId,
           visualConcernId: concernId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set aural concerns
-  private async setAuralConcerns(seniorId: number, concernIds: number[]) {
+  private async setAuralConcerns(seniorId: number, concernIds: number[], transaction?: Transaction) {
     await SeniorAuralConcern.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (concernIds.length > 0) {
@@ -61,15 +69,17 @@ export class HealthProfileService {
         concernIds.map(concernId => ({
           seniorId,
           auralConcernId: concernId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set social emotional concerns
-  private async setSocialEmotionalConcerns(seniorId: number, concernIds: number[]) {
+  private async setSocialEmotionalConcerns(seniorId: number, concernIds: number[], transaction?: Transaction) {
     await SeniorSocialEmotionalConcern.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (concernIds.length > 0) {
@@ -77,15 +87,17 @@ export class HealthProfileService {
         concernIds.map(concernId => ({
           seniorId,
           socialEmotionalConcernId: concernId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set areas of difficulty
-  private async setAreasOfDifficulty(seniorId: number, difficultyIds: number[]) {
+  private async setAreasOfDifficulty(seniorId: number, difficultyIds: number[], transaction?: Transaction) {
     await SeniorAreaOfDifficulty.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (difficultyIds.length > 0) {
@@ -93,7 +105,8 @@ export class HealthProfileService {
         difficultyIds.map(difficultyId => ({
           seniorId,
           areaOfDifficultyId: difficultyId
-        }))
+        })),
+        { transaction }
       );
     }
   }
@@ -109,7 +122,7 @@ export class HealthProfileService {
     auralConcerns?: number[];
     socialEmotionalConcerns?: number[];
     areasOfDifficulty?: number[];
-  }) {
+  }, transaction?: Transaction) {
     // If no data provided, create with default values
     const profileData = data || {};
     
@@ -135,30 +148,30 @@ export class HealthProfileService {
       ...otherProfileData 
     } = defaultData;
     
-    const profile = await HealthProfile.create(otherProfileData);
+    const profile = await HealthProfile.create(otherProfileData, { transaction });
     
     if (healthProblemAilments && healthProblemAilments.length > 0) {
-      await this.setHealthProblemAilments(profile.seniorId, healthProblemAilments);
+      await this.setHealthProblemAilments(profile.seniorId, healthProblemAilments, transaction);
     }
     
     if (dentalConcerns && dentalConcerns.length > 0) {
-      await this.setDentalConcerns(profile.seniorId, dentalConcerns);
+      await this.setDentalConcerns(profile.seniorId, dentalConcerns, transaction);
     }
     
     if (visualConcerns && visualConcerns.length > 0) {
-      await this.setVisualConcerns(profile.seniorId, visualConcerns);
+      await this.setVisualConcerns(profile.seniorId, visualConcerns, transaction);
     }
     
     if (auralConcerns && auralConcerns.length > 0) {
-      await this.setAuralConcerns(profile.seniorId, auralConcerns);
+      await this.setAuralConcerns(profile.seniorId, auralConcerns, transaction);
     }
     
     if (socialEmotionalConcerns && socialEmotionalConcerns.length > 0) {
-      await this.setSocialEmotionalConcerns(profile.seniorId, socialEmotionalConcerns);
+      await this.setSocialEmotionalConcerns(profile.seniorId, socialEmotionalConcerns, transaction);
     }
     
     if (areasOfDifficulty && areasOfDifficulty.length > 0) {
-      await this.setAreasOfDifficulty(profile.seniorId, areasOfDifficulty);
+      await this.setAreasOfDifficulty(profile.seniorId, areasOfDifficulty, transaction);
     }
     
     return profile;
@@ -171,8 +184,8 @@ export class HealthProfileService {
     auralConcerns?: number[];
     socialEmotionalConcerns?: number[];
     areasOfDifficulty?: number[];
-  }) {
-    const healthProfile = await HealthProfile.findByPk(seniorId);
+  }, transaction?: Transaction) {
+    const healthProfile = await HealthProfile.findByPk(seniorId, { transaction });
     
     if (!healthProfile) {
       throw new Error("Health profile not found");
@@ -188,30 +201,30 @@ export class HealthProfileService {
       ...profileData 
     } = data;
     
-    await healthProfile.update(profileData);
+    await healthProfile.update(profileData, { transaction });
     
     if (healthProblemAilments !== undefined) {
-      await this.setHealthProblemAilments(seniorId, healthProblemAilments);
+      await this.setHealthProblemAilments(seniorId, healthProblemAilments, transaction);
     }
     
     if (dentalConcerns !== undefined) {
-      await this.setDentalConcerns(seniorId, dentalConcerns);
+      await this.setDentalConcerns(seniorId, dentalConcerns, transaction);
     }
     
     if (visualConcerns !== undefined) {
-      await this.setVisualConcerns(seniorId, visualConcerns);
+      await this.setVisualConcerns(seniorId, visualConcerns, transaction);
     }
     
     if (auralConcerns !== undefined) {
-      await this.setAuralConcerns(seniorId, auralConcerns);
+      await this.setAuralConcerns(seniorId, auralConcerns, transaction);
     }
     
     if (socialEmotionalConcerns !== undefined) {
-      await this.setSocialEmotionalConcerns(seniorId, socialEmotionalConcerns);
+      await this.setSocialEmotionalConcerns(seniorId, socialEmotionalConcerns, transaction);
     }
     
     if (areasOfDifficulty !== undefined) {
-      await this.setAreasOfDifficulty(seniorId, areasOfDifficulty);
+      await this.setAreasOfDifficulty(seniorId, areasOfDifficulty, transaction);
     }
     
     return healthProfile;

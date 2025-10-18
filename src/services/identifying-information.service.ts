@@ -1,12 +1,13 @@
 import { IdentifyingInformation } from "@/models";
 import type { CreationAttributes } from "sequelize";
+import { Transaction } from "sequelize";
 
 export class IdentifyingInformationService {
   async getBySeniorId(seniorId: number) {
     return IdentifyingInformation.findByPk(seniorId);
   }
 
-  async create(data: CreationAttributes<IdentifyingInformation>) {
+  async create(data: CreationAttributes<IdentifyingInformation>, transaction?: Transaction) {
     // If no data provided, create with minimal required fields
     if (!data || Object.keys(data).length === 0) {
       throw new Error("IdentifyingInformation is required and cannot be empty");
@@ -16,17 +17,17 @@ export class IdentifyingInformationService {
       throw new Error("Required fields: lastname, firstname, region, province, city, barangay, residence, birthDate, birthPlace, maritalStatus, sexAtBirth");
     }
 
-    return IdentifyingInformation.create(data);
+    return IdentifyingInformation.create(data, { transaction });
   }
 
-  async update(seniorId: number, data: Partial<CreationAttributes<IdentifyingInformation>>) {
-    const identifyingInfo = await IdentifyingInformation.findByPk(seniorId);
+  async update(seniorId: number, data: Partial<CreationAttributes<IdentifyingInformation>>, transaction?: Transaction) {
+    const identifyingInfo = await IdentifyingInformation.findByPk(seniorId, { transaction });
     
     if (!identifyingInfo) {
       throw new Error("Identifying information not found");
     }
 
-    await identifyingInfo.update(data);
+    await identifyingInfo.update(data, { transaction });
     return identifyingInfo;
   }
 

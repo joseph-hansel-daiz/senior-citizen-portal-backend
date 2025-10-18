@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { seniorController } from "@/controllers";
-import { requireAuthentication } from "@/middleware";
+import { requireAuthentication, upload } from "@/middleware";
 
 const router = Router();
 
@@ -13,10 +13,10 @@ router.get("/", seniorController.list);
 router.get("/:id", seniorController.detail);
 
 // POST /seniors - Create new senior
-router.post("/", seniorController.create);
+router.post("/", upload.single("photo"), seniorController.create);
 
 // PUT /seniors/:id - Update senior
-router.put("/:id", seniorController.update);
+router.put("/:id", upload.single("photo"), seniorController.update);
 
 // DELETE /seniors/:id - Delete senior (soft delete)
 router.delete("/:id", seniorController.remove);

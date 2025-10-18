@@ -1,11 +1,13 @@
 import { EconomicProfile, IncomeAssistanceSource, RealImmovableProperty, PersonalMovableProperty, MonthlyIncome, ProblemsNeedsCommonlyEncountered, SeniorIncomeAssistanceSource, SeniorRealImmovableProperty, SeniorPersonalMovableProperty, SeniorMonthlyIncome, SeniorProblemsNeedsCommonlyEncountered } from "@/models";
 import type { CreationAttributes } from "sequelize";
+import { Transaction } from "sequelize";
 
 export class EconomicProfileService {
   // Helper function to set income assistance sources
-  private async setIncomeAssistanceSources(seniorId: number, sourceIds: number[]) {
+  private async setIncomeAssistanceSources(seniorId: number, sourceIds: number[], transaction?: Transaction) {
     await SeniorIncomeAssistanceSource.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (sourceIds.length > 0) {
@@ -13,15 +15,17 @@ export class EconomicProfileService {
         sourceIds.map(sourceId => ({
           seniorId,
           incomeAssistanceSourceId: sourceId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set real immovable properties
-  private async setRealImmovableProperties(seniorId: number, propertyIds: number[]) {
+  private async setRealImmovableProperties(seniorId: number, propertyIds: number[], transaction?: Transaction) {
     await SeniorRealImmovableProperty.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (propertyIds.length > 0) {
@@ -29,15 +33,17 @@ export class EconomicProfileService {
         propertyIds.map(propertyId => ({
           seniorId,
           realImmovablePropertyId: propertyId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set personal movable properties
-  private async setPersonalMovableProperties(seniorId: number, propertyIds: number[]) {
+  private async setPersonalMovableProperties(seniorId: number, propertyIds: number[], transaction?: Transaction) {
     await SeniorPersonalMovableProperty.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (propertyIds.length > 0) {
@@ -45,15 +51,17 @@ export class EconomicProfileService {
         propertyIds.map(propertyId => ({
           seniorId,
           personalMovablePropertieId: propertyId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set monthly incomes
-  private async setMonthlyIncomes(seniorId: number, incomeIds: number[]) {
+  private async setMonthlyIncomes(seniorId: number, incomeIds: number[], transaction?: Transaction) {
     await SeniorMonthlyIncome.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (incomeIds.length > 0) {
@@ -61,15 +69,17 @@ export class EconomicProfileService {
         incomeIds.map(incomeId => ({
           seniorId,
           monthlyIncomeId: incomeId
-        }))
+        })),
+        { transaction }
       );
     }
   }
 
   // Helper function to set problems needs commonly encountered
-  private async setProblemsNeedsCommonlyEncountered(seniorId: number, problemIds: number[]) {
+  private async setProblemsNeedsCommonlyEncountered(seniorId: number, problemIds: number[], transaction?: Transaction) {
     await SeniorProblemsNeedsCommonlyEncountered.destroy({
-      where: { seniorId }
+      where: { seniorId },
+      transaction
     });
     
     if (problemIds.length > 0) {
@@ -77,7 +87,8 @@ export class EconomicProfileService {
         problemIds.map(problemId => ({
           seniorId,
           problemsNeedsCommonlyEncounteredId: problemId
-        }))
+        })),
+        { transaction }
       );
     }
   }
@@ -92,7 +103,7 @@ export class EconomicProfileService {
     personalMovableProperties?: number[];
     monthlyIncomes?: number[];
     problemsNeedsCommonlyEncountered?: number[];
-  }) {
+  }, transaction?: Transaction) {
     // If no data provided, create with empty profile
     const profileData = data || {};
     const { 
@@ -104,26 +115,26 @@ export class EconomicProfileService {
       ...otherProfileData 
     } = profileData;
     
-    const profile = await EconomicProfile.create(otherProfileData);
+    const profile = await EconomicProfile.create(otherProfileData, { transaction });
     
     if (incomeAssistanceSources && incomeAssistanceSources.length > 0) {
-      await this.setIncomeAssistanceSources(profile.seniorId, incomeAssistanceSources);
+      await this.setIncomeAssistanceSources(profile.seniorId, incomeAssistanceSources, transaction);
     }
     
     if (realImmovableProperties && realImmovableProperties.length > 0) {
-      await this.setRealImmovableProperties(profile.seniorId, realImmovableProperties);
+      await this.setRealImmovableProperties(profile.seniorId, realImmovableProperties, transaction);
     }
     
     if (personalMovableProperties && personalMovableProperties.length > 0) {
-      await this.setPersonalMovableProperties(profile.seniorId, personalMovableProperties);
+      await this.setPersonalMovableProperties(profile.seniorId, personalMovableProperties, transaction);
     }
     
     if (monthlyIncomes && monthlyIncomes.length > 0) {
-      await this.setMonthlyIncomes(profile.seniorId, monthlyIncomes);
+      await this.setMonthlyIncomes(profile.seniorId, monthlyIncomes, transaction);
     }
     
     if (problemsNeedsCommonlyEncountered && problemsNeedsCommonlyEncountered.length > 0) {
-      await this.setProblemsNeedsCommonlyEncountered(profile.seniorId, problemsNeedsCommonlyEncountered);
+      await this.setProblemsNeedsCommonlyEncountered(profile.seniorId, problemsNeedsCommonlyEncountered, transaction);
     }
     
     return profile;
@@ -135,8 +146,8 @@ export class EconomicProfileService {
     personalMovableProperties?: number[];
     monthlyIncomes?: number[];
     problemsNeedsCommonlyEncountered?: number[];
-  }) {
-    const economicProfile = await EconomicProfile.findByPk(seniorId);
+  }, transaction?: Transaction) {
+    const economicProfile = await EconomicProfile.findByPk(seniorId, { transaction });
     
     if (!economicProfile) {
       throw new Error("Economic profile not found");
@@ -151,26 +162,26 @@ export class EconomicProfileService {
       ...profileData 
     } = data;
     
-    await economicProfile.update(profileData);
+    await economicProfile.update(profileData, { transaction });
     
     if (incomeAssistanceSources !== undefined) {
-      await this.setIncomeAssistanceSources(seniorId, incomeAssistanceSources);
+      await this.setIncomeAssistanceSources(seniorId, incomeAssistanceSources, transaction);
     }
     
     if (realImmovableProperties !== undefined) {
-      await this.setRealImmovableProperties(seniorId, realImmovableProperties);
+      await this.setRealImmovableProperties(seniorId, realImmovableProperties, transaction);
     }
     
     if (personalMovableProperties !== undefined) {
-      await this.setPersonalMovableProperties(seniorId, personalMovableProperties);
+      await this.setPersonalMovableProperties(seniorId, personalMovableProperties, transaction);
     }
     
     if (monthlyIncomes !== undefined) {
-      await this.setMonthlyIncomes(seniorId, monthlyIncomes);
+      await this.setMonthlyIncomes(seniorId, monthlyIncomes, transaction);
     }
     
     if (problemsNeedsCommonlyEncountered !== undefined) {
-      await this.setProblemsNeedsCommonlyEncountered(seniorId, problemsNeedsCommonlyEncountered);
+      await this.setProblemsNeedsCommonlyEncountered(seniorId, problemsNeedsCommonlyEncountered, transaction);
     }
     
     return economicProfile;

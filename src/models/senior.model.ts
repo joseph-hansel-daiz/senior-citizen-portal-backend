@@ -18,6 +18,7 @@ class Senior extends Model<InferAttributes<Senior>, InferCreationAttributes<Seni
   declare id: CreationOptional<number>;
   declare isDeleted: CreationOptional<boolean>;
   declare barangayId: number;
+  declare photo: CreationOptional<Blob>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare deletedAt: CreationOptional<Date | null>;
@@ -61,6 +62,10 @@ Senior.init(
       references: { model: "Barangay", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "RESTRICT",
+    },
+    photo: {
+      type: DataTypes.BLOB,
+      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,

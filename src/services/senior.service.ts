@@ -32,6 +32,7 @@ import {
   SpecializationTechnicalSkill,
   VisualConcern
 } from "@/models";
+import { Transaction } from "sequelize";
 
 export class SeniorService {
   private getIncludeOptions() {
@@ -206,10 +207,11 @@ export class SeniorService {
     });
   }
 
-  async getSeniorById(id: string) {
+  async getSeniorById(id: string, transaction?: Transaction) {
     const senior = await Senior.findOne({
       where: { id, isDeleted: false },
-      include: this.getIncludeOptions()
+      include: this.getIncludeOptions(),
+      transaction
     });
     if (!senior) throw new Error("Senior not found");
     return senior;
@@ -217,9 +219,10 @@ export class SeniorService {
 
   async createSenior(data: {
     barangayId: number;
+    photo?: Blob;
     createdBy?: number;
-  }) {
-    const { barangayId, createdBy } = data;
+  }, transaction?: Transaction) {
+    const { barangayId, photo, createdBy } = data;
 
     if (!barangayId) {
       throw new Error("barangayId is required");
@@ -227,36 +230,43 @@ export class SeniorService {
 
     const senior = await Senior.create({
       barangayId,
+      photo: photo || undefined,
       createdBy: createdBy || null,
-    });
+    }, { transaction });
 
-    return this.getSeniorById(senior.id.toString());
+    return this.getSeniorById(senior.id.toString(), transaction);
   }
 
   async updateSenior(id: string, data: {
     barangayId?: number;
+    photo?: Blob;
     updatedBy?: number;
-  }) {
+  }, transaction?: Transaction) {
     const senior = await Senior.findOne({
-      where: { id, isDeleted: false }
+      where: { id, isDeleted: false },
+      transaction
     });
     
     if (!senior) {
       throw new Error("Senior not found");
     }
 
-    const { barangayId, updatedBy } = data;
+    const { barangayId, photo, updatedBy } = data;
 
     if (barangayId !== undefined) {
       senior.barangayId = barangayId;
+    }
+    
+    if (photo !== undefined) {
+      senior.photo = photo;
     }
     
     if (updatedBy !== undefined) {
       senior.updatedBy = updatedBy;
     }
 
-    await senior.save();
-    return this.getSeniorById(id);
+    await senior.save({ transaction });
+    return this.getSeniorById(id, transaction);
   }
 
   async deleteSenior(id: string, deletedBy?: number) {
