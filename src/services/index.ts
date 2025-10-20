@@ -9,3 +9,4 @@ export { educationProfileService } from './education-profile.service';
 export { economicProfileService } from './economic-profile.service';
 export { healthProfileService } from './health-profile.service';
 export { deathInfoService } from './death-info.service';
+export { helpdeskService } from './helpdesk.service';

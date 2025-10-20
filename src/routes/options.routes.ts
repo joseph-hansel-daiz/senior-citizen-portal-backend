@@ -21,4 +21,9 @@ router.get("/social-emotional-concerns", optionController.listSocialEmotionalCon
 router.get("/technical-skills", optionController.listSpecializationTechnicalSkills);
 router.get("/visual-concerns", optionController.listVisualConcerns);
 
+router.get(
+  "/help-desk-record-categories",
+  optionController.listHelpDeskRecordCategories
+);
+
 export default router;

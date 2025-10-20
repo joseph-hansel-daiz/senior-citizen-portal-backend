@@ -89,6 +89,11 @@ export const listAreaOfDifficulties = async (_req: Request, res: Response) =>
 export const listBarangays = async (_req: Request, res: Response) =>
   handleOptionRequest(res, () => optionService.getBarangays());
 
+export const listHelpDeskRecordCategories = async (
+  _req: Request,
+  res: Response
+) => handleOptionRequest(res, () => optionService.getHelpDeskRecordCategories());
+
 export default {
   listCohabitants,
   listLivingConditions,
@@ -107,4 +112,5 @@ export default {
   listSocialEmotionalConcerns,
   listAreaOfDifficulties,
   listBarangays,
+  listHelpDeskRecordCategories,
 };

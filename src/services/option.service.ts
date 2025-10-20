@@ -16,6 +16,7 @@ import {
   SocialEmotionalConcern,
   AreaOfDifficulty,
   Barangay,
+  HelpDeskRecordCategory,
 } from "@/models";
 
 export class OptionService {
@@ -93,6 +94,10 @@ export class OptionService {
 
   async getBarangays() {
     return this.getList(Barangay);
+  }
+
+  async getHelpDeskRecordCategories() {
+    return this.getList(HelpDeskRecordCategory);
   }
 }
 

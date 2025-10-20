@@ -9,6 +9,7 @@ import authRoutes from "@/routes/auth.routes";
 import userRoutes from "@/routes/users.routes";
 import optionsRoutes from "@/routes/options.routes";
 import seniorRoutes from "@/routes/seniors.routes";
+import helpdeskRoutes from "@/routes/helpdesk.routes";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/options", optionsRoutes);
 app.use("/seniors", seniorRoutes);
+app.use("/helpdesk", helpdeskRoutes);
 
 const PORT = process.env.PORT || 8000;
 
