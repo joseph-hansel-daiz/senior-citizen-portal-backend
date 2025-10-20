@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface SpecializationTechnicalSkillAttributes {
-  id: number;
-  name: string;
-}
-
-export interface SpecializationTechnicalSkillCreationAttributes
-  extends Optional<SpecializationTechnicalSkillAttributes, "id"> {}
-
-class SpecializationTechnicalSkill
-  extends Model<SpecializationTechnicalSkillAttributes, SpecializationTechnicalSkillCreationAttributes>
-  implements SpecializationTechnicalSkillAttributes
-{
-  public id!: number;
-  public name!: string;
+class SpecializationTechnicalSkill extends Model<InferAttributes<SpecializationTechnicalSkill>, InferCreationAttributes<SpecializationTechnicalSkill>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 SpecializationTechnicalSkill.init(

@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface SocialEmotionalConcernAttributes {
-  id: number;
-  name: string;
-}
-
-export interface SocialEmotionalConcernCreationAttributes
-  extends Optional<SocialEmotionalConcernAttributes, "id"> {}
-
-class SocialEmotionalConcern
-  extends Model<SocialEmotionalConcernAttributes, SocialEmotionalConcernCreationAttributes>
-  implements SocialEmotionalConcernAttributes
-{
-  public id!: number;
-  public name!: string;
+class SocialEmotionalConcern extends Model<InferAttributes<SocialEmotionalConcern>, InferCreationAttributes<SocialEmotionalConcern>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 SocialEmotionalConcern.init(

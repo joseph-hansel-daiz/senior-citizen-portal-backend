@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface SeniorMonthlyIncomeAttributes {
-  seniorId: number;
-  monthlyIncomeId: number;
-}
-
-export interface SeniorMonthlyIncomeCreationAttributes
-  extends Optional<SeniorMonthlyIncomeAttributes, never> {}
-
-class SeniorMonthlyIncome
-  extends Model<SeniorMonthlyIncomeAttributes, SeniorMonthlyIncomeCreationAttributes>
-  implements SeniorMonthlyIncomeAttributes
-{
-  public seniorId!: number;
-  public monthlyIncomeId!: number;
+class SeniorMonthlyIncome extends Model<InferAttributes<SeniorMonthlyIncome>, InferCreationAttributes<SeniorMonthlyIncome>> {
+  declare seniorId: number;
+  declare monthlyIncomeId: number;
 }
 
 SeniorMonthlyIncome.init(

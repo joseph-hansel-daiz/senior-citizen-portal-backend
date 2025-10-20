@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface IncomeAssistanceSourceAttributes {
-  id: number;
-  name: string;
-}
-
-export interface IncomeAssistanceSourceCreationAttributes
-  extends Optional<IncomeAssistanceSourceAttributes, "id"> {}
-
-class IncomeAssistanceSource
-  extends Model<IncomeAssistanceSourceAttributes, IncomeAssistanceSourceCreationAttributes>
-  implements IncomeAssistanceSourceAttributes
-{
-  public id!: number;
-  public name!: string;
+class IncomeAssistanceSource extends Model<InferAttributes<IncomeAssistanceSource>, InferCreationAttributes<IncomeAssistanceSource>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 IncomeAssistanceSource.init(

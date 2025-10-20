@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface SeniorProblemsNeedsCommonlyEncounteredAttributes {
-  seniorId: number;
-  problemsNeedsCommonlyEncounteredId: number;
-}
-
-export interface SeniorProblemsNeedsCommonlyEncounteredCreationAttributes
-  extends Optional<SeniorProblemsNeedsCommonlyEncounteredAttributes, never> {}
-
-class SeniorProblemsNeedsCommonlyEncountered
-  extends Model<SeniorProblemsNeedsCommonlyEncounteredAttributes, SeniorProblemsNeedsCommonlyEncounteredCreationAttributes>
-  implements SeniorProblemsNeedsCommonlyEncounteredAttributes
-{
-  public seniorId!: number;
-  public problemsNeedsCommonlyEncounteredId!: number;
+class SeniorProblemsNeedsCommonlyEncountered extends Model<InferAttributes<SeniorProblemsNeedsCommonlyEncountered>, InferCreationAttributes<SeniorProblemsNeedsCommonlyEncountered>> {
+  declare seniorId: number;
+  declare problemsNeedsCommonlyEncounteredId: number;
 }
 
 SeniorProblemsNeedsCommonlyEncountered.init(

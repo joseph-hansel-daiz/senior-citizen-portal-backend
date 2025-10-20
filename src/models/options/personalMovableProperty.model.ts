@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface PersonalMovablePropertyAttributes {
-  id: number;
-  name: string;
-}
-
-export interface PersonalMovablePropertyCreationAttributes
-  extends Optional<PersonalMovablePropertyAttributes, "id"> {}
-
-class PersonalMovableProperty
-  extends Model<PersonalMovablePropertyAttributes, PersonalMovablePropertyCreationAttributes>
-  implements PersonalMovablePropertyAttributes
-{
-  public id!: number;
-  public name!: string;
+class PersonalMovableProperty extends Model<InferAttributes<PersonalMovableProperty>, InferCreationAttributes<PersonalMovableProperty>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 PersonalMovableProperty.init(

@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface VisualConcernAttributes {
-  id: number;
-  name: string;
-}
-
-export interface VisualConcernCreationAttributes
-  extends Optional<VisualConcernAttributes, "id"> {}
-
-class VisualConcern
-  extends Model<VisualConcernAttributes, VisualConcernCreationAttributes>
-  implements VisualConcernAttributes
-{
-  public id!: number;
-  public name!: string;
+class VisualConcern extends Model<InferAttributes<VisualConcern>, InferCreationAttributes<VisualConcern>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 VisualConcern.init(

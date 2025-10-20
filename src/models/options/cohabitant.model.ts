@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface CohabitantAttributes {
-  id: number;
-  name: string;
-}
-
-export interface CohabitantCreationAttributes
-  extends Optional<CohabitantAttributes, "id"> {}
-
-class Cohabitant
-  extends Model<CohabitantAttributes, CohabitantCreationAttributes>
-  implements CohabitantAttributes
-{
-  public id!: number;
-  public name!: string;
+class Cohabitant extends Model<InferAttributes<Cohabitant>, InferCreationAttributes<Cohabitant>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 Cohabitant.init(

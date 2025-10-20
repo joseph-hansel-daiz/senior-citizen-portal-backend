@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface SeniorSocialEmotionalConcernAttributes {
-  seniorId: number;
-  socialEmotionalConcernId: number;
-}
-
-export interface SeniorSocialEmotionalConcernCreationAttributes
-  extends Optional<SeniorSocialEmotionalConcernAttributes, never> {}
-
-class SeniorSocialEmotionalConcern
-  extends Model<SeniorSocialEmotionalConcernAttributes, SeniorSocialEmotionalConcernCreationAttributes>
-  implements SeniorSocialEmotionalConcernAttributes
-{
-  public seniorId!: number;
-  public socialEmotionalConcernId!: number;
+class SeniorSocialEmotionalConcern extends Model<InferAttributes<SeniorSocialEmotionalConcern>, InferCreationAttributes<SeniorSocialEmotionalConcern>> {
+  declare seniorId: number;
+  declare socialEmotionalConcernId: number;
 }
 
 SeniorSocialEmotionalConcern.init(

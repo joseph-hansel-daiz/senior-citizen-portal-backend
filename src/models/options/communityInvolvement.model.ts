@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface CommunityInvolvementAttributes {
-  id: number;
-  name: string;
-}
-
-export interface CommunityInvolvementCreationAttributes
-  extends Optional<CommunityInvolvementAttributes, "id"> {}
-
-class CommunityInvolvement
-  extends Model<CommunityInvolvementAttributes, CommunityInvolvementCreationAttributes>
-  implements CommunityInvolvementAttributes
-{
-  public id!: number;
-  public name!: string;
+class CommunityInvolvement extends Model<InferAttributes<CommunityInvolvement>, InferCreationAttributes<CommunityInvolvement>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 CommunityInvolvement.init(

@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface SeniorIncomeAssistanceSourceAttributes {
-  seniorId: number;
-  incomeAssistanceSourceId: number;
-}
-
-export interface SeniorIncomeAssistanceSourceCreationAttributes
-  extends Optional<SeniorIncomeAssistanceSourceAttributes, never> {}
-
-class SeniorIncomeAssistanceSource
-  extends Model<SeniorIncomeAssistanceSourceAttributes, SeniorIncomeAssistanceSourceCreationAttributes>
-  implements SeniorIncomeAssistanceSourceAttributes
-{
-  public seniorId!: number;
-  public incomeAssistanceSourceId!: number;
+class SeniorIncomeAssistanceSource extends Model<InferAttributes<SeniorIncomeAssistanceSource>, InferCreationAttributes<SeniorIncomeAssistanceSource>> {
+  declare seniorId: number;
+  declare incomeAssistanceSourceId: number;
 }
 
 SeniorIncomeAssistanceSource.init(

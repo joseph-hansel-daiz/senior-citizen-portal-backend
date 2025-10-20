@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface AuralConcernAttributes {
-  id: number;
-  name: string;
-}
-
-export interface AuralConcernCreationAttributes
-  extends Optional<AuralConcernAttributes, "id"> {}
-
-class AuralConcern
-  extends Model<AuralConcernAttributes, AuralConcernCreationAttributes>
-  implements AuralConcernAttributes
-{
-  public id!: number;
-  public name!: string;
+class AuralConcern extends Model<InferAttributes<AuralConcern>, InferCreationAttributes<AuralConcern>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 AuralConcern.init(

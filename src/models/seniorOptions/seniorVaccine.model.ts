@@ -1,37 +1,37 @@
 import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-class SeniorDentalConcern extends Model<InferAttributes<SeniorDentalConcern>, InferCreationAttributes<SeniorDentalConcern>> {
+class SeniorVaccine extends Model<InferAttributes<SeniorVaccine>, InferCreationAttributes<SeniorVaccine>> {
   declare seniorId: number;
-  declare dentalConcernId: number;
+  declare VaccineId: number;
 }
 
-SeniorDentalConcern.init(
+SeniorVaccine.init(
   {
     seniorId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "HealthProfile", key: "seniorId" },
+      references: { model: "Senior", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    dentalConcernId: {
+    VaccineId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      references: { model: "DentalConcern", key: "id" },
+      references: { model: "Vaccine", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
   },
   {
     sequelize,
-    modelName: "SeniorDentalConcern",
-    tableName: "SeniorDentalConcern",
+    modelName: "SeniorVaccine",
+    tableName: "SeniorVaccine",
     timestamps: false,
     underscored: false,
   }
 );
 
-export default SeniorDentalConcern;
+export default SeniorVaccine;

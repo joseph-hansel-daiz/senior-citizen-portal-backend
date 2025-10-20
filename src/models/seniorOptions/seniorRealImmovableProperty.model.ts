@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface SeniorRealImmovablePropertyAttributes {
-  seniorId: number;
-  realImmovablePropertyId: number;
-}
-
-export interface SeniorRealImmovablePropertyCreationAttributes
-  extends Optional<SeniorRealImmovablePropertyAttributes, never> {}
-
-class SeniorRealImmovableProperty
-  extends Model<SeniorRealImmovablePropertyAttributes, SeniorRealImmovablePropertyCreationAttributes>
-  implements SeniorRealImmovablePropertyAttributes
-{
-  public seniorId!: number;
-  public realImmovablePropertyId!: number;
+class SeniorRealImmovableProperty extends Model<InferAttributes<SeniorRealImmovableProperty>, InferCreationAttributes<SeniorRealImmovableProperty>> {
+  declare seniorId: number;
+  declare realImmovablePropertyId: number;
 }
 
 SeniorRealImmovableProperty.init(

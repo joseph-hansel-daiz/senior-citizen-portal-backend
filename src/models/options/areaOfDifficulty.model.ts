@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface AreaOfDifficultyAttributes {
-  id: number;
-  name: string;
-}
-
-export interface AreaOfDifficultyCreationAttributes
-  extends Optional<AreaOfDifficultyAttributes, "id"> {}
-
-class AreaOfDifficulty
-  extends Model<AreaOfDifficultyAttributes, AreaOfDifficultyCreationAttributes>
-  implements AreaOfDifficultyAttributes
-{
-  public id!: number;
-  public name!: string;
+class AreaOfDifficulty extends Model<InferAttributes<AreaOfDifficulty>, InferCreationAttributes<AreaOfDifficulty>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 AreaOfDifficulty.init(

@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface MonthlyIncomeAttributes {
-  id: number;
-  name: string;
-}
-
-export interface MonthlyIncomeCreationAttributes
-  extends Optional<MonthlyIncomeAttributes, "id"> {}
-
-class MonthlyIncome
-  extends Model<MonthlyIncomeAttributes, MonthlyIncomeCreationAttributes>
-  implements MonthlyIncomeAttributes
-{
-  public id!: number;
-  public name!: string;
+class MonthlyIncome extends Model<InferAttributes<MonthlyIncome>, InferCreationAttributes<MonthlyIncome>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 MonthlyIncome.init(

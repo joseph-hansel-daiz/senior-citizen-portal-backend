@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface HighestEducationalAttainmentAttributes {
-  id: number;
-  name: string;
-}
-
-export interface HighestEducationalAttainmentCreationAttributes
-  extends Optional<HighestEducationalAttainmentAttributes, "id"> {}
-
-class HighestEducationalAttainment
-  extends Model<HighestEducationalAttainmentAttributes, HighestEducationalAttainmentCreationAttributes>
-  implements HighestEducationalAttainmentAttributes
-{
-  public id!: number;
-  public name!: string;
+class HighestEducationalAttainment extends Model<InferAttributes<HighestEducationalAttainment>, InferCreationAttributes<HighestEducationalAttainment>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 HighestEducationalAttainment.init(

@@ -1,20 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../../config/db";
 
-export interface RealImmovablePropertyAttributes {
-  id: number;
-  name: string;
-}
-
-export interface RealImmovablePropertyCreationAttributes
-  extends Optional<RealImmovablePropertyAttributes, "id"> {}
-
-class RealImmovableProperty
-  extends Model<RealImmovablePropertyAttributes, RealImmovablePropertyCreationAttributes>
-  implements RealImmovablePropertyAttributes
-{
-  public id!: number;
-  public name!: string;
+class RealImmovableProperty extends Model<InferAttributes<RealImmovableProperty>, InferCreationAttributes<RealImmovableProperty>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
 }
 
 RealImmovableProperty.init(
