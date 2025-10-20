@@ -14,6 +14,61 @@ async function handleOptionRequest(
   }
 }
 
+export const createOption = async (req: Request, res: Response) => {
+  try {
+    const key = req.params.key;
+    const { name } = req.body || {};
+    if (!name || typeof name !== "string" || !name.trim()) {
+      return res.status(400).json({ error: "'name' is required" });
+    }
+    const created = await optionService.createOption(key, name.trim());
+    return res.status(201).json(created);
+  } catch (err: any) {
+    console.error("Error creating option:", err);
+    return res.status(500).json({ error: err.message || "Failed to create option" });
+  }
+};
+
+export const updateOption = async (req: Request, res: Response) => {
+  try {
+    const key = req.params.key;
+    const id = Number(req.params.id);
+    const { name } = req.body || {};
+    if (!Number.isFinite(id)) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+    if (!name || typeof name !== "string" || !name.trim()) {
+      return res.status(400).json({ error: "'name' is required" });
+    }
+    const updated = await optionService.updateOption(key, id, name.trim());
+    return res.json(updated);
+  } catch (err: any) {
+    if (String(err?.message || "").includes("Not found")) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    console.error("Error updating option:", err);
+    return res.status(500).json({ error: err.message || "Failed to update option" });
+  }
+};
+
+export const deleteOption = async (req: Request, res: Response) => {
+  try {
+    const key = req.params.key;
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+    const deleted = await optionService.deleteOption(key, id);
+    if (deleted === 0) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    return res.status(204).send();
+  } catch (err: any) {
+    console.error("Error deleting option:", err);
+    return res.status(500).json({ error: err.message || "Failed to delete option" });
+  }
+};
+
 export const listCohabitants = async (_req: Request, res: Response) =>
   handleOptionRequest(res, () => optionService.getCohabitants());
 
@@ -95,6 +150,9 @@ export const listHelpDeskRecordCategories = async (
 ) => handleOptionRequest(res, () => optionService.getHelpDeskRecordCategories());
 
 export default {
+  createOption,
+  updateOption,
+  deleteOption,
   listCohabitants,
   listLivingConditions,
   listHighestEducationalAttainments,

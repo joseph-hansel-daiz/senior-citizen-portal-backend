@@ -20,6 +20,34 @@ import {
 } from "@/models";
 
 export class OptionService {
+  private readonly keyToModel: Record<string, any> = {
+    "cohabitants": Cohabitant,
+    "living-conditions": LivingCondition,
+    "educational-attainments": HighestEducationalAttainment,
+    "technical-skills": SpecializationTechnicalSkill,
+    "community-involvements": CommunityInvolvement,
+    "income-sources": IncomeAssistanceSource,
+    "monthly-incomes": MonthlyIncome,
+    "real-properties": RealImmovableProperty,
+    "personal-properties": PersonalMovableProperty,
+    "problems-needs": ProblemsNeedsCommonlyEncountered,
+    "health-problems": HealthProblemAilment,
+    "dental-concerns": DentalConcern,
+    "visual-concerns": VisualConcern,
+    "aural-concerns": AuralConcern,
+    "social-emotional-concerns": SocialEmotionalConcern,
+    "area-of-difficulties": AreaOfDifficulty,
+    "barangays": Barangay,
+    "help-desk-record-categories": HelpDeskRecordCategory,
+  };
+
+  private getModelByKey(key: string) {
+    const model = this.keyToModel[key];
+    if (!model) {
+      throw new Error(`Unknown option type: ${key}`);
+    }
+    return model;
+  }
   private async getList(model: any) {
     try {
       return await model.findAll();
@@ -98,6 +126,41 @@ export class OptionService {
 
   async getHelpDeskRecordCategories() {
     return this.getList(HelpDeskRecordCategory);
+  }
+
+  async createOption(key: string, name: string) {
+    const Model = this.getModelByKey(key);
+    try {
+      const created = await Model.create({ name });
+      return created;
+    } catch (err) {
+      throw new Error(`Failed to create option: ${err}`);
+    }
+  }
+
+  async updateOption(key: string, id: number, name: string) {
+    const Model = this.getModelByKey(key);
+    try {
+      const record = await Model.findByPk(id);
+      if (!record) {
+        throw new Error("Not found");
+      }
+      record.name = name;
+      await record.save();
+      return record;
+    } catch (err) {
+      throw new Error(`Failed to update option: ${err}`);
+    }
+  }
+
+  async deleteOption(key: string, id: number) {
+    const Model = this.getModelByKey(key);
+    try {
+      const deleted = await Model.destroy({ where: { id } });
+      return deleted; // number of rows deleted
+    } catch (err) {
+      throw new Error(`Failed to delete option: ${err}`);
+    }
   }
 }
 

@@ -4,6 +4,11 @@ import { optionController } from "@/controllers";
 
 const router = Router();
 
+// generic CRUD endpoints for options collections by key
+router.post("/:key", optionController.createOption);
+router.put("/:key/:id", optionController.updateOption);
+router.delete("/:key/:id", optionController.deleteOption);
+
 router.get("/area-of-difficulties", optionController.listAreaOfDifficulties);
 router.get("/aural-concerns", optionController.listAuralConcerns);
 router.get("/cohabitants", optionController.listCohabitants);
