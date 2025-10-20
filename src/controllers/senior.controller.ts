@@ -9,6 +9,7 @@ import {
   healthProfileService,
 } from "@/services";
 import { TransactionHelper } from "@/utils/transaction";
+import { Children, Dependent } from "@/models";
 
 export const list = async (_req: Request, res: Response) => {
   try {
@@ -43,6 +44,8 @@ export const create = async (req: any, res: Response) => {
       educationProfile,
       economicProfile,
       healthProfile,
+      children,
+      dependents,
     } = req.body;
     const createdBy = req.user?.id;
 
@@ -136,6 +139,35 @@ export const create = async (req: any, res: Response) => {
       // Wait for all profile creations to complete
       await Promise.all(profilePromises);
 
+      // Persist children and dependents if provided
+      if (Array.isArray(children) && children.length > 0) {
+        await Children.bulkCreate(
+          children.map((c: any) => ({
+            seniorId,
+            name: c.name,
+            occupation: c.occupation ?? null,
+            income: c.income ?? null,
+            age: c.age,
+            isWorking: c.isWorking,
+          })),
+          { transaction }
+        );
+      }
+
+      if (Array.isArray(dependents) && dependents.length > 0) {
+        await Dependent.bulkCreate(
+          dependents.map((d: any) => ({
+            seniorId,
+            name: d.name,
+            occupation: d.occupation ?? null,
+            income: d.income ?? null,
+            age: d.age,
+            isWorking: !!d.isWorking,
+          })),
+          { transaction }
+        );
+      }
+
       // Return the complete senior with all associations
       return await seniorService.getSeniorById(seniorId.toString(), transaction);
     });
@@ -162,6 +194,8 @@ export const update = async (req: any, res: Response) => {
       educationProfile,
       economicProfile,
       healthProfile,
+      children,
+      dependents,
     } = req.body;
     const updatedBy = req.user?.id;
 
@@ -198,6 +232,7 @@ export const update = async (req: any, res: Response) => {
       // Update all profile associations
       const profilePromises = [];
 
+      // Always accept the same shapes as in create; only update when provided
       if (identifyingInformation) {
         profilePromises.push(
           identifyingInformationService.update(seniorId, {
@@ -254,6 +289,46 @@ export const update = async (req: any, res: Response) => {
 
       // Wait for all profile updates to complete
       await Promise.all(profilePromises);
+
+      // Update children: replace strategy to mirror create shape exactly
+      if (children) {
+        await Children.destroy({ where: { seniorId }, transaction });
+        if (Array.isArray(children) && children.length > 0) {
+          await Children.bulkCreate(
+            children.map((c: any) => ({
+              seniorId,
+              name: c.name,
+              occupation: c.occupation ?? null,
+              income: c.income ?? null,
+              age: c.age,
+              // Normalize to expected DB format ('Yes' | 'No') to accept same shape as create
+              isWorking:
+                c.isWorking === true || c.isWorking === "Yes"
+                  ? "Yes"
+                  : "No",
+            })),
+            { transaction }
+          );
+        }
+      }
+
+      if (dependents) {
+        await Dependent.destroy({ where: { seniorId }, transaction });
+        if (Array.isArray(dependents) && dependents.length > 0) {
+          await Dependent.bulkCreate(
+            dependents.map((d: any) => ({
+              seniorId,
+              name: d.name,
+              occupation: d.occupation ?? null,
+              income: d.income ?? null,
+              age: d.age,
+              // Dependents expect boolean
+              isWorking: !!(d.isWorking === true || d.isWorking === "Yes"),
+            })),
+            { transaction }
+          );
+        }
+      }
 
       // Return the complete senior with all associations
       return await seniorService.getSeniorById(id, transaction);
