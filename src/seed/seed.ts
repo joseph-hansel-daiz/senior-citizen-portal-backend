@@ -15,6 +15,7 @@ import {
   HelpDeskRecord,
   HelpDeskRecordCategory,
   SeniorStatusHistory,
+  DeathInfo,
   AreaOfDifficulty,
   AuralConcern,
   Cohabitant,
@@ -646,7 +647,7 @@ async function seed() {
     // Senior Status History
     await SeniorStatusHistory.create({
       seniorId: senior.id,
-      status: "Active",
+      status: "Pending",
       note: "Initial registration",
       createdBy: 1,
     });
@@ -655,6 +656,180 @@ async function seed() {
       seniorId: senior.id,
       status: "Active",
       note: "Documents verified and approved",
+      createdBy: 1,
+    });
+
+    // Create a Pending senior
+    console.log("Seeding pending senior...");
+    const pendingSenior = await Senior.create({
+      barangayId: 2, // Balire
+      createdBy: 1,
+    });
+
+    await IdentifyingInformation.create({
+      seniorId: pendingSenior.id,
+      lastname: "Reyes",
+      firstname: "Juan",
+      middlename: "Garcia",
+      region: "Region IV-A (CALABARZON)",
+      province: "Laguna",
+      city: "San Pedro",
+      barangay: "Balire",
+      residence: "456 Side Street",
+      street: "Purok 2",
+      birthDate: new Date("1955-07-20"),
+      birthPlace: "Balire, San Pedro, Laguna",
+      maritalStatus: "Married",
+      religion: "Roman Catholic",
+      sexAtBirth: "Male",
+      contactNumber: "09187654321",
+      oscaIdNo: "OSCA-2024-002",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: pendingSenior.id,
+      status: "Pending",
+      note: "Awaiting document verification",
+      createdBy: 1,
+    });
+
+    // Create a Declined senior
+    console.log("Seeding declined senior...");
+    const declinedSenior = await Senior.create({
+      barangayId: 3, // Banawang
+      createdBy: 1,
+    });
+
+    await IdentifyingInformation.create({
+      seniorId: declinedSenior.id,
+      lastname: "Dela Cruz",
+      firstname: "Pedro",
+      middlename: "Mendoza",
+      region: "Region IV-A (CALABARZON)",
+      province: "Laguna",
+      city: "San Pedro",
+      barangay: "Banawang",
+      residence: "789 Back Road",
+      street: "Purok 3",
+      birthDate: new Date("1960-12-10"),
+      birthPlace: "Banawang, San Pedro, Laguna",
+      maritalStatus: "Single",
+      religion: "Roman Catholic",
+      sexAtBirth: "Male",
+      contactNumber: "09191234567",
+      oscaIdNo: "OSCA-2024-003",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: declinedSenior.id,
+      status: "Pending",
+      note: "Initial application submitted",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: declinedSenior.id,
+      status: "Declined",
+      note: "Incomplete documentation - missing valid ID",
+      createdBy: 1,
+    });
+
+    // Create another Active senior
+    console.log("Seeding another active senior...");
+    const activeSenior = await Senior.create({
+      barangayId: 4, // San Antonio
+      createdBy: 1,
+    });
+
+    await IdentifyingInformation.create({
+      seniorId: activeSenior.id,
+      lastname: "Lopez",
+      firstname: "Rosa",
+      middlename: "Santos",
+      region: "Region IV-A (CALABARZON)",
+      province: "Laguna",
+      city: "San Pedro",
+      barangay: "San Antonio",
+      residence: "321 Front Avenue",
+      street: "Purok 4",
+      birthDate: new Date("1952-05-25"),
+      birthPlace: "San Antonio, San Pedro, Laguna",
+      maritalStatus: "Widowed",
+      religion: "Iglesia ni Cristo",
+      sexAtBirth: "Female",
+      contactNumber: "09201234567",
+      oscaIdNo: "OSCA-2024-004",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: activeSenior.id,
+      status: "Pending",
+      note: "Application received",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: activeSenior.id,
+      status: "Active",
+      note: "All requirements met and verified",
+      createdBy: 1,
+    });
+
+    // Create a Deceased senior
+    console.log("Seeding deceased senior...");
+    const deceasedSenior = await Senior.create({
+      barangayId: 5, // San Pedro
+      createdBy: 1,
+    });
+
+    await IdentifyingInformation.create({
+      seniorId: deceasedSenior.id,
+      lastname: "Aquino",
+      firstname: "Carlos",
+      middlename: "Villanueva",
+      region: "Region IV-A (CALABARZON)",
+      province: "Laguna",
+      city: "San Pedro",
+      barangay: "San Pedro",
+      residence: "555 Memorial Drive",
+      street: "Purok 5",
+      birthDate: new Date("1948-11-30"),
+      birthPlace: "San Pedro, Laguna",
+      maritalStatus: "Married",
+      religion: "Roman Catholic",
+      sexAtBirth: "Male",
+      contactNumber: "09171234567",
+      oscaIdNo: "OSCA-2024-005",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: deceasedSenior.id,
+      status: "Pending",
+      note: "Application submitted",
+      createdBy: 1,
+    });
+
+    await SeniorStatusHistory.create({
+      seniorId: deceasedSenior.id,
+      status: "Active",
+      note: "Approved and registered",
+      createdBy: 1,
+    });
+
+    // Create death information
+    const deathCertificateBuffer = Buffer.from(
+      "DEATH CERTIFICATE - Carlos V. Aquino - Date of Death: 2025-09-15 - This is a placeholder for the actual death certificate document.",
+      "utf-8"
+    );
+
+    await DeathInfo.create({
+      seniorId: deceasedSenior.id,
+      dateOfDeath: new Date("2025-09-15"),
+      deathCertificate: deathCertificateBuffer,
       createdBy: 1,
     });
 

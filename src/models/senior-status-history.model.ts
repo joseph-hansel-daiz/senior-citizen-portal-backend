@@ -4,7 +4,7 @@ import sequelize from "../config/db";
 class SeniorStatusHistory extends Model<InferAttributes<SeniorStatusHistory>, InferCreationAttributes<SeniorStatusHistory>> {
   declare id: CreationOptional<number>;
   declare seniorId: number;
-  declare status: 'Active' | 'Deceased' | 'Declined';
+  declare status: 'Pending' | 'Active' | 'Declined';
   declare note: CreationOptional<string>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -27,7 +27,7 @@ SeniorStatusHistory.init(
       onDelete: "CASCADE",
     },
     status: {
-      type: DataTypes.ENUM('Active', 'Deceased', 'Declined'),
+      type: DataTypes.ENUM('Pending', 'Active', 'Declined'),
       allowNull: false,
     },
     note: {

@@ -228,6 +228,14 @@ export class SeniorService {
               attributes: ["id", "name"]
             }
           ]
+        },
+        {
+          model: DeathInfo,
+          attributes: { exclude: ["createdAt", "updatedAt"] }
+        },
+        {
+          model: SeniorStatusHistory,
+          attributes: { exclude: ["createdAt", "updatedAt"] }
         }
       ]
     });
