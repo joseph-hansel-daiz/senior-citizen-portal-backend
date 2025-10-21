@@ -40,6 +40,7 @@ export class OptionService {
     "area-of-difficulties": AreaOfDifficulty,
     "barangays": Barangay,
     "help-desk-record-categories": HelpDeskRecordCategory,
+    "vaccines": Vaccine,
   };
 
   private getModelByKey(key: string) {

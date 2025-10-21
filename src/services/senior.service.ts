@@ -201,9 +201,35 @@ export class SeniorService {
   }
 
   async listSeniors() {
+    // Lightweight list without all profile relationships for better performance
     return Senior.findAll({
       where: { isDeleted: false },
-      include: this.getIncludeOptions()
+      include: [
+        {
+          model: Barangay,
+          attributes: ["id", "name"]
+        },
+        {
+          model: User,
+          as: "creator",
+          attributes: ["id", "name", "username", "role"]
+        },
+        {
+          model: IdentifyingInformation,
+          attributes: { exclude: ["createdAt", "updatedAt"] }
+        },
+        {
+          model: DependencyProfile,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+          include: [
+            {
+              model: LivingCondition,
+              through: { attributes: [] },
+              attributes: ["id", "name"]
+            }
+          ]
+        }
+      ]
     });
   }
 
