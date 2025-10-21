@@ -268,6 +268,12 @@ export class SeniorService {
       createdBy: createdBy || null,
     }, { transaction });
 
+    // Auto-create status history with pending status
+    await SeniorStatusHistory.create({
+      seniorId: senior.id,
+      status: "Pending",
+    }, { transaction });
+
     return this.getSeniorById(senior.id.toString(), transaction);
   }
 
@@ -320,6 +326,89 @@ export class SeniorService {
 
     await senior.save();
     return { message: "Senior deleted successfully" };
+  }
+
+  async approveSenior(id: string, oscaId: string, note?: string, approvedBy?: number, transaction?: Transaction) {
+    const senior = await Senior.findOne({
+      where: { id, isDeleted: false },
+      include: [
+        {
+          model: SeniorStatusHistory,
+          attributes: ["id", "status"]
+        },
+        {
+          model: IdentifyingInformation,
+          attributes: ["seniorId", "oscaIdNo"]
+        }
+      ],
+      transaction
+    });
+    
+    if (!senior) {
+      throw new Error("Senior not found");
+    }
+
+    // Check if senior is in pending status
+    const statusHistory = senior.statusHistory || [];
+    if (statusHistory.length !== 1 || statusHistory[0].status !== "Pending") {
+      throw new Error("Senior is not in pending status");
+    }
+
+    // Update OSCA ID in IdentifyingInformation
+    if (senior.identifyingInformation) {
+      await senior.identifyingInformation.update(
+        { oscaIdNo: oscaId, updatedBy: approvedBy },
+        { transaction }
+      );
+    } else {
+      throw new Error("Identifying information not found");
+    }
+
+    // Create new status history entry with "Active" status
+    await SeniorStatusHistory.create({
+      seniorId: Number(id),
+      status: "Active",
+      note: note || undefined,
+      createdBy: approvedBy,
+      updatedBy: approvedBy
+    }, { transaction });
+
+    return this.getSeniorById(id, transaction);
+  }
+
+  async declineSenior(id: string, note?: string, declinedBy?: number, transaction?: Transaction) {
+    const senior = await Senior.findOne({
+      where: { id, isDeleted: false },
+      include: [
+        {
+          model: SeniorStatusHistory,
+          attributes: ["id", "status"]
+        }
+      ],
+      transaction
+    });
+    
+    if (!senior) {
+      throw new Error("Senior not found");
+    }
+
+    // Check if senior is in pending status
+    const statusHistory = senior.statusHistory || [];
+    console.log(statusHistory);
+    if (statusHistory.length !== 1 || statusHistory[0].status !== "Pending") {
+      throw new Error("Senior is not in pending status");
+    }
+
+    // Create new status history entry with "Declined" status
+    await SeniorStatusHistory.create({
+      seniorId: Number(id),
+      status: "Declined",
+      note: note || undefined,
+      createdBy: declinedBy,
+      updatedBy: declinedBy
+    }, { transaction });
+
+    return this.getSeniorById(id, transaction);
   }
 }
 

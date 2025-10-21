@@ -27,4 +27,10 @@ router.post("/:id/mark-deceased", upload.single("deathCertificate"), seniorContr
 // DELETE /seniors/:id/unmark-deceased - Unmark senior as deceased
 router.delete("/:id/unmark-deceased", seniorController.unmarkDeceased);
 
+// POST /seniors/:id/approve - Approve senior
+router.post("/:id/approve", seniorController.approve);
+
+// POST /seniors/:id/decline - Decline senior
+router.post("/:id/decline", seniorController.decline);
+
 export default router;

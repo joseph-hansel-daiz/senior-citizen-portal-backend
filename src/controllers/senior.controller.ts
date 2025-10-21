@@ -502,3 +502,64 @@ export const unmarkDeceased = async (req: any, res: Response) => {
     }
   }
 };
+
+export const approve = async (req: any, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { oscaId, note } = req.body;
+    const approvedBy = req.user?.id;
+
+    // Validate required fields
+    if (!oscaId) {
+      return res.status(400).json({ message: "OSCA ID is required" });
+    }
+
+    // Execute approve operation within a transaction
+    const completeSenior = await TransactionHelper.executeInTransaction(
+      async (transaction) => {
+        return await seniorService.approveSenior(id, oscaId, note, approvedBy, transaction);
+      }
+    );
+
+    res.json({
+      message: "Senior approved successfully",
+      senior: completeSenior
+    });
+  } catch (err: any) {
+    if (err.message === "Senior not found") {
+      res.status(404).json({ message: err.message });
+    } else if (err.message === "Senior is not in pending status" || err.message === "Identifying information not found") {
+      res.status(400).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  }
+};
+
+export const decline = async (req: any, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { note } = req.body;
+    const declinedBy = req.user?.id;
+
+    // Execute decline operation within a transaction
+    const completeSenior = await TransactionHelper.executeInTransaction(
+      async (transaction) => {
+        return await seniorService.declineSenior(id, note, declinedBy, transaction);
+      }
+    );
+
+    res.json({
+      message: "Senior declined successfully",
+      senior: completeSenior
+    });
+  } catch (err: any) {
+    if (err.message === "Senior not found") {
+      res.status(404).json({ message: err.message });
+    } else if (err.message === "Senior is not in pending status") {
+      res.status(400).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  }
+};
