@@ -10,6 +10,7 @@ import userRoutes from "@/routes/users.routes";
 import optionsRoutes from "@/routes/options.routes";
 import seniorRoutes from "@/routes/seniors.routes";
 import helpdeskRoutes from "@/routes/helpdesk.routes";
+import seniorVaccineRoutes from "@/routes/senior-vaccines.routes";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/users", userRoutes);
 app.use("/options", optionsRoutes);
 app.use("/seniors", seniorRoutes);
 app.use("/helpdesk", helpdeskRoutes);
+app.use("/senior-vaccines", seniorVaccineRoutes);
 
 const PORT = process.env.PORT || 8000;
 

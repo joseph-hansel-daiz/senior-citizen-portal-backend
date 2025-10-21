@@ -149,6 +149,9 @@ export const listHelpDeskRecordCategories = async (
   res: Response
 ) => handleOptionRequest(res, () => optionService.getHelpDeskRecordCategories());
 
+export const listVaccines = async (_req: Request, res: Response) =>
+  handleOptionRequest(res, () => optionService.getVaccines());
+
 export default {
   createOption,
   updateOption,
@@ -171,4 +174,5 @@ export default {
   listAreaOfDifficulties,
   listBarangays,
   listHelpDeskRecordCategories,
+  listVaccines,
 };

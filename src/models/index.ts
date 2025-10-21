@@ -52,6 +52,8 @@ import SeniorSpecializationTechnicalSkill from "./seniorOptions/seniorSpecializa
 import SeniorVisualConcern from "./seniorOptions/seniorVisualConcern.model";
 
 import User from "./user.model";
+import Vaccine from "./options/vaccine.model";
+import SeniorVaccine from "./seniorOptions/seniorVaccine.model";
 
 // Basic Associations
 Barangay.hasMany(User, { foreignKey: "barangayId" });
@@ -84,6 +86,22 @@ HelpDeskRecord.belongsTo(HelpDeskRecordCategory, {
 HelpDeskRecordCategory.hasMany(HelpDeskRecord, {
   foreignKey: "helpDeskRecordCategory",
 });
+
+// Senior Vaccines Associations
+Senior.belongsToMany(Vaccine, {
+  through: SeniorVaccine,
+  foreignKey: "seniorId",
+  otherKey: "VaccineId",
+});
+Vaccine.belongsToMany(Senior, {
+  through: SeniorVaccine,
+  foreignKey: "VaccineId",
+  otherKey: "seniorId",
+});
+
+// Through model direct associations for includes
+SeniorVaccine.belongsTo(Vaccine, { foreignKey: "VaccineId" });
+SeniorVaccine.belongsTo(Senior, { foreignKey: "seniorId" });
 
 // Dependency Profile Associations
 DependencyProfile.belongsToMany(Cohabitant, {
@@ -314,4 +332,6 @@ export {
   SpecializationTechnicalSkill,
   User,
   VisualConcern,
+  Vaccine,
+  SeniorVaccine,
 };

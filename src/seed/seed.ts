@@ -47,6 +47,8 @@ import {
   SeniorSocialEmotionalConcern,
   SeniorSpecializationTechnicalSkill,
   SeniorVisualConcern,
+  Vaccine,
+  SeniorVaccine,
 } from "@/models";
 
 async function seed() {
@@ -302,6 +304,13 @@ async function seed() {
     await SocialEmotionalConcern.create({
       name: "Lack SC friendly environment",
     });
+
+    // Vaccines
+    console.log("Seeding vaccines...");
+    const flu = await Vaccine.create({ name: "Influenza (Flu)" });
+    const pneumo = await Vaccine.create({ name: "Pneumococcal" });
+    const covid = await Vaccine.create({ name: "COVID-19" });
+    const shingles = await Vaccine.create({ name: "Shingles" });
 
     // Area of Difficulty
     await AreaOfDifficulty.create({ name: "High Cost of medicine" });
@@ -605,6 +614,12 @@ async function seed() {
       seniorId: senior.id,
       areaOfDifficultyId: 2, // Lack of medicines
     });
+
+    // Senior Vaccines
+    console.log("Seeding senior vaccines...");
+    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: flu.id, lastVaccineDate: new Date("2024-10-01") as any });
+    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: pneumo.id, lastVaccineDate: new Date("2023-06-15") as any });
+    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: covid.id, lastVaccineDate: new Date("2025-01-20") as any });
 
     // Help Desk Records
     await HelpDeskRecord.create({

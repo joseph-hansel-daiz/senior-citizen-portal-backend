@@ -25,10 +25,6 @@ router.get("/real-properties", optionController.listRealImmovableProperties);
 router.get("/social-emotional-concerns", optionController.listSocialEmotionalConcerns);
 router.get("/technical-skills", optionController.listSpecializationTechnicalSkills);
 router.get("/visual-concerns", optionController.listVisualConcerns);
-
-router.get(
-  "/help-desk-record-categories",
-  optionController.listHelpDeskRecordCategories
-);
-
+router.get("/help-desk-record-categories",optionController.listHelpDeskRecordCategories);
+router.get("/vaccines", optionController.listVaccines);
 export default router;

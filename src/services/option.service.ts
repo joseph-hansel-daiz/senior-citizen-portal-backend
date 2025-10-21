@@ -18,6 +18,7 @@ import {
   Barangay,
   HelpDeskRecordCategory,
 } from "@/models";
+import Vaccine from "@/models/options/vaccine.model";
 
 export class OptionService {
   private readonly keyToModel: Record<string, any> = {
@@ -126,6 +127,10 @@ export class OptionService {
 
   async getHelpDeskRecordCategories() {
     return this.getList(HelpDeskRecordCategory);
+  }
+
+  async getVaccines() {
+    return this.getList(Vaccine);
   }
 
   async createOption(key: string, name: string) {
