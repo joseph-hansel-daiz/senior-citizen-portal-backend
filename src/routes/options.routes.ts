@@ -11,6 +11,7 @@ router.delete("/:key/:id", optionController.deleteOption);
 
 router.get("/area-of-difficulties", optionController.listAreaOfDifficulties);
 router.get("/aural-concerns", optionController.listAuralConcerns);
+router.get("/barangays", optionController.listBarangays);
 router.get("/cohabitants", optionController.listCohabitants);
 router.get("/community-involvements", optionController.listCommunityInvolvements);
 router.get("/dental-concerns", optionController.listDentalConcerns);
