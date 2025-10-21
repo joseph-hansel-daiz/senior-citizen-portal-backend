@@ -4,7 +4,7 @@ import sequelize from "../config/db";
 class DeathInfo extends Model<InferAttributes<DeathInfo>, InferCreationAttributes<DeathInfo>> {
   declare seniorId: number;
   declare dateOfDeath: Date;
-  declare deathCertificate: Buffer;
+  declare deathCertificate: CreationOptional<Buffer>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare createdBy: CreationOptional<number | null>;
@@ -26,7 +26,7 @@ DeathInfo.init(
     },
     deathCertificate: {
       type: DataTypes.BLOB,
-      allowNull: false,
+      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,

@@ -21,4 +21,10 @@ router.put("/:id", upload.single("photo"), seniorController.update);
 // DELETE /seniors/:id - Delete senior (soft delete)
 router.delete("/:id", seniorController.remove);
 
+// POST /seniors/:id/mark-deceased - Mark senior as deceased
+router.post("/:id/mark-deceased", upload.single("deathCertificate"), seniorController.markDeceased);
+
+// DELETE /seniors/:id/unmark-deceased - Unmark senior as deceased
+router.delete("/:id/unmark-deceased", seniorController.unmarkDeceased);
+
 export default router;

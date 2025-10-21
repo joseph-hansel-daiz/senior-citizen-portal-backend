@@ -7,8 +7,8 @@ export class DeathInfoService {
   }
 
   async create(data: InferCreationAttributes<DeathInfo>) {
-    if (!data.dateOfDeath || !data.deathCertificate) {
-      throw new Error("Required fields: dateOfDeath, deathCertificate");
+    if (!data.dateOfDeath) {
+      throw new Error("Required field: dateOfDeath");
     }
 
     return DeathInfo.create(data);
