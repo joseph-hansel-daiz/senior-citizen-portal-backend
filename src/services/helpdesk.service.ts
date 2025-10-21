@@ -1,16 +1,40 @@
-import { HelpDeskRecord, HelpDeskRecordCategory } from "@/models";
+import { HelpDeskRecord, HelpDeskRecordCategory, Senior, IdentifyingInformation } from "@/models";
 
 export class HelpdeskService {
   async list() {
     return HelpDeskRecord.findAll({
-      include: [{ model: HelpDeskRecordCategory, attributes: ["id", "name"] }],
+      include: [
+        { model: HelpDeskRecordCategory, attributes: ["id", "name"] },
+        {
+          model: Senior,
+          attributes: ["id"],
+          include: [
+            {
+              model: IdentifyingInformation,
+              attributes: ["firstname", "lastname", "middlename"],
+            },
+          ],
+        },
+      ],
       order: [["createdAt", "DESC"]],
     });
   }
 
   async detail(id: string | number) {
     const record = await HelpDeskRecord.findByPk(id, {
-      include: [{ model: HelpDeskRecordCategory, attributes: ["id", "name"] }],
+      include: [
+        { model: HelpDeskRecordCategory, attributes: ["id", "name"] },
+        {
+          model: Senior,
+          attributes: ["id"],
+          include: [
+            {
+              model: IdentifyingInformation,
+              attributes: ["firstname", "lastname", "middlename"],
+            },
+          ],
+        },
+      ],
     });
     return record;
   }

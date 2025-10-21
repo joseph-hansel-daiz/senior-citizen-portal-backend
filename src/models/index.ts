@@ -80,6 +80,7 @@ Senior.hasMany(Children, { foreignKey: "seniorId" });
 Senior.hasMany(Dependent, { foreignKey: "seniorId" });
 
 // Help Desk Associations
+HelpDeskRecord.belongsTo(Senior, { foreignKey: "seniorId" });
 HelpDeskRecord.belongsTo(HelpDeskRecordCategory, {
   foreignKey: "helpDeskRecordCategory",
 });
