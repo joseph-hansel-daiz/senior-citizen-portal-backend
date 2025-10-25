@@ -33,15 +33,15 @@ class Senior extends Model<InferAttributes<Senior>, InferCreationAttributes<Seni
   declare deleter?: NonAttribute<User>;
 
   // Profile Associations
-  declare identifyingInformation?: NonAttribute<IdentifyingInformation>;
-  declare familyComposition?: NonAttribute<FamilyComposition>;
-  declare dependencyProfile?: NonAttribute<DependencyProfile>;
-  declare educationProfile?: NonAttribute<EducationProfile>;
-  declare economicProfile?: NonAttribute<EconomicProfile>;
-  declare healthProfile?: NonAttribute<HealthProfile>;
-  declare deathInfo?: NonAttribute<DeathInfo>;
-  declare statusHistory?: NonAttribute<SeniorStatusHistory[]>;
-  declare helpDeskRecords?: NonAttribute<HelpDeskRecord[]>;
+  declare IdentifyingInformation?: NonAttribute<IdentifyingInformation>;
+  declare FamilyComposition?: NonAttribute<FamilyComposition>;
+  declare DependencyProfile?: NonAttribute<DependencyProfile>;
+  declare EducationProfile?: NonAttribute<EducationProfile>;
+  declare EconomicProfile?: NonAttribute<EconomicProfile>;
+  declare HealthProfile?: NonAttribute<HealthProfile>;
+  declare DeathInfo?: NonAttribute<DeathInfo>;
+  declare SeniorStatusHistories?: NonAttribute<SeniorStatusHistory[]>;
+  declare HelpDeskRecords?: NonAttribute<HelpDeskRecord[]>;
 }
 
 Senior.init(

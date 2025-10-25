@@ -334,7 +334,7 @@ export class SeniorService {
       include: [
         {
           model: SeniorStatusHistory,
-          attributes: ["id", "status"]
+          attributes: { exclude: ["createdAt", "updatedAt"] }
         },
         {
           model: IdentifyingInformation,
@@ -349,14 +349,15 @@ export class SeniorService {
     }
 
     // Check if senior is in pending status
-    const statusHistory = senior.statusHistory || [];
+    const statusHistory = senior.SeniorStatusHistories || [];
+    console.log(senior);
     if (statusHistory.length !== 1 || statusHistory[0].status !== "Pending") {
       throw new Error("Senior is not in pending status");
     }
 
     // Update OSCA ID in IdentifyingInformation
-    if (senior.identifyingInformation) {
-      await senior.identifyingInformation.update(
+    if (senior.IdentifyingInformation) {
+      await senior.IdentifyingInformation.update(
         { oscaIdNo: oscaId, updatedBy: approvedBy },
         { transaction }
       );
@@ -382,8 +383,8 @@ export class SeniorService {
       include: [
         {
           model: SeniorStatusHistory,
-          attributes: ["id", "status"]
-        }
+          attributes: { exclude: ["createdAt", "updatedAt"] }
+        },
       ],
       transaction
     });
@@ -393,7 +394,7 @@ export class SeniorService {
     }
 
     // Check if senior is in pending status
-    const statusHistory = senior.statusHistory || [];
+    const statusHistory = senior.SeniorStatusHistories || [];
     console.log(statusHistory);
     if (statusHistory.length !== 1 || statusHistory[0].status !== "Pending") {
       throw new Error("Senior is not in pending status");
