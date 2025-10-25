@@ -11,6 +11,7 @@ import optionsRoutes from "@/routes/options.routes";
 import seniorRoutes from "@/routes/seniors.routes";
 import helpdeskRoutes from "@/routes/helpdesk.routes";
 import seniorVaccineRoutes from "@/routes/senior-vaccines.routes";
+import { requireAuthentication } from "./middleware";
 
 dotenv.config();
 
@@ -29,11 +30,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mount routes
 app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
-app.use("/options", optionsRoutes);
-app.use("/seniors", seniorRoutes);
-app.use("/helpdesk", helpdeskRoutes);
-app.use("/senior-vaccines", seniorVaccineRoutes);
+app.use("/users", requireAuthentication,userRoutes);
+app.use("/options", requireAuthentication,optionsRoutes);
+app.use("/seniors", requireAuthentication,seniorRoutes);
+app.use("/helpdesk", requireAuthentication,helpdeskRoutes);
+app.use("/senior-vaccines", requireAuthentication,seniorVaccineRoutes);
 
 const PORT = process.env.PORT || 8000;
 
