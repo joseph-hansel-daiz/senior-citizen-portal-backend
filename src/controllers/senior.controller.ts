@@ -36,9 +36,41 @@ export const detail = async (req: Request, res: Response) => {
 
 export const create = async (req: any, res: Response) => {
   try {
+    let requestData;
+    let photoBuffer: Buffer | undefined;
+
+    // Check if request is multipart/form-data (has file upload)
+    if (req.file?.buffer) {
+      // Handle multipart/form-data with file upload
+      const { data, photo } = req.body;
+      
+      // Parse the JSON data field
+      requestData = JSON.parse(data);
+      
+      // Get photo from uploaded file
+      photoBuffer = req.file.buffer as Buffer;
+    } else {
+      // Handle regular JSON request
+      requestData = req.body;
+      
+      // Handle photo from JSON (base64 or other format)
+      const { photo } = requestData;
+      if (photo) {
+        if (typeof photo === "string" && photo.startsWith("data:")) {
+          // Base64 data URL
+          photoBuffer = Buffer.from(
+            photo.replace(/^data:[\w/]+;base64,/, ""),
+            "base64"
+          );
+        } else if (photo instanceof Buffer) {
+          // Already a Buffer
+          photoBuffer = photo;
+        }
+      }
+    }
+
     const {
       barangayId,
-      photo,
       identifyingInformation,
       familyComposition,
       dependencyProfile,
@@ -47,27 +79,8 @@ export const create = async (req: any, res: Response) => {
       healthProfile,
       children,
       dependents,
-    } = req.body;
+    } = requestData;
     const createdBy = req.user?.id;
-
-    // Handle photo upload - convert File to Buffer if needed
-    let photoBuffer: Buffer | undefined;
-    if ((req as any).file?.buffer) {
-      // Photo uploaded via multipart/form-data
-      photoBuffer = (req as any).file.buffer as Buffer;
-    } else if (photo) {
-      // Photo sent as base64 or other format
-      if (typeof photo === "string" && photo.startsWith("data:")) {
-        // Base64 data URL
-        photoBuffer = Buffer.from(
-          photo.replace(/^data:[\w/]+;base64,/, ""),
-          "base64"
-        );
-      } else if (photo instanceof Buffer) {
-        // Already a Buffer
-        photoBuffer = photo;
-      }
-    }
 
     // Execute all operations within a single transaction
     const completeSenior = await TransactionHelper.executeInTransaction(
@@ -212,9 +225,41 @@ export const create = async (req: any, res: Response) => {
 export const update = async (req: any, res: Response) => {
   try {
     const { id } = req.params;
+    let requestData;
+    let photoBuffer: Buffer | undefined;
+
+    // Check if request is multipart/form-data (has file upload)
+    if (req.file?.buffer) {
+      // Handle multipart/form-data with file upload
+      const { data, photo } = req.body;
+      
+      // Parse the JSON data field
+      requestData = JSON.parse(data);
+      
+      // Get photo from uploaded file
+      photoBuffer = req.file.buffer as Buffer;
+    } else {
+      // Handle regular JSON request
+      requestData = req.body;
+      
+      // Handle photo from JSON (base64 or other format)
+      const { photo } = requestData;
+      if (photo) {
+        if (typeof photo === "string" && photo.startsWith("data:")) {
+          // Base64 data URL
+          photoBuffer = Buffer.from(
+            photo.replace(/^data:[\w/]+;base64,/, ""),
+            "base64"
+          );
+        } else if (photo instanceof Buffer) {
+          // Already a Buffer
+          photoBuffer = photo;
+        }
+      }
+    }
+
     const {
       barangayId,
-      photo,
       identifyingInformation,
       familyComposition,
       dependencyProfile,
@@ -223,27 +268,8 @@ export const update = async (req: any, res: Response) => {
       healthProfile,
       children,
       dependents,
-    } = req.body;
+    } = requestData;
     const updatedBy = req.user?.id;
-
-    // Handle photo upload - convert File to Buffer if needed
-    let photoBuffer: Buffer | undefined;
-    if ((req as any).file?.buffer) {
-      // Photo uploaded via multipart/form-data
-      photoBuffer = (req as any).file.buffer as Buffer;
-    } else if (photo) {
-      // Photo sent as base64 or other format
-      if (typeof photo === "string" && photo.startsWith("data:")) {
-        // Base64 data URL
-        photoBuffer = Buffer.from(
-          photo.replace(/^data:[\w/]+;base64,/, ""),
-          "base64"
-        );
-      } else if (photo instanceof Buffer) {
-        // Already a Buffer
-        photoBuffer = photo;
-      }
-    }
 
     // Execute all operations within a single transaction
     const completeSenior = await TransactionHelper.executeInTransaction(
