@@ -9,7 +9,6 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare username: string;
   declare password: string;
   declare name: string;
-  declare logo: CreationOptional<Blob>;              // stored as BLOB in DB
   declare role: CreationOptional<UserRole>;
   declare barangayId: CreationOptional<number | null>; // FK → Barangay, required if role = "barangay"
 
@@ -24,7 +23,6 @@ User.init(
     username: { type: DataTypes.STRING, unique: true, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false },
-    logo: { type: DataTypes.BLOB(), allowNull: true },
     role: {
       type: DataTypes.ENUM("admin", "barangay", "osca", "viewOnly"),
       allowNull: false,

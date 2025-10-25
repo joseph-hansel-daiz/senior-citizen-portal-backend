@@ -3,7 +3,7 @@ import { User, Barangay } from "@/models";
 import type { UserRole } from "@/models/user.model";
 
 const ALLOWED_ROLES: UserRole[] = ["admin", "barangay", "osca", "viewOnly"];
-const exclude = ["password", "logo", "createdAt", "updatedAt"];
+const exclude = ["password", "createdAt", "updatedAt"];
 
 export class UserService {
   private readonly jwtSecret: string;
@@ -52,9 +52,8 @@ export class UserService {
     name: string;
     role?: UserRole;
     barangayId?: number;
-    logo?: Buffer;
   }) {
-    const { username, password, name, role = "viewOnly", barangayId, logo } = data;
+    const { username, password, name, role = "viewOnly", barangayId } = data;
 
     if (!username || !password || !name) {
       throw new Error("username, password, and name are required");
@@ -90,7 +89,6 @@ export class UserService {
       name,
       role,
       barangayId: resolvedBarangayId,
-      ...(logo ? { logo: logo as unknown as Blob } : {}),
     });
 
     // Sign JWT

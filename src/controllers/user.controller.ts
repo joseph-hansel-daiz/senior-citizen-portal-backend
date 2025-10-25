@@ -58,23 +58,8 @@ export const register = async (req: Request, res: Response) => {
       name,
       role,
       barangayId,
-      logoBase64,
     } = req.body;
 
-    // Prepare optional logo
-    let logoBuffer: Buffer | undefined;
-    if ((req as any).file?.buffer) {
-      logoBuffer = (req as any).file.buffer as Buffer;
-    } else if (logoBase64) {
-      try {
-        logoBuffer = Buffer.from(
-          logoBase64.replace(/^data:[\w/]+;base64,/, ""),
-          "base64"
-        );
-      } catch {
-        return res.status(400).json({ message: "Invalid logoBase64" });
-      }
-    }
 
     const result = await userService.register({
       username,
@@ -82,7 +67,6 @@ export const register = async (req: Request, res: Response) => {
       name,
       role,
       barangayId: barangayId ? Number(barangayId) : undefined,
-      logo: logoBuffer,
     });
 
     return res.status(201).json(result);

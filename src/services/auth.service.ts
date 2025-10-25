@@ -36,7 +36,6 @@ export class AuthService {
         name: user.name,
         role: user.role,
         barangayId: user.barangayId,
-        logo: user.logo,
       },
     };
   }

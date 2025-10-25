@@ -10,7 +10,6 @@ router.post(
   "/register",
   requireAuthentication,
   requireAdmin,
-  upload.single("logo"),
   userController.register
 );
 router.get("/me", requireAuthentication, userController.profile);
