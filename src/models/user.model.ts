@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import * as argon2 from "argon2";
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../config/db";
 
@@ -13,7 +13,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare barangayId: CreationOptional<number | null>; // FK → Barangay, required if role = "barangay"
 
   async validPassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
+    return argon2.verify(this.password, password);
   }
 }
 
@@ -55,12 +55,12 @@ User.init(
       },
       beforeCreate: async (user: User) => {
         if (user.password) {
-          user.password = await bcrypt.hash(user.password, 10);
+          user.password = await argon2.hash(user.password);
         }
       },
       beforeUpdate: async (user: User) => {
         if (user.password && user.changed("password")) {
-          user.password = await bcrypt.hash(user.password, 10);
+          user.password = await argon2.hash(user.password);
         }
       },
     },

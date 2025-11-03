@@ -8,7 +8,7 @@
     "seed": "ts-node -r tsconfig-paths/register src/seed/seed.ts"
   },
   "dependencies": {
-    "bcrypt": "^6.0.0",
+    "argon2": "^0.44.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
@@ -21,7 +21,6 @@
     "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
