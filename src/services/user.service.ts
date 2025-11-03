@@ -108,6 +108,62 @@ export class UserService {
       },
     };
   }
+
+  async updateUser(id: string, payload: {
+    name?: string;
+    role?: UserRole;
+    barangayId?: number | null;
+  }) {
+    const user = await User.findByPk(id);
+    if (!user) throw new Error("User not found");
+
+    const nextRole = payload.role ?? user.role;
+    if (!ALLOWED_ROLES.includes(nextRole)) {
+      throw new Error("Invalid role");
+    }
+
+    let resolvedBarangayId: number | null = user.barangayId ?? null;
+    if (nextRole === "barangay") {
+      const idToUse = payload.barangayId ?? user.barangayId;
+      if (!idToUse) {
+        throw new Error("barangayId is required when role is 'barangay'");
+      }
+      const barangay = await Barangay.findByPk(Number(idToUse));
+      if (!barangay) {
+        throw new Error("Barangay not found");
+      }
+      resolvedBarangayId = Number(idToUse);
+    } else {
+      resolvedBarangayId = null;
+    }
+
+    user.set({
+      name: payload.name ?? user.name,
+      role: nextRole,
+      barangayId: resolvedBarangayId,
+    });
+    await user.save();
+
+    return User.findByPk(id, { attributes: { exclude } });
+  }
+
+  async deleteUser(id: string) {
+    const user = await User.findByPk(id);
+    if (!user) throw new Error("User not found");
+    await user.destroy();
+    return { success: true };
+  }
+
+  async updateUserPassword(id: string, newPassword: string) {
+    if (!newPassword) {
+      throw new Error("Password is required");
+    }
+    const user = await User.findByPk(id);
+    if (!user) throw new Error("User not found");
+    user.set({ password: newPassword });
+    await user.save();
+    return { success: true };
+  }
 }
 
 export const userService = new UserService();
