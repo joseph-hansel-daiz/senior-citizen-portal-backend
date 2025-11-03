@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { User } from "@/models";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
@@ -8,7 +9,7 @@ export interface AuthRequest extends Request {
   user?: any;
 }
 
-const requireAuthentication = (
+const requireAuthentication = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -25,8 +26,19 @@ const requireAuthentication = (
     const payload = jwt.verify(
       token,
       process.env.JWT_SECRET || "supersecretkey"
-    );
-    req.user = payload;
+    ) as any;
+
+    // Fetch user from DB to enrich payload with barangayId (and ensure user exists)
+    const dbUser = await User.findByPk(payload.id);
+    if (!dbUser) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    req.user = {
+      ...payload,
+      barangayId: dbUser.barangayId ?? null,
+    };
+
     next();
   } catch (err: any) {
     return res

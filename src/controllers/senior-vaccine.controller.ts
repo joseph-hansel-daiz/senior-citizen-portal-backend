@@ -1,9 +1,21 @@
 import { Request, Response } from "express";
-import { seniorVaccineService } from "@/services";
+import { seniorService, seniorVaccineService } from "@/services";
 
 export const listBySenior = async (req: Request, res: Response) => {
   try {
     const seniorId = Number(req.params.seniorId);
+    const user = (req as any).user;
+
+    if (user?.role === "barangay") {
+      try {
+        const senior = await seniorService.getSeniorById(String(seniorId));
+        if (Number(senior.barangayId) !== Number(user.barangayId)) {
+          return res.status(403).json({ message: "Forbidden" });
+        }
+      } catch (e: any) {
+        return res.status(404).json({ message: "Senior not found" });
+      }
+    }
     const records = await seniorVaccineService.listBySenior(seniorId);
     res.json(records);
   } catch (err: any) {

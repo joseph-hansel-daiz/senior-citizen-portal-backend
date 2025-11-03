@@ -1,13 +1,15 @@
 import { HelpDeskRecord, HelpDeskRecordCategory, Senior, IdentifyingInformation } from "@/models";
 
 export class HelpdeskService {
-  async list() {
+  async list(filter?: { barangayId?: number }) {
     return HelpDeskRecord.findAll({
       include: [
         { model: HelpDeskRecordCategory, attributes: ["id", "name"] },
         {
           model: Senior,
           attributes: ["id"],
+          where: filter?.barangayId ? { barangayId: filter.barangayId } : undefined,
+          required: !!filter?.barangayId,
           include: [
             {
               model: IdentifyingInformation,

@@ -200,10 +200,13 @@ export class SeniorService {
     ];
   }
 
-  async listSeniors() {
+  async listSeniors(filter?: { barangayId?: number }) {
     // Lightweight list without all profile relationships for better performance
     return Senior.findAll({
-      where: { isDeleted: false },
+      where: {
+        isDeleted: false,
+        ...(filter?.barangayId ? { barangayId: filter.barangayId } : {}),
+      },
       include: [
         {
           model: Barangay,
@@ -350,7 +353,6 @@ export class SeniorService {
 
     // Check if senior is in pending status
     const statusHistory = senior.SeniorStatusHistories || [];
-    console.log(senior);
     if (statusHistory.length !== 1 || statusHistory[0].status !== "Pending") {
       throw new Error("Senior is not in pending status");
     }
@@ -395,7 +397,6 @@ export class SeniorService {
 
     // Check if senior is in pending status
     const statusHistory = senior.SeniorStatusHistories || [];
-    console.log(statusHistory);
     if (statusHistory.length !== 1 || statusHistory[0].status !== "Pending") {
       throw new Error("Senior is not in pending status");
     }

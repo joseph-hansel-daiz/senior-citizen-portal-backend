@@ -28,7 +28,9 @@ export default { create };
 
 export const list = async (_req: Request, res: Response) => {
   try {
-    const records = await helpdeskService.list();
+    const user = (_req as any).user;
+    const barangayId = user?.role === "barangay" ? Number(user?.barangayId) : undefined;
+    const records = await helpdeskService.list(barangayId ? { barangayId } : undefined);
     return res.json(records);
   } catch (err: any) {
     console.error("Error listing help desk records:", err);

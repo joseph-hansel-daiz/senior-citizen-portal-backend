@@ -14,7 +14,9 @@ import { Children, Dependent } from "@/models";
 
 export const list = async (_req: Request, res: Response) => {
   try {
-    const seniors = await seniorService.listSeniors();
+    const user = (_req as any).user;
+    const barangayId = user?.role === "barangay" ? Number(user?.barangayId) : undefined;
+    const seniors = await seniorService.listSeniors(barangayId ? { barangayId } : undefined);
     res.json(seniors);
   } catch (err: any) {
     res.status(500).json({ message: "Server error", error: err.message });
