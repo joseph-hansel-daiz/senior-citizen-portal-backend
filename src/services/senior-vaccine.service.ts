@@ -5,21 +5,34 @@ export class SeniorVaccineService {
     return SeniorVaccine.findAll({
       where: { seniorId },
       include: [{ model: Vaccine, attributes: ["id", "name"] } as any],
-      order: [["VaccineId", "ASC"]],
+      order: [["VaccineId", "ASC"], ["vaccineDate", "DESC"]],
     });
   }
 
-  async upsert({ seniorId, vaccineId, lastVaccineDate }: { seniorId: number; vaccineId: number; lastVaccineDate: string | null; }) {
-    const [record] = await SeniorVaccine.upsert({
+  async upsert({ id, seniorId, vaccineId, vaccineDate }: { id?: number; seniorId: number; vaccineId: number; vaccineDate: string | null; }) {
+    if (id) {
+      const record = await SeniorVaccine.findByPk(id);
+      if (!record) {
+        throw new Error("Record not found");
+      }
+      record.set({
+        // VaccineId stays immutable on edit per UI, but allow update if provided
+        VaccineId: vaccineId ?? record.get("VaccineId"),
+        vaccineDate: vaccineDate ? new Date(vaccineDate) : null,
+      });
+      await record.save();
+      return record;
+    }
+    const created = await SeniorVaccine.create({
       seniorId,
       VaccineId: vaccineId,
-      lastVaccineDate: lastVaccineDate ? new Date(lastVaccineDate) : null,
-    });
-    return record;
+      vaccineDate: vaccineDate ? new Date(vaccineDate) : null,
+    } as any);
+    return created;
   }
 
-  async delete({ seniorId, vaccineId }: { seniorId: number; vaccineId: number; }) {
-    await SeniorVaccine.destroy({ where: { seniorId, VaccineId: vaccineId } });
+  async delete({ id }: { id: number; }) {
+    await SeniorVaccine.destroy({ where: { id } });
     return { message: "Deleted" };
   }
 }

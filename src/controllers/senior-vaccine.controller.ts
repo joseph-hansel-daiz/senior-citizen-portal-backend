@@ -26,8 +26,8 @@ export const listBySenior = async (req: Request, res: Response) => {
 export const upsert = async (req: Request, res: Response) => {
   try {
     const seniorId = Number(req.params.seniorId);
-    const { vaccineId, lastVaccineDate } = req.body;
-    const record = await seniorVaccineService.upsert({ seniorId, vaccineId: Number(vaccineId), lastVaccineDate: lastVaccineDate ?? null });
+    const { id, vaccineId, vaccineDate } = req.body;
+    const record = await seniorVaccineService.upsert({ id: id ? Number(id) : undefined, seniorId, vaccineId: Number(vaccineId), vaccineDate: vaccineDate ?? null });
     res.json(record);
   } catch (err: any) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -36,9 +36,9 @@ export const upsert = async (req: Request, res: Response) => {
 
 export const remove = async (req: Request, res: Response) => {
   try {
-    const seniorId = Number(req.params.seniorId);
-    const vaccineId = Number(req.params.vaccineId);
-    const result = await seniorVaccineService.delete({ seniorId, vaccineId });
+    // Keep route compatibility: treat path param as the record id
+    const id = Number(req.params.vaccineId ?? req.params.id);
+    const result = await seniorVaccineService.delete({ id });
     res.json(result);
   } catch (err: any) {
     res.status(500).json({ message: "Server error", error: err.message });

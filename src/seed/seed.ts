@@ -618,9 +618,9 @@ async function seed() {
 
     // Senior Vaccines
     console.log("Seeding senior vaccines...");
-    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: flu.id, lastVaccineDate: new Date("2024-10-01") as any });
-    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: pneumo.id, lastVaccineDate: new Date("2023-06-15") as any });
-    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: covid.id, lastVaccineDate: new Date("2025-01-20") as any });
+    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: flu.id, vaccineDate: new Date("2024-10-01") });
+    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: pneumo.id, vaccineDate: new Date("2023-06-15") });
+    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: covid.id, vaccineDate: new Date("2025-01-20") });
 
     // Help Desk Records
     await HelpDeskRecord.create({

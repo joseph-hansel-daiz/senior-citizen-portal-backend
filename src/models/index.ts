@@ -90,12 +90,12 @@ HelpDeskRecordCategory.hasMany(HelpDeskRecord, {
 
 // Senior Vaccines Associations
 Senior.belongsToMany(Vaccine, {
-  through: SeniorVaccine,
+  through: { model: SeniorVaccine, unique: false },
   foreignKey: "seniorId",
   otherKey: "VaccineId",
 });
 Vaccine.belongsToMany(Senior, {
-  through: SeniorVaccine,
+  through: { model: SeniorVaccine, unique: false },
   foreignKey: "VaccineId",
   otherKey: "seniorId",
 });
