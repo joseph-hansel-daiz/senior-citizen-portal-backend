@@ -11,3 +11,4 @@ export { healthProfileService } from './health-profile.service';
 export { deathInfoService } from './death-info.service';
 export { helpdeskService } from './helpdesk.service';
 export { seniorVaccineService } from './senior-vaccine.service';
+export { seniorAssistanceService } from './senior-assistance.service';

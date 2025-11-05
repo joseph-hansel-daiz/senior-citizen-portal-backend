@@ -1,5 +1,5 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
-import sequelize from "../config/db";
+import sequelize from "../../config/db";
 
 class HelpDeskRecordCategory extends Model<InferAttributes<HelpDeskRecordCategory>, InferCreationAttributes<HelpDeskRecordCategory>> {
   declare id: CreationOptional<number>;

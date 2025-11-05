@@ -17,6 +17,7 @@ import {
   AreaOfDifficulty,
   Barangay,
   HelpDeskRecordCategory,
+  Assistance,
 } from "@/models";
 import Vaccine from "@/models/options/vaccine.model";
 
@@ -41,6 +42,7 @@ export class OptionService {
     "barangays": Barangay,
     "help-desk-record-categories": HelpDeskRecordCategory,
     "vaccines": Vaccine,
+    "assistances": Assistance,
   };
 
   private getModelByKey(key: string) {
@@ -132,6 +134,10 @@ export class OptionService {
 
   async getVaccines() {
     return this.getList(Vaccine);
+  }
+
+  async getAssistances() {
+    return this.getList(Assistance);
   }
 
   async createOption(key: string, name: string) {

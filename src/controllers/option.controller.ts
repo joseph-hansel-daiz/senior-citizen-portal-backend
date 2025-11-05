@@ -25,7 +25,9 @@ export const createOption = async (req: Request, res: Response) => {
     return res.status(201).json(created);
   } catch (err: any) {
     console.error("Error creating option:", err);
-    return res.status(500).json({ error: err.message || "Failed to create option" });
+    return res
+      .status(500)
+      .json({ error: err.message || "Failed to create option" });
   }
 };
 
@@ -47,7 +49,9 @@ export const updateOption = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Not found" });
     }
     console.error("Error updating option:", err);
-    return res.status(500).json({ error: err.message || "Failed to update option" });
+    return res
+      .status(500)
+      .json({ error: err.message || "Failed to update option" });
   }
 };
 
@@ -65,7 +69,9 @@ export const deleteOption = async (req: Request, res: Response) => {
     return res.status(204).send();
   } catch (err: any) {
     console.error("Error deleting option:", err);
-    return res.status(500).json({ error: err.message || "Failed to delete option" });
+    return res
+      .status(500)
+      .json({ error: err.message || "Failed to delete option" });
   }
 };
 
@@ -147,10 +153,14 @@ export const listBarangays = async (_req: Request, res: Response) =>
 export const listHelpDeskRecordCategories = async (
   _req: Request,
   res: Response
-) => handleOptionRequest(res, () => optionService.getHelpDeskRecordCategories());
+) =>
+  handleOptionRequest(res, () => optionService.getHelpDeskRecordCategories());
 
 export const listVaccines = async (_req: Request, res: Response) =>
   handleOptionRequest(res, () => optionService.getVaccines());
+
+export const listAssistances = async (_req: Request, res: Response) =>
+  handleOptionRequest(res, () => optionService.getAssistances());
 
 export default {
   createOption,
@@ -175,4 +185,5 @@ export default {
   listBarangays,
   listHelpDeskRecordCategories,
   listVaccines,
+  listAssistances,
 };

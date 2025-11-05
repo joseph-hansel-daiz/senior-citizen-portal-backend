@@ -1,14 +1,14 @@
 import { DataTypes, InferAttributes, InferCreationAttributes, Model, CreationOptional } from "sequelize";
 import sequelize from "../../config/db";
 
-class SeniorVaccine extends Model<InferAttributes<SeniorVaccine>, InferCreationAttributes<SeniorVaccine>> {
+class SeniorAssistance extends Model<InferAttributes<SeniorAssistance>, InferCreationAttributes<SeniorAssistance>> {
   declare id: CreationOptional<number>;
   declare seniorId: number;
-  declare vaccineId: number;
-  declare vaccineDate: Date | null;
+  declare assistanceId: number;
+  declare assistanceDate: Date | null;
 }
 
-SeniorVaccine.init(
+SeniorAssistance.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -22,26 +22,26 @@ SeniorVaccine.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    vaccineId: {
+    assistanceId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: "Vaccine", key: "id" },
+      references: { model: "Assistance", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    vaccineDate: {
+    assistanceDate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      field: "vaccineDate",
+      field: "assistanceDate",
     },
   },
   {
     sequelize,
-    modelName: "SeniorVaccine",
-    tableName: "SeniorVaccine",
+    modelName: "SeniorAssistance",
+    tableName: "SeniorAssistance",
     timestamps: false,
     underscored: false,
   }
 );
 
-export default SeniorVaccine;
+export default SeniorAssistance;

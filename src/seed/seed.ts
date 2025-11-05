@@ -50,6 +50,8 @@ import {
   SeniorVisualConcern,
   Vaccine,
   SeniorVaccine,
+  Assistance,
+  SeniorAssistance,
 } from "@/models";
 
 async function seed() {
@@ -312,6 +314,13 @@ async function seed() {
     const pneumo = await Vaccine.create({ name: "Pneumococcal" });
     const covid = await Vaccine.create({ name: "COVID-19" });
     const shingles = await Vaccine.create({ name: "Shingles" });
+
+    // Assistances
+    console.log("Seeding assistances...");
+    const medicalAssistance = await Assistance.create({ name: "Medical Assistance" });
+    const financialAssistance = await Assistance.create({ name: "Financial Assistance" });
+    const foodAssistance = await Assistance.create({ name: "Food Assistance" });
+    const transportationAssistance = await Assistance.create({ name: "Transportation Assistance" });
 
     // Area of Difficulty
     await AreaOfDifficulty.create({ name: "High Cost of medicine" });
@@ -618,9 +627,15 @@ async function seed() {
 
     // Senior Vaccines
     console.log("Seeding senior vaccines...");
-    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: flu.id, vaccineDate: new Date("2024-10-01") });
-    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: pneumo.id, vaccineDate: new Date("2023-06-15") });
-    await SeniorVaccine.create({ seniorId: senior.id, VaccineId: covid.id, vaccineDate: new Date("2025-01-20") });
+    await SeniorVaccine.create({ seniorId: senior.id, vaccineId: flu.id, vaccineDate: new Date("2024-10-01") });
+    await SeniorVaccine.create({ seniorId: senior.id, vaccineId: pneumo.id, vaccineDate: new Date("2023-06-15") });
+    await SeniorVaccine.create({ seniorId: senior.id, vaccineId: covid.id, vaccineDate: new Date("2025-01-20") });
+
+    // Senior Assistances
+    console.log("Seeding senior assistances...");
+    await SeniorAssistance.create({ seniorId: senior.id, assistanceId: medicalAssistance.id, assistanceDate: new Date("2024-09-01") });
+    await SeniorAssistance.create({ seniorId: senior.id, assistanceId: financialAssistance.id, assistanceDate: new Date("2024-11-05") });
+    await SeniorAssistance.create({ seniorId: senior.id, assistanceId: foodAssistance.id, assistanceDate: new Date("2025-02-10") });
 
     // Help Desk Records
     await HelpDeskRecord.create({

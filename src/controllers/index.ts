@@ -4,3 +4,4 @@ export * as optionController from './option.controller';
 export * as seniorController from './senior.controller';
 export * as helpdeskController from './helpdesk.controller';
 export * as seniorVaccineController from './senior-vaccine.controller';
+export * as seniorAssistanceController from './senior-assistance.controller';

@@ -29,7 +29,7 @@ import HealthProfile from "./health-profile.model";
 import IdentifyingInformation from "./identifying-information.model";
 import SeniorStatusHistory from "./senior-status-history.model";
 import HelpDeskRecord from "./help-desk-record.model";
-import HelpDeskRecordCategory from "./help-desk-record-category.model";
+import HelpDeskRecordCategory from "./options/help-desk-record-category.model";
 
 import Children from "./children.model";
 import Dependent from "./dependent.model";
@@ -54,6 +54,8 @@ import SeniorVisualConcern from "./seniorOptions/seniorVisualConcern.model";
 import User from "./user.model";
 import Vaccine from "./options/vaccine.model";
 import SeniorVaccine from "./seniorOptions/seniorVaccine.model";
+import Assistance from "./options/assistance.model";
+import SeniorAssistance from "./seniorOptions/seniorAssistance.model";
 
 // Basic Associations
 Barangay.hasMany(User, { foreignKey: "barangayId" });
@@ -92,17 +94,32 @@ HelpDeskRecordCategory.hasMany(HelpDeskRecord, {
 Senior.belongsToMany(Vaccine, {
   through: { model: SeniorVaccine, unique: false },
   foreignKey: "seniorId",
-  otherKey: "VaccineId",
+  otherKey: "vaccineId",
 });
 Vaccine.belongsToMany(Senior, {
   through: { model: SeniorVaccine, unique: false },
-  foreignKey: "VaccineId",
+  foreignKey: "vaccineId",
   otherKey: "seniorId",
 });
 
 // Through model direct associations for includes
-SeniorVaccine.belongsTo(Vaccine, { foreignKey: "VaccineId" });
+SeniorVaccine.belongsTo(Vaccine, { foreignKey: "vaccineId" });
 SeniorVaccine.belongsTo(Senior, { foreignKey: "seniorId" });
+
+// Senior Assistance Associations
+Senior.belongsToMany(Assistance, {
+  through: { model: SeniorAssistance, unique: false },
+  foreignKey: "seniorId",
+  otherKey: "assistanceId",
+});
+Assistance.belongsToMany(Senior, {
+  through: { model: SeniorAssistance, unique: false },
+  foreignKey: "assistanceId",
+  otherKey: "seniorId",
+});
+// Through model direct associations for includes
+SeniorAssistance.belongsTo(Assistance, { foreignKey: "assistanceId" });
+SeniorAssistance.belongsTo(Senior, { foreignKey: "seniorId" });
 
 // Dependency Profile Associations
 DependencyProfile.belongsToMany(Cohabitant, {
@@ -335,4 +352,6 @@ export {
   VisualConcern,
   Vaccine,
   SeniorVaccine,
+  Assistance,
+  SeniorAssistance,
 };

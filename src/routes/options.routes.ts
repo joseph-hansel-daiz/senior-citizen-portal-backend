@@ -28,4 +28,5 @@ router.get("/technical-skills", optionController.listSpecializationTechnicalSkil
 router.get("/visual-concerns", optionController.listVisualConcerns);
 router.get("/help-desk-record-categories",optionController.listHelpDeskRecordCategories);
 router.get("/vaccines", optionController.listVaccines);
+router.get("/assistances", optionController.listAssistances);
 export default router;

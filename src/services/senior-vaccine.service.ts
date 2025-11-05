@@ -5,7 +5,7 @@ export class SeniorVaccineService {
     return SeniorVaccine.findAll({
       where: { seniorId },
       include: [{ model: Vaccine, attributes: ["id", "name"] } as any],
-      order: [["VaccineId", "ASC"], ["vaccineDate", "DESC"]],
+      order: [["vaccineId", "ASC"], ["vaccineDate", "DESC"]],
     });
   }
 
@@ -16,8 +16,8 @@ export class SeniorVaccineService {
         throw new Error("Record not found");
       }
       record.set({
-        // VaccineId stays immutable on edit per UI, but allow update if provided
-        VaccineId: vaccineId ?? record.get("VaccineId"),
+        // vaccineId stays immutable on edit per UI, but allow update if provided
+        vaccineId: vaccineId ?? record.get("vaccineId"),
         vaccineDate: vaccineDate ? new Date(vaccineDate) : null,
       });
       await record.save();
@@ -25,7 +25,7 @@ export class SeniorVaccineService {
     }
     const created = await SeniorVaccine.create({
       seniorId,
-      VaccineId: vaccineId,
+      vaccineId: vaccineId,
       vaccineDate: vaccineDate ? new Date(vaccineDate) : null,
     } as any);
     return created;
