@@ -68,6 +68,7 @@ Senior.belongsTo(User, { foreignKey: "deletedBy", as: "deleter" });
 
 // Senior Profile Associations
 Senior.hasOne(IdentifyingInformation, { foreignKey: "seniorId" });
+IdentifyingInformation.belongsTo(Senior, { foreignKey: "seniorId" });
 Senior.hasOne(FamilyComposition, { foreignKey: "seniorId" });
 Senior.hasOne(DependencyProfile, { foreignKey: "seniorId" });
 Senior.hasOne(EducationProfile, { foreignKey: "seniorId" });

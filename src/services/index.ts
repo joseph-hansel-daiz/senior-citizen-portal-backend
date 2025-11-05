@@ -12,3 +12,4 @@ export { deathInfoService } from './death-info.service';
 export { helpdeskService } from './helpdesk.service';
 export { seniorVaccineService } from './senior-vaccine.service';
 export { seniorAssistanceService } from './senior-assistance.service';
+export { analyticsService } from './analytics.service';
