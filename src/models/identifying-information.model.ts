@@ -1,11 +1,20 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, NonAttribute } from "sequelize";
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+  NonAttribute,
+} from "sequelize";
 import sequelize from "../config/db";
 import Senior from "./senior.model";
 import User from "./user.model";
 
-class IdentifyingInformation extends Model<InferAttributes<IdentifyingInformation>, InferCreationAttributes<IdentifyingInformation>> {
+class IdentifyingInformation extends Model<
+  InferAttributes<IdentifyingInformation>,
+  InferCreationAttributes<IdentifyingInformation>
+> {
   declare seniorId: number;
-  declare picture: CreationOptional<string>;
   declare lastname: string;
   declare firstname: string;
   declare middlename: CreationOptional<string>;
@@ -50,10 +59,6 @@ IdentifyingInformation.init(
       references: { model: "Senior", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
-    },
-    picture: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
     },
     lastname: {
       type: DataTypes.STRING(100),

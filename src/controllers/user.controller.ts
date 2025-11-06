@@ -38,8 +38,46 @@ export const profile = async (req: any, res: Response) => {
 
 export const updateProfile = async (req: any, res: Response) => {
   try {
-    const { name } = req.body;
-    const updatedUser = await userService.updateProfile(req.user.id, name);
+    let requestData;
+    let photoBuffer: Buffer | undefined;
+
+    // Check if request is multipart/form-data (has file upload)
+    if (req.file?.buffer) {
+      // Handle multipart/form-data with file upload
+      const { data } = req.body || {};
+      
+      // Parse the JSON data field
+      requestData = data ? JSON.parse(data) : {};
+      
+      // Get photo from uploaded file
+      photoBuffer = req.file.buffer as Buffer;
+    } else {
+      // Handle regular JSON request
+      requestData = req.body || {};
+      
+      // Handle photo from JSON (base64 or other format)
+      const { photo } = requestData;
+      if (photo) {
+        if (typeof photo === "string" && photo.startsWith("data:")) {
+          // Base64 data URL
+          photoBuffer = Buffer.from(
+            photo.replace(/^data:[\w/]+;base64,/, ""),
+            "base64"
+          );
+        } else if (photo instanceof Buffer) {
+          // Already a Buffer
+          photoBuffer = photo;
+        }
+      }
+    }
+
+    const { name } = requestData;
+    const updatedUser = await userService.updateProfile(
+      req.user.id,
+      name,
+      // cast to Blob for model compatibility
+      photoBuffer ? (photoBuffer as unknown as Blob) : undefined
+    );
     res.json(updatedUser);
   } catch (err: any) {
     if (err.message === "User not found") {
@@ -50,16 +88,42 @@ export const updateProfile = async (req: any, res: Response) => {
   }
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: any, res: Response) => {
   try {
-    const {
-      username,
-      password,
-      name,
-      role,
-      barangayId,
-    } = req.body;
+    let requestData;
+    let photoBuffer: Buffer | undefined;
 
+    // Check if request is multipart/form-data (has file upload)
+    if (req.file?.buffer) {
+      // Handle multipart/form-data with file upload
+      const { data } = req.body || {};
+      
+      // Parse the JSON data field
+      requestData = data ? JSON.parse(data) : {};
+      
+      // Get photo from uploaded file
+      photoBuffer = req.file.buffer as Buffer;
+    } else {
+      // Handle regular JSON request
+      requestData = req.body || {};
+      
+      // Handle photo from JSON (base64 or other format)
+      const { photo } = requestData;
+      if (photo) {
+        if (typeof photo === "string" && photo.startsWith("data:")) {
+          // Base64 data URL
+          photoBuffer = Buffer.from(
+            photo.replace(/^data:[\w/]+;base64,/, ""),
+            "base64"
+          );
+        } else if (photo instanceof Buffer) {
+          // Already a Buffer
+          photoBuffer = photo;
+        }
+      }
+    }
+
+    const { username, password, name, role, barangayId } = requestData;
 
     const result = await userService.register({
       username,
@@ -67,6 +131,7 @@ export const register = async (req: Request, res: Response) => {
       name,
       role,
       barangayId: barangayId ? Number(barangayId) : undefined,
+      photo: photoBuffer ? (photoBuffer as unknown as Blob) : undefined,
     });
 
     return res.status(201).json(result);
@@ -83,13 +148,47 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: any, res: Response) => {
   try {
-    const { name, role, barangayId } = req.body;
+    let requestData;
+    let photoBuffer: Buffer | undefined;
+
+    // Check if request is multipart/form-data (has file upload)
+    if (req.file?.buffer) {
+      // Handle multipart/form-data with file upload
+      const { data } = req.body || {};
+      
+      // Parse the JSON data field
+      requestData = data ? JSON.parse(data) : {};
+      
+      // Get photo from uploaded file
+      photoBuffer = req.file.buffer as Buffer;
+    } else {
+      // Handle regular JSON request
+      requestData = req.body || {};
+      
+      // Handle photo from JSON (base64 or other format)
+      const { photo } = requestData;
+      if (photo) {
+        if (typeof photo === "string" && photo.startsWith("data:")) {
+          // Base64 data URL
+          photoBuffer = Buffer.from(
+            photo.replace(/^data:[\w/]+;base64,/, ""),
+            "base64"
+          );
+        } else if (photo instanceof Buffer) {
+          // Already a Buffer
+          photoBuffer = photo;
+        }
+      }
+    }
+
+    const { name, role, barangayId } = requestData;
     const updated = await userService.updateUser(req.params.id, {
       name,
       role,
       barangayId: barangayId === undefined ? undefined : (barangayId === null ? null : Number(barangayId)),
+      photo: photoBuffer ? (photoBuffer as unknown as Blob) : undefined,
     });
     return res.json(updated);
   } catch (err: any) {

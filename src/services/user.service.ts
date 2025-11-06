@@ -32,12 +32,13 @@ export class UserService {
     return user;
   }
 
-  async updateProfile(userId: string, name: string) {
+  async updateProfile(userId: string, name?: string, photo?: Blob | null) {
     const user = await User.findByPk(userId);
     if (!user) throw new Error("User not found");
 
     user.set({
       name: name ?? user.name,
+      ...(photo !== undefined ? { photo } : {}),
     });
     await user.save();
 
@@ -52,8 +53,9 @@ export class UserService {
     name: string;
     role?: UserRole;
     barangayId?: number;
+    photo?: Blob | null;
   }) {
-    const { username, password, name, role = "viewOnly", barangayId } = data;
+    const { username, password, name, role = "viewOnly", barangayId, photo } = data;
 
     if (!username || !password || !name) {
       throw new Error("username, password, and name are required");
@@ -89,6 +91,7 @@ export class UserService {
       name,
       role,
       barangayId: resolvedBarangayId,
+      photo: photo ?? undefined,
     });
 
     // Sign JWT
@@ -105,6 +108,7 @@ export class UserService {
         name: user.name,
         role: user.role,
         barangayId: user.barangayId ?? null,
+        // photo may be large; include only if needed by clients
       },
     };
   }
@@ -113,6 +117,7 @@ export class UserService {
     name?: string;
     role?: UserRole;
     barangayId?: number | null;
+    photo?: Blob | null;
   }) {
     const user = await User.findByPk(id);
     if (!user) throw new Error("User not found");
@@ -141,6 +146,7 @@ export class UserService {
       name: payload.name ?? user.name,
       role: nextRole,
       barangayId: resolvedBarangayId,
+      ...(payload.photo !== undefined ? { photo: payload.photo } : {}),
     });
     await user.save();
 

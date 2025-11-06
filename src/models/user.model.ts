@@ -11,6 +11,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare name: string;
   declare role: CreationOptional<UserRole>;
   declare barangayId: CreationOptional<number | null>; // FK → Barangay, required if role = "barangay"
+  declare photo: CreationOptional<Blob | null>;
 
   async validPassword(password: string): Promise<boolean> {
     return argon2.verify(this.password, password);
@@ -34,6 +35,10 @@ User.init(
       references: { model: "Barangay", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
+    },
+    photo: {
+      type: DataTypes.BLOB,
+      allowNull: true,
     },
   },
   {
