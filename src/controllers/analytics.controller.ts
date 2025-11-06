@@ -47,4 +47,30 @@ export const vaccineCoverage = async (req: Request, res: Response) => {
   }
 };
 
+export const usersPerRole = async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (user?.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    const data = await analyticsService.usersPerRole();
+    res.json(data);
+  } catch (err: any) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+export const usersPerBarangay = async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    if (user?.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    const data = await analyticsService.usersPerBarangay();
+    res.json(data);
+  } catch (err: any) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 

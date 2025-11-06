@@ -1,9 +1,11 @@
 import {
   Assistance,
+  Barangay,
   IdentifyingInformation,
   Senior,
   SeniorAssistance,
   SeniorVaccine,
+  User,
   Vaccine,
 } from "@/models";
 import { FindAttributeOptions, Includeable, col, fn } from "sequelize";
@@ -148,6 +150,46 @@ export class AnalyticsService {
       vaccineId: Number((r as any).vaccineId),
       name: String((r as any)["Vaccine.name"]).toString(),
       count: Number((r as any).countDistinctSeniors),
+    }));
+  }
+
+  async usersPerRole() {
+    const records = await User.findAll({
+      attributes: [
+        [col("role"), "role"],
+        [fn("COUNT", col("User.id")), "count"],
+      ] as unknown as FindAttributeOptions,
+      group: [col("role")],
+      raw: true,
+    });
+    return records.map((r) => ({
+      role: String((r as any).role),
+      count: Number((r as any).count),
+    }));
+  }
+
+  async usersPerBarangay() {
+    const rows = await User.findAll({
+      attributes: [
+        [col("barangayId"), "barangayId"],
+        [fn("COUNT", col("User.id")), "count"],
+      ] as unknown as FindAttributeOptions,
+      include: [
+        {
+          model: Barangay,
+          attributes: ["id", "name"],
+          required: false,
+        } as any,
+      ],
+      group: [col("barangayId"), col("Barangay.id"), col("Barangay.name")],
+      raw: true,
+    });
+    return rows.map((r) => ({
+      barangayId: (r as any).barangayId ? Number((r as any).barangayId) : null,
+      name: (r as any)["Barangay.name"]
+        ? String((r as any)["Barangay.name"])
+        : "No Barangay",
+      count: Number((r as any).count),
     }));
   }
 }
