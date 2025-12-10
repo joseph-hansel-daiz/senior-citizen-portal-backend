@@ -1,26 +1,49 @@
 import {
   Assistance,
   Barangay,
+  DeathInfo,
   IdentifyingInformation,
   Senior,
   SeniorAssistance,
+  SeniorStatusHistory,
   SeniorVaccine,
   User,
   Vaccine,
 } from "@/models";
-import { FindAttributeOptions, Includeable, col, fn } from "sequelize";
+import { FindAttributeOptions, Includeable, col, fn, literal, Op } from "sequelize";
 
 export class AnalyticsService {
-  private barangayInclude(barangayId?: number): Includeable[] {
-    if (!barangayId) return [];
+  private activeSeniorInclude(barangayId?: number): Includeable[] {
     return [
       {
         model: Senior,
         attributes: [],
-        where: { barangayId },
+        where: {
+          isDeleted: false,
+          ...(barangayId ? { barangayId } : {}),
+        },
         required: true,
+        include: [
+          {
+            model: DeathInfo,
+            attributes: [],
+            required: false,
+          } as any,
+          {
+            model: SeniorStatusHistory,
+            attributes: [],
+            required: true,
+            where: {
+              status: 'Active',
+            },
+          } as any,
+        ],
       } as any,
     ];
+  }
+
+  private barangayInclude(barangayId?: number): Includeable[] {
+    return this.activeSeniorInclude(barangayId);
   }
 
   async genderDistribution(params?: { barangayId?: number }) {
@@ -28,9 +51,10 @@ export class AnalyticsService {
     const records = await IdentifyingInformation.findAll({
       attributes: [
         [col("sexAtBirth"), "sexAtBirth"],
-        [fn("COUNT", col("IdentifyingInformation.seniorId")), "count"],
+        [fn("COUNT", fn("DISTINCT", col("IdentifyingInformation.seniorId"))), "count"],
       ] as unknown as FindAttributeOptions,
       include: this.barangayInclude(barangayId),
+      where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
       group: [col("sexAtBirth")],
       raw: true,
     });
@@ -44,18 +68,8 @@ export class AnalyticsService {
     const { barangayId } = params || {};
     const items = await IdentifyingInformation.findAll({
       attributes: ["birthDate"],
-      include: [
-        ...(barangayId
-          ? [
-              {
-                model: Senior,
-                attributes: [],
-                where: { barangayId },
-                required: true,
-              } as any,
-            ]
-          : []),
-      ],
+      include: this.activeSeniorInclude(barangayId),
+      where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
       raw: true,
     });
 
@@ -95,21 +109,15 @@ export class AnalyticsService {
     const { barangayId } = params || {};
     const include: Includeable[] = [
       { model: Assistance, attributes: ["id", "name"], required: true } as any,
+      ...this.activeSeniorInclude(barangayId),
     ];
-    if (barangayId) {
-      include.push({
-        model: Senior,
-        attributes: [],
-        where: { barangayId },
-        required: true,
-      } as any);
-    }
     const rows = await SeniorAssistance.findAll({
       attributes: [
         [col("assistanceId"), "assistanceId"],
         [fn("COUNT", col("SeniorAssistance.id")), "totalCount"],
       ] as unknown as FindAttributeOptions,
       include,
+      where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
       group: [
         col("assistanceId"),
         col("Assistance.id"),
@@ -128,21 +136,15 @@ export class AnalyticsService {
     const { barangayId } = params || {};
     const include: Includeable[] = [
       { model: Vaccine, attributes: ["id", "name"], required: true } as any,
+      ...this.activeSeniorInclude(barangayId),
     ];
-    if (barangayId) {
-      include.push({
-        model: Senior,
-        attributes: [],
-        where: { barangayId },
-        required: true,
-      } as any);
-    }
     const rows = await SeniorVaccine.findAll({
       attributes: [
         [col("vaccineId"), "vaccineId"],
-        [fn("COUNT", fn("DISTINCT", col("seniorId"))), "countDistinctSeniors"],
+        [fn("COUNT", fn("DISTINCT", col("SeniorVaccine.seniorId"))), "countDistinctSeniors"],
       ] as unknown as FindAttributeOptions,
       include,
+      where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
       group: [col("vaccineId"), col("Vaccine.id"), col("Vaccine.name")],
       raw: true,
     });
