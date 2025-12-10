@@ -4,7 +4,6 @@ import sequelize from "../config/db";
 class HelpDeskRecord extends Model<InferAttributes<HelpDeskRecord>, InferCreationAttributes<HelpDeskRecord>> {
   declare id: CreationOptional<number>;
   declare seniorId: number;
-  declare helpDeskRecordCategory: number;
   declare details: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -25,13 +24,6 @@ HelpDeskRecord.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: "Senior", key: "id" },
-      onUpdate: "CASCADE",
-      onDelete: "RESTRICT",
-    },
-    helpDeskRecordCategory: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: "HelpDeskRecordCategory", key: "id" },
       onUpdate: "CASCADE",
       onDelete: "RESTRICT",
     },

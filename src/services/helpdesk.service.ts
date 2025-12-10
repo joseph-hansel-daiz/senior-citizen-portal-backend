@@ -1,4 +1,4 @@
-import { HelpDeskRecord, HelpDeskRecordCategory, Senior, IdentifyingInformation } from "@/models";
+import { HelpDeskRecord, HelpDeskRecordCategory, Senior, IdentifyingInformation, HelpDeskRecordCategoryRecord } from "@/models";
 
 export class HelpdeskService {
   async list(filter?: { barangayId?: number }) {
@@ -41,26 +41,55 @@ export class HelpdeskService {
     return record;
   }
 
-  async create(payload: { seniorId: number; helpDeskRecordCategory: number; details: string }) {
-    return HelpDeskRecord.create({
+  async create(payload: { seniorId: number; helpDeskRecordCategoryIds: number[]; details: string }) {
+    const record = await HelpDeskRecord.create({
       seniorId: Number(payload.seniorId),
-      helpDeskRecordCategory: Number(payload.helpDeskRecordCategory),
       details: String(payload.details).slice(0, 100),
     });
+
+    // Create category associations
+    if (payload.helpDeskRecordCategoryIds && payload.helpDeskRecordCategoryIds.length > 0) {
+      await HelpDeskRecordCategoryRecord.bulkCreate(
+        payload.helpDeskRecordCategoryIds.map(categoryId => ({
+          helpDeskRecordId: record.id,
+          helpDeskRecordCategoryId: Number(categoryId),
+        }))
+      );
+    }
+
+    // Reload with associations
+    return this.detail(record.id);
   }
 
-  async update(id: string | number, payload: { helpDeskRecordCategory?: number; details?: string }) {
+  async update(id: string | number, payload: { helpDeskRecordCategoryIds?: number[]; details?: string }) {
     const record = await HelpDeskRecord.findByPk(id);
     if (!record) return null;
 
-    if (payload.helpDeskRecordCategory !== undefined) {
-      (record as any).helpDeskRecordCategory = Number(payload.helpDeskRecordCategory);
-    }
     if (payload.details !== undefined) {
       (record as any).details = String(payload.details).slice(0, 100);
+      await record.save();
     }
-    await record.save();
-    return record;
+
+    // Update category associations if provided
+    if (payload.helpDeskRecordCategoryIds !== undefined) {
+      // Remove existing associations
+      await HelpDeskRecordCategoryRecord.destroy({
+        where: { helpDeskRecordId: record.id },
+      });
+
+      // Add new associations
+      if (payload.helpDeskRecordCategoryIds.length > 0) {
+        await HelpDeskRecordCategoryRecord.bulkCreate(
+          payload.helpDeskRecordCategoryIds.map(categoryId => ({
+            helpDeskRecordId: record.id,
+            helpDeskRecordCategoryId: Number(categoryId),
+          }))
+        );
+      }
+    }
+
+    // Reload with associations
+    return this.detail(record.id);
   }
 
   async remove(id: string | number) {

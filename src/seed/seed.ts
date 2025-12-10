@@ -14,6 +14,7 @@ import {
   HealthProfile,
   HelpDeskRecord,
   HelpDeskRecordCategory,
+  HelpDeskRecordCategoryRecord,
   SeniorStatusHistory,
   DeathInfo,
   AreaOfDifficulty,
@@ -638,25 +639,49 @@ async function seed() {
     await SeniorAssistance.create({ seniorId: senior.id, assistanceId: foodAssistance.id, assistanceDate: new Date("2025-02-10") });
 
     // Help Desk Records
-    await HelpDeskRecord.create({
+    const helpDeskRecord1 = await HelpDeskRecord.create({
       seniorId: senior.id,
-      helpDeskRecordCategory: 1, // Medical Assistance
       details: "Request for medical check-up assistance",
       createdBy: 1,
     });
+    await HelpDeskRecordCategoryRecord.create({
+      helpDeskRecordId: helpDeskRecord1.id,
+      helpDeskRecordCategoryId: 1, // Medical Assistance
+    });
 
-    await HelpDeskRecord.create({
+    const helpDeskRecord2 = await HelpDeskRecord.create({
       seniorId: senior.id,
-      helpDeskRecordCategory: 2, // Financial Aid
       details: "Application for senior citizen discount card",
       createdBy: 1,
     });
+    await HelpDeskRecordCategoryRecord.create({
+      helpDeskRecordId: helpDeskRecord2.id,
+      helpDeskRecordCategoryId: 2, // Financial Aid
+    });
 
-    await HelpDeskRecord.create({
+    const helpDeskRecord3 = await HelpDeskRecord.create({
       seniorId: senior.id,
-      helpDeskRecordCategory: 7, // Food Assistance
       details: "Request for food assistance program",
       createdBy: 1,
+    });
+    await HelpDeskRecordCategoryRecord.create({
+      helpDeskRecordId: helpDeskRecord3.id,
+      helpDeskRecordCategoryId: 7, // Food Assistance
+    });
+
+    // Example of a record with multiple categories
+    const helpDeskRecord4 = await HelpDeskRecord.create({
+      seniorId: senior.id,
+      details: "Multiple assistance requests - medical and transportation",
+      createdBy: 1,
+    });
+    await HelpDeskRecordCategoryRecord.create({
+      helpDeskRecordId: helpDeskRecord4.id,
+      helpDeskRecordCategoryId: 1, // Medical Assistance
+    });
+    await HelpDeskRecordCategoryRecord.create({
+      helpDeskRecordId: helpDeskRecord4.id,
+      helpDeskRecordCategoryId: 5, // Transportation
     });
 
     // Senior Status History

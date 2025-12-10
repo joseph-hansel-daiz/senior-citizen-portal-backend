@@ -3,15 +3,24 @@ import { helpdeskService } from "@/services";
 
 export const create = async (req: Request, res: Response) => {
   try {
-    const { seniorId, helpDeskRecordCategory, details } = req.body;
+    const { seniorId, helpDeskRecordCategoryIds, details } = req.body;
 
-    if (!seniorId || !helpDeskRecordCategory || !details) {
+    if (!seniorId || !helpDeskRecordCategoryIds || !details) {
       return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Ensure helpDeskRecordCategoryIds is an array
+    const categoryIds = Array.isArray(helpDeskRecordCategoryIds)
+      ? helpDeskRecordCategoryIds.map(id => Number(id))
+      : [Number(helpDeskRecordCategoryIds)];
+
+    if (categoryIds.length === 0) {
+      return res.status(400).json({ message: "At least one category is required" });
     }
 
     const record = await helpdeskService.create({
       seniorId: Number(seniorId),
-      helpDeskRecordCategory: Number(helpDeskRecordCategory),
+      helpDeskRecordCategoryIds: categoryIds,
       details: String(details).slice(0, 100),
     });
 
@@ -53,9 +62,17 @@ export const detail = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { helpDeskRecordCategory, details } = req.body;
+    const { helpDeskRecordCategoryIds, details } = req.body;
 
-    const updated = await helpdeskService.update(id, { helpDeskRecordCategory, details });
+    // Convert helpDeskRecordCategoryIds to array if provided
+    let categoryIds: number[] | undefined;
+    if (helpDeskRecordCategoryIds !== undefined) {
+      categoryIds = Array.isArray(helpDeskRecordCategoryIds)
+        ? helpDeskRecordCategoryIds.map(catId => Number(catId))
+        : [Number(helpDeskRecordCategoryIds)];
+    }
+
+    const updated = await helpdeskService.update(id, { helpDeskRecordCategoryIds: categoryIds, details });
     if (!updated) return res.status(404).json({ message: "Not found" });
     return res.json(updated);
   } catch (err: any) {

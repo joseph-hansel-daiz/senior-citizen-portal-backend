@@ -30,6 +30,7 @@ import IdentifyingInformation from "./identifying-information.model";
 import SeniorStatusHistory from "./senior-status-history.model";
 import HelpDeskRecord from "./help-desk-record.model";
 import HelpDeskRecordCategory from "./options/help-desk-record-category.model";
+import HelpDeskRecordCategoryRecord from "./help-desk-record-category-record.model";
 
 import Children from "./children.model";
 import Dependent from "./dependent.model";
@@ -84,12 +85,19 @@ Senior.hasMany(Dependent, { foreignKey: "seniorId" });
 
 // Help Desk Associations
 HelpDeskRecord.belongsTo(Senior, { foreignKey: "seniorId" });
-HelpDeskRecord.belongsTo(HelpDeskRecordCategory, {
-  foreignKey: "helpDeskRecordCategory",
+HelpDeskRecord.belongsToMany(HelpDeskRecordCategory, {
+  through: { model: HelpDeskRecordCategoryRecord, unique: false },
+  foreignKey: "helpDeskRecordId",
+  otherKey: "helpDeskRecordCategoryId",
 });
-HelpDeskRecordCategory.hasMany(HelpDeskRecord, {
-  foreignKey: "helpDeskRecordCategory",
+HelpDeskRecordCategory.belongsToMany(HelpDeskRecord, {
+  through: { model: HelpDeskRecordCategoryRecord, unique: false },
+  foreignKey: "helpDeskRecordCategoryId",
+  otherKey: "helpDeskRecordId",
 });
+// Through model direct associations for includes
+HelpDeskRecordCategoryRecord.belongsTo(HelpDeskRecordCategory, { foreignKey: "helpDeskRecordCategoryId" });
+HelpDeskRecordCategoryRecord.belongsTo(HelpDeskRecord, { foreignKey: "helpDeskRecordId" });
 
 // Senior Vaccines Associations
 Senior.belongsToMany(Vaccine, {
@@ -320,6 +328,7 @@ export {
   HealthProfile,
   HelpDeskRecord,
   HelpDeskRecordCategory,
+  HelpDeskRecordCategoryRecord,
   HighestEducationalAttainment,
   IdentifyingInformation,
   IncomeAssistanceSource,
