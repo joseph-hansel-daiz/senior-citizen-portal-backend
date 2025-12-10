@@ -194,6 +194,76 @@ export class AnalyticsService {
       count: Number((r as any).count),
     }));
   }
+
+  async deadAliveCount(params?: { barangayId?: number }) {
+    const { barangayId } = params || {};
+    
+    // Count alive seniors: not deleted, Active status, no DeathInfo
+    const aliveInclude: Includeable[] = [
+      {
+        model: Senior,
+        attributes: [],
+        where: {
+          isDeleted: false,
+          ...(barangayId ? { barangayId } : {}),
+        },
+        required: true,
+        include: [
+          {
+            model: DeathInfo,
+            attributes: [],
+            required: false,
+          } as any,
+          {
+            model: SeniorStatusHistory,
+            attributes: [],
+            required: true,
+            where: {
+              status: 'Active',
+            },
+          } as any,
+        ],
+      } as any,
+    ];
+
+    const aliveCount = await IdentifyingInformation.count({
+      include: aliveInclude,
+      where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
+      distinct: true,
+      col: 'seniorId',
+    });
+
+    // Count dead seniors: not deleted, has DeathInfo
+    const deadInclude: Includeable[] = [
+      {
+        model: Senior,
+        attributes: [],
+        where: {
+          isDeleted: false,
+          ...(barangayId ? { barangayId } : {}),
+        },
+        required: true,
+        include: [
+          {
+            model: DeathInfo,
+            attributes: [],
+            required: true,
+          } as any,
+        ],
+      } as any,
+    ];
+
+    const deadCount = await IdentifyingInformation.count({
+      include: deadInclude,
+      distinct: true,
+      col: 'seniorId',
+    });
+
+    return [
+      { status: "alive", count: aliveCount },
+      { status: "dead", count: deadCount },
+    ];
+  }
 }
 
 export const analyticsService = new AnalyticsService();

@@ -9,6 +9,7 @@ router.get("/assistance", analyticsController.assistanceTotals);
 router.get("/vaccines", analyticsController.vaccineCoverage);
 router.get("/users-per-role", analyticsController.usersPerRole);
 router.get("/users-per-barangay", analyticsController.usersPerBarangay);
+router.get("/dead-alive-count", analyticsController.deadAliveCount);
 
 export default router;
 

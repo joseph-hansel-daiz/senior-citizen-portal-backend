@@ -73,4 +73,14 @@ export const usersPerBarangay = async (req: Request, res: Response) => {
   }
 };
 
+export const deadAliveCount = async (req: Request, res: Response) => {
+  try {
+    const barangayId = resolveBarangayId(req);
+    const data = await analyticsService.deadAliveCount({ barangayId });
+    res.json(data);
+  } catch (err: any) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 
