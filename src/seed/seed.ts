@@ -727,6 +727,34 @@ async function seed() {
       createdBy: 1,
     });
 
+    await FamilyComposition.create({
+      seniorId: pendingSenior.id,
+      createdBy: 1,
+    });
+
+    await DependencyProfile.create({
+      seniorId: pendingSenior.id,
+      createdBy: 1,
+    });
+
+    await EducationProfile.create({
+      seniorId: pendingSenior.id,
+      createdBy: 1,
+    });
+
+    await EconomicProfile.create({
+      seniorId: pendingSenior.id,
+      createdBy: 1,
+    });
+
+    await HealthProfile.create({
+      seniorId: pendingSenior.id,
+      bloodType: "O+",
+      checkUp: false,
+      scheduleCheckUp: "Annually",
+      createdBy: 1,
+    });
+
     await SeniorStatusHistory.create({
       seniorId: pendingSenior.id,
       status: "Pending",
@@ -759,6 +787,34 @@ async function seed() {
       sexAtBirth: "Male",
       contactNumber: "09191234567",
       oscaIdNo: "OSCA-2024-003",
+      createdBy: 1,
+    });
+
+    await FamilyComposition.create({
+      seniorId: declinedSenior.id,
+      createdBy: 1,
+    });
+
+    await DependencyProfile.create({
+      seniorId: declinedSenior.id,
+      createdBy: 1,
+    });
+
+    await EducationProfile.create({
+      seniorId: declinedSenior.id,
+      createdBy: 1,
+    });
+
+    await EconomicProfile.create({
+      seniorId: declinedSenior.id,
+      createdBy: 1,
+    });
+
+    await HealthProfile.create({
+      seniorId: declinedSenior.id,
+      bloodType: "O+",
+      checkUp: false,
+      scheduleCheckUp: "Annually",
       createdBy: 1,
     });
 
@@ -804,6 +860,34 @@ async function seed() {
       createdBy: 1,
     });
 
+    await FamilyComposition.create({
+      seniorId: activeSenior.id,
+      createdBy: 1,
+    });
+
+    await DependencyProfile.create({
+      seniorId: activeSenior.id,
+      createdBy: 1,
+    });
+
+    await EducationProfile.create({
+      seniorId: activeSenior.id,
+      createdBy: 1,
+    });
+
+    await EconomicProfile.create({
+      seniorId: activeSenior.id,
+      createdBy: 1,
+    });
+
+    await HealthProfile.create({
+      seniorId: activeSenior.id,
+      bloodType: "O+",
+      checkUp: false,
+      scheduleCheckUp: "Annually",
+      createdBy: 1,
+    });
+
     await SeniorStatusHistory.create({
       seniorId: activeSenior.id,
       status: "Pending",
@@ -843,6 +927,34 @@ async function seed() {
       sexAtBirth: "Male",
       contactNumber: "09171234567",
       oscaIdNo: "OSCA-2024-005",
+      createdBy: 1,
+    });
+
+    await FamilyComposition.create({
+      seniorId: deceasedSenior.id,
+      createdBy: 1,
+    });
+
+    await DependencyProfile.create({
+      seniorId: deceasedSenior.id,
+      createdBy: 1,
+    });
+
+    await EducationProfile.create({
+      seniorId: deceasedSenior.id,
+      createdBy: 1,
+    });
+
+    await EconomicProfile.create({
+      seniorId: deceasedSenior.id,
+      createdBy: 1,
+    });
+
+    await HealthProfile.create({
+      seniorId: deceasedSenior.id,
+      bloodType: "O+",
+      checkUp: false,
+      scheduleCheckUp: "Annually",
       createdBy: 1,
     });
 

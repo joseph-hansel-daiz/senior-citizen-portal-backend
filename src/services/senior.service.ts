@@ -207,6 +207,18 @@ export class SeniorService {
         isDeleted: false,
         ...(filter?.barangayId ? { barangayId: filter.barangayId } : {}),
       },
+      attributes: [
+        "id",
+        "isDeleted",
+        "barangayId",
+        "photo", // Explicitly include photo field
+        "createdAt",
+        "updatedAt",
+        "deletedAt",
+        "createdBy",
+        "updatedBy",
+        "deletedBy",
+      ],
       include: [
         {
           model: Barangay,
