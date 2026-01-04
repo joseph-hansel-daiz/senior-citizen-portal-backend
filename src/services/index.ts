@@ -1,5 +1,6 @@
 export { authService } from './auth.service';
 export { userService } from './user.service';
+export { passwordResetService } from './password-reset.service';
 export { optionService } from './option.service';
 export { seniorService } from './senior.service';
 export { identifyingInformationService } from './identifying-information.service';

@@ -53,6 +53,7 @@ import SeniorSpecializationTechnicalSkill from "./seniorOptions/seniorSpecializa
 import SeniorVisualConcern from "./seniorOptions/seniorVisualConcern.model";
 
 import User from "./user.model";
+import PasswordResetCode from "./password-reset-code.model";
 import Vaccine from "./options/vaccine.model";
 import SeniorVaccine from "./seniorOptions/seniorVaccine.model";
 import Assistance from "./options/assistance.model";
@@ -61,6 +62,10 @@ import SeniorAssistance from "./seniorOptions/seniorAssistance.model";
 // Basic Associations
 Barangay.hasMany(User, { foreignKey: "barangayId" });
 User.belongsTo(Barangay, { foreignKey: "barangayId" });
+
+// Password Reset Code Associations
+User.hasOne(PasswordResetCode, { foreignKey: "userId", onDelete: "CASCADE" });
+PasswordResetCode.belongsTo(User, { foreignKey: "userId" });
 
 Senior.belongsTo(Barangay, { foreignKey: "barangayId" });
 Senior.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
@@ -334,6 +339,7 @@ export {
   IncomeAssistanceSource,
   LivingCondition,
   MonthlyIncome,
+  PasswordResetCode,
   PersonalMovableProperty,
   ProblemsNeedsCommonlyEncountered,
   RealImmovableProperty,
