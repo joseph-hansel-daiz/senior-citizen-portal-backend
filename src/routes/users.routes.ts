@@ -15,6 +15,7 @@ router.post(
 );
 router.get("/me", requireAuthentication, userController.profile);
 router.put("/me", requireAuthentication, upload.single("photo"), userController.updateProfile);
+router.put("/me/password", requireAuthentication, userController.updateMyPassword);
 router.get("/", requireAuthentication, requireAdmin, userController.list);
 router.get("/:id", requireAuthentication, requireAdmin, userController.detail);
 router.put("/:id", requireAuthentication, requireAdmin, upload.single("photo"), userController.updateUser);

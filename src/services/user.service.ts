@@ -160,6 +160,17 @@ export class UserService {
     return { success: true };
   }
 
+  async updateMyPassword(userId: string, newPassword: string) {
+    if (!newPassword) {
+      throw new Error("Password is required");
+    }
+    const user = await User.findByPk(userId);
+    if (!user) throw new Error("User not found");
+    user.set({ password: newPassword });
+    await user.save();
+    return { success: true };
+  }
+
   async updateUserPassword(id: string, newPassword: string) {
     if (!newPassword) {
       throw new Error("Password is required");

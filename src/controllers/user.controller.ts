@@ -214,6 +214,22 @@ export const removeUser = async (req: Request, res: Response) => {
   }
 };
 
+export const updateMyPassword = async (req: any, res: Response) => {
+  try {
+    const { password } = req.body as { password: string };
+    const result = await userService.updateMyPassword(req.user.id, password);
+    return res.json(result);
+  } catch (err: any) {
+    if (err.message.includes("required")) {
+      return res.status(400).json({ message: err.message });
+    }
+    if (err.message.includes("not found")) {
+      return res.status(404).json({ message: err.message });
+    }
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 export const updatePassword = async (req: Request, res: Response) => {
   try {
     const { password } = req.body as { password: string };
