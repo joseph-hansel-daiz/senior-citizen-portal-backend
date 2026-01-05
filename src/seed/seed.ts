@@ -61,14 +61,14 @@ async function seed() {
     await sequelize.sync({ force: true });
 
     console.log("Seeding Barangays...");
-    await Barangay.create({ name: "Astorga" });
-    await Barangay.create({ name: "Balire" });
-    await Barangay.create({ name: "Banawang" });
-    await Barangay.create({ name: "San Antonio" });
-    await Barangay.create({ name: "San Pedro" });
-    await Barangay.create({ name: "San Roque" });
-    await Barangay.create({ name: "San Vicente" });
-    await Barangay.create({ name: "Santo Niño" });
+    await Barangay.create({ name: "Guindapunan East" });
+    await Barangay.create({ name: "Sawang" });
+    await Barangay.create({ name: "San Mateo" });
+    await Barangay.create({ name: "Sidlangan" });
+    await Barangay.create({ name: "Ponong" });
+    await Barangay.create({ name: "Canal" });
+    await Barangay.create({ name: "Parena" });
+    await Barangay.create({ name: "Baybay" });
 
     console.log("Seeding users...");
     await User.create({
@@ -91,58 +91,58 @@ async function seed() {
     });
 
     await User.create({
-      username: "astorga",
+      username: "guindapunan_east",
       password: "password123",
-      name: "Astorga",
+      name: "Guindapunan East",
       role: "barangay",
       barangayId: 1,
     });
     await User.create({
-      username: "balire",
+      username: "sawang",
       password: "password123",
-      name: "Balire",
+      name: "Sawang",
       role: "barangay",
       barangayId: 2,
     });
     await User.create({
-      username: "banawang",
+      username: "san_mateo",
       password: "password123",
-      name: "Banawang",
+      name: "San Mateo",
       role: "barangay",
       barangayId: 3,
     });
     await User.create({
-      username: "san_antonio",
+      username: "sidlangan",
       password: "password123",
-      name: "San Antonio",
+      name: "Sidlangan",
       role: "barangay",
       barangayId: 4,
     });
     await User.create({
-      username: "san_pedro",
+      username: "ponong",
       password: "password123",
-      name: "San Pedro",
+      name: "Ponong",
       role: "barangay",
       barangayId: 5,
     });
     await User.create({
-      username: "san_roque",
+      username: "canal",
       password: "password123",
-      name: "San Roque",
+      name: "Canal",
       role: "barangay",
       barangayId: 6,
     });
     await User.create({
-      username: "san_vicente",
+      username: "parena",
       password: "password123",
-      name: "San Vicente",
+      name: "Parena",
       role: "barangay",
       barangayId: 7,
     });
     await User.create({
-      username: "santo_niño",
+      username: "baybay",
       password: "password123",
-      name: "Santo Niño",
+      name: "Baybay",
       role: "barangay",
       barangayId: 8,
     });
