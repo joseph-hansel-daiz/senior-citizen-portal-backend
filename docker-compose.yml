@@ -3,32 +3,56 @@ services:
     image: postgres:15
     restart: unless-stopped
     environment:
-      POSTGRES_DB: seniorCitizenPortalDb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DB_NAME:-seniorCitizenPortalDb}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  app:
-    build: .
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
-      PORT: 8000
+      PORT: ${PORT:-8002}
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME: seniorCitizenPortalDb
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      JWT_SECRET: supersecretkey
+      DB_NAME: ${DB_NAME:-seniorCitizenPortalDb}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-supersecretkey}
+      FRONTEND_URL: ${FRONTEND_URL:-http://35.221.129.106:3001}
+      NODE_ENV: production
     ports:
-      - "8000:8000"
+      - "8002:8002"
     volumes:
-      - .:/app
-    command: npm run dev
+      - ./uploads:/app/uploads
+    command: node -r tsconfig-paths/register dist/app.js
+
+  frontend:
+    build:
+      context: ../senior-citizen-portal
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      PORT: 3001
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://35.221.129.106:8002}
+      NODE_ENV: production
+    ports:
+      - "3001:3001"
 
 volumes:
   pgdata:

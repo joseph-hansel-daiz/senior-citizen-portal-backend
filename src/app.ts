@@ -19,9 +19,13 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
+  : ["http://localhost:3000", "http://localhost:3001", "http://35.221.129.106:3001"];
+
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
