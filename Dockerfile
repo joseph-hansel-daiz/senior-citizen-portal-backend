@@ -19,7 +19,7 @@ FROM node:18-alpine AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Copy package files
 COPY package.json package-lock.json* ./
@@ -29,13 +29,11 @@ RUN npm ci --only=production
 
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
 # Create uploads directory
 RUN mkdir -p /app/uploads
 
 EXPOSE 8002
 
-# Use tsconfig-paths to resolve path aliases at runtime
-# Note: dist/app.js (not .ts) since TypeScript compiles to JavaScript
-CMD ["node", "-r", "tsconfig-paths/register", "dist/app.js"]
+# No need for tsconfig-paths since paths are already transformed by tsc-alias
+CMD ["node", "dist/app.js"]
