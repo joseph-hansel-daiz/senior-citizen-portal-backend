@@ -32,7 +32,7 @@ import {
   SpecializationTechnicalSkill,
   VisualConcern
 } from "@/models";
-import { Transaction } from "sequelize";
+import { Transaction, where, fn, col } from "sequelize";
 
 export class SeniorService {
   private getIncludeOptions() {
@@ -200,7 +200,7 @@ export class SeniorService {
     ];
   }
 
-  async listSeniors(filter?: { barangayId?: number }) {
+  async listSeniors(filter?: { barangayId?: number; birthYear?: number }) {
     // Lightweight list without all profile relationships for better performance
     return Senior.findAll({
       where: {
@@ -231,7 +231,13 @@ export class SeniorService {
         },
         {
           model: IdentifyingInformation,
-          attributes: { exclude: ["createdAt", "updatedAt"] }
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+          ...(filter?.birthYear != null
+            ? {
+                where: where(fn("YEAR", col("birthDate")), filter.birthYear),
+                required: true,
+              }
+            : {}),
         },
         {
           model: DependencyProfile,

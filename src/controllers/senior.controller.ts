@@ -12,11 +12,23 @@ import {
 import { TransactionHelper } from "@/utils/transaction";
 import { Children, Dependent } from "@/models";
 
-export const list = async (_req: Request, res: Response) => {
+export const list = async (req: Request, res: Response) => {
   try {
-    const user = (_req as any).user;
-    const barangayId = user?.role === "barangay" ? Number(user?.barangayId) : undefined;
-    const seniors = await seniorService.listSeniors(barangayId ? { barangayId } : undefined);
+    const user = (req as any).user;
+    const barangayId =
+      user?.role === "barangay"
+        ? Number(user?.barangayId)
+        : req.query.barangayId
+          ? Number(req.query.barangayId)
+          : undefined;
+    const birthYear = req.query.birthYear
+      ? Number(req.query.birthYear)
+      : undefined;
+    const filter =
+      barangayId != null || birthYear != null
+        ? { barangayId, birthYear }
+        : undefined;
+    const seniors = await seniorService.listSeniors(filter);
     res.json(seniors);
   } catch (err: any) {
     res.status(500).json({ message: "Server error", error: err.message });
