@@ -2,8 +2,8 @@ import {
   Assistance,
   Barangay,
   DeathInfo,
-  IdentifyingInformation,
   Senior,
+  SeniorProfile,
   SeniorAssistance,
   SeniorStatusHistory,
   SeniorVaccine,
@@ -48,10 +48,10 @@ export class AnalyticsService {
 
   async genderDistribution(params?: { barangayId?: number }) {
     const { barangayId } = params || {};
-    const records = await IdentifyingInformation.findAll({
+    const records = await SeniorProfile.findAll({
       attributes: [
         [col("sexAtBirth"), "sexAtBirth"],
-        [fn("COUNT", fn("DISTINCT", col("IdentifyingInformation.seniorId"))), "count"],
+        [fn("COUNT", fn("DISTINCT", col("SeniorProfile.seniorId"))), "count"],
       ] as unknown as FindAttributeOptions,
       include: this.barangayInclude(barangayId),
       where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
@@ -66,7 +66,7 @@ export class AnalyticsService {
 
   async ageDemographics(params?: { barangayId?: number }) {
     const { barangayId } = params || {};
-    const items = await IdentifyingInformation.findAll({
+    const items = await SeniorProfile.findAll({
       attributes: ["birthDate"],
       include: this.activeSeniorInclude(barangayId),
       where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
@@ -226,7 +226,7 @@ export class AnalyticsService {
       } as any,
     ];
 
-    const aliveCount = await IdentifyingInformation.count({
+    const aliveCount = await SeniorProfile.count({
       include: aliveInclude,
       where: literal('"Senior->DeathInfo"."seniorId" IS NULL'),
       distinct: true,
@@ -253,7 +253,7 @@ export class AnalyticsService {
       } as any,
     ];
 
-    const deadCount = await IdentifyingInformation.count({
+    const deadCount = await SeniorProfile.count({
       include: deadInclude,
       distinct: true,
       col: 'seniorId',

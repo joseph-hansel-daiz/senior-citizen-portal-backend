@@ -6,8 +6,11 @@ const router = Router();
 
 // router.use(requireAuthentication);
 
-// GET /seniors - List all seniors
+// GET /seniors - List all seniors (returns list DTO)
 router.get("/", seniorController.list);
+
+// GET /seniors/options - List senior id+name for dropdowns (query: status=active|pending|all)
+router.get("/options", seniorController.options);
 
 // GET /seniors/:id - Get senior by ID
 router.get("/:id", seniorController.detail);

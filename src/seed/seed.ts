@@ -4,14 +4,9 @@ import {
   User,
   Barangay,
   Senior,
-  IdentifyingInformation,
-  FamilyComposition,
+  SeniorProfile,
   Children,
   Dependent,
-  DependencyProfile,
-  EducationProfile,
-  EconomicProfile,
-  HealthProfile,
   HelpDeskRecord,
   HelpDeskRecordCategory,
   HelpDeskRecordCategoryRecord,
@@ -33,22 +28,6 @@ import {
   SocialEmotionalConcern,
   SpecializationTechnicalSkill,
   VisualConcern,
-  SeniorAreaOfDifficulty,
-  SeniorAuralConcern,
-  SeniorCohabitant,
-  SeniorCommunityInvolvement,
-  SeniorDentalConcern,
-  SeniorHealthProblemAilment,
-  SeniorHighestEducationalAttainment,
-  SeniorIncomeAssistanceSource,
-  SeniorLivingCondition,
-  SeniorMonthlyIncome,
-  SeniorPersonalMovableProperty,
-  SeniorProblemsNeedsCommonlyEncountered,
-  SeniorRealImmovableProperty,
-  SeniorSocialEmotionalConcern,
-  SeniorSpecializationTechnicalSkill,
-  SeniorVisualConcern,
   Vaccine,
   SeniorVaccine,
   Assistance,
@@ -148,7 +127,6 @@ async function seed() {
     });
 
     console.log("Seeding options...");
-    // Cohabitants
     await Cohabitant.create({ name: "Grand Children" });
     await Cohabitant.create({ name: "Common Law Spouse" });
     await Cohabitant.create({ name: "Spouse" });
@@ -158,7 +136,6 @@ async function seed() {
     await Cohabitant.create({ name: "Relative" });
     await Cohabitant.create({ name: "Friends" });
 
-    // Living Conditions
     await LivingCondition.create({ name: "No privacy" });
     await LivingCondition.create({ name: "Overcrowded in home" });
     await LivingCondition.create({ name: "Informal Settler" });
@@ -168,7 +145,6 @@ async function seed() {
       name: "Longing for independent living quiet atmosphere",
     });
 
-    // Education
     await HighestEducationalAttainment.create({ name: "Not Attended School" });
     await HighestEducationalAttainment.create({ name: "Elementary Level" });
     await HighestEducationalAttainment.create({ name: "Elementary Graduate" });
@@ -179,7 +155,6 @@ async function seed() {
     await HighestEducationalAttainment.create({ name: "College Graduate" });
     await HighestEducationalAttainment.create({ name: "Post Graduate" });
 
-    // Technical Skills
     await SpecializationTechnicalSkill.create({ name: "Medical" });
     await SpecializationTechnicalSkill.create({ name: "Dental" });
     await SpecializationTechnicalSkill.create({ name: "Fishing" });
@@ -198,109 +173,94 @@ async function seed() {
     await SpecializationTechnicalSkill.create({ name: "Arts" });
     await SpecializationTechnicalSkill.create({ name: "Plumber" });
     await SpecializationTechnicalSkill.create({ name: "Shoemaker" });
-    await SpecializationTechnicalSkill.create({ name: "Chef/Cook" });
-    await SpecializationTechnicalSkill.create({
-      name: "Information Technology",
-    });
+    await SpecializationTechnicalSkill.create({ name: "Driver" });
+    await SpecializationTechnicalSkill.create({ name: "Computer Literate" });
 
-    // Community Activities
     await CommunityInvolvement.create({ name: "Medical" });
-    await CommunityInvolvement.create({ name: "Resource Volunteer" });
-    await CommunityInvolvement.create({ name: "Community Beautification" });
-    await CommunityInvolvement.create({
-      name: "Community/Organization Leader",
-    });
-    await CommunityInvolvement.create({ name: "Friendly Visits" });
-    await CommunityInvolvement.create({
-      name: "Neighborhood Support Services",
-    });
-    await CommunityInvolvement.create({ name: "Legal Services" });
+    await CommunityInvolvement.create({ name: "Dental" });
+    await CommunityInvolvement.create({ name: "Legal" });
+    await CommunityInvolvement.create({ name: "Financial" });
+    await CommunityInvolvement.create({ name: "Education" });
+    await CommunityInvolvement.create({ name: "Social" });
+    await CommunityInvolvement.create({ name: "Spiritual" });
     await CommunityInvolvement.create({ name: "Religious" });
     await CommunityInvolvement.create({ name: "Counselling/Referral" });
-    await CommunityInvolvement.create({ name: "Sponsorship" });
+    await CommunityInvolvement.create({ name: "Sports" });
+    await CommunityInvolvement.create({ name: "Arts and Culture" });
+    await CommunityInvolvement.create({ name: "Environment" });
+    await CommunityInvolvement.create({ name: "Livelihood" });
+    await CommunityInvolvement.create({ name: "Disaster" });
+    await CommunityInvolvement.create({ name: "Others" });
 
-    // Sources of Income
-    await IncomeAssistanceSource.create({
-      name: "Own earnings, salary/ wages",
-    });
     await IncomeAssistanceSource.create({ name: "Own Pension" });
-    await IncomeAssistanceSource.create({ name: "Stocks/ Dividends" });
-    await IncomeAssistanceSource.create({
-      name: "Dependent on children/ relatives",
-    });
-    await IncomeAssistanceSource.create({ name: "Spouse's salary" });
     await IncomeAssistanceSource.create({ name: "Spouse Pension" });
-    await IncomeAssistanceSource.create({ name: "Insurance" });
-    await IncomeAssistanceSource.create({ name: "Rental/ Sharecorp" });
-    await IncomeAssistanceSource.create({ name: "Savings" });
-    await IncomeAssistanceSource.create({ name: "Livestock/ orchard/ farm" });
-    await IncomeAssistanceSource.create({ name: "Fishing" });
+    await IncomeAssistanceSource.create({ name: "Children Support" });
+    await IncomeAssistanceSource.create({ name: "Dependent on children/relatives" });
+    await IncomeAssistanceSource.create({ name: "Government Assistance" });
+    await IncomeAssistanceSource.create({ name: "NGO/CSO" });
+    await IncomeAssistanceSource.create({ name: "Self-employed" });
+    await IncomeAssistanceSource.create({ name: "Others" });
 
-    // Monthly Income
-    await MonthlyIncome.create({ name: "60000 and above" });
-    await MonthlyIncome.create({ name: "50000 to 60000" });
-    await MonthlyIncome.create({ name: "40000 to 50000" });
-    await MonthlyIncome.create({ name: "20000 to 30000" });
-    await MonthlyIncome.create({ name: "10000 to 20000" });
-    await MonthlyIncome.create({ name: "5000 to 10000" });
-    await MonthlyIncome.create({ name: "below 5000" });
-    await MonthlyIncome.create({ name: "None" });
-
-    // Real Immovable Property
-    await RealImmovableProperty.create({ name: "House" });
-    await RealImmovableProperty.create({ name: "Lot/ Farmland" });
+    await RealImmovableProperty.create({ name: "None" });
+    await RealImmovableProperty.create({ name: "Land Only" });
     await RealImmovableProperty.create({ name: "House & Lot" });
-    await RealImmovableProperty.create({ name: "Commercial Building" });
-    await RealImmovableProperty.create({ name: "Fishpond/ resort" });
+    await RealImmovableProperty.create({ name: "Commercial" });
+    await RealImmovableProperty.create({ name: "Agricultural" });
+    await RealImmovableProperty.create({ name: "Others" });
 
-    // Personal Movable Property
     await PersonalMovableProperty.create({ name: "Automobile" });
-    await PersonalMovableProperty.create({ name: "Personal Computer" });
-    await PersonalMovableProperty.create({ name: "Boats" });
-    await PersonalMovableProperty.create({ name: "Heavy Equipment" });
-    await PersonalMovableProperty.create({ name: "Laptops" });
     await PersonalMovableProperty.create({ name: "Motorcycle" });
+    await PersonalMovableProperty.create({ name: "Bicycle" });
+    await PersonalMovableProperty.create({ name: "Appliances" });
+    await PersonalMovableProperty.create({ name: "Jewelry" });
+    await PersonalMovableProperty.create({ name: "Livestock" });
     await PersonalMovableProperty.create({ name: "Mobile Phones" });
+    await PersonalMovableProperty.create({ name: "Others" });
 
-    // Problems
-    await ProblemsNeedsCommonlyEncountered.create({
-      name: "Lack of incomes/ resource",
-    });
-    await ProblemsNeedsCommonlyEncountered.create({
-      name: "Lose of income/ resource",
-    });
-    await ProblemsNeedsCommonlyEncountered.create({
-      name: "Skills/ capability training",
-    });
+    await MonthlyIncome.create({ name: "Below 5000" });
+    await MonthlyIncome.create({ name: "5000 to 10000" });
+    await MonthlyIncome.create({ name: "20000 to 30000" });
+    await MonthlyIncome.create({ name: "30000 to 40000" });
+    await MonthlyIncome.create({ name: "Above 40000" });
 
-    // Health Problems
+    await ProblemsNeedsCommonlyEncountered.create({ name: "Lack of incomes/resource" });
+    await ProblemsNeedsCommonlyEncountered.create({ name: "Health" });
+    await ProblemsNeedsCommonlyEncountered.create({ name: "Shelter" });
+    await ProblemsNeedsCommonlyEncountered.create({ name: "Food" });
+    await ProblemsNeedsCommonlyEncountered.create({ name: "Education" });
+    await ProblemsNeedsCommonlyEncountered.create({ name: "Others" });
+
     await HealthProblemAilment.create({ name: "Hypertension" });
-    await HealthProblemAilment.create({ name: "Arthritis/ Gout" });
-    await HealthProblemAilment.create({ name: "Coronary Heart Disease" });
+    await HealthProblemAilment.create({ name: "Arthritis/Gout" });
     await HealthProblemAilment.create({ name: "Diabetes" });
-    await HealthProblemAilment.create({ name: "Chronic Kidney Disease" });
-    await HealthProblemAilment.create({ name: "Alzheimer's/ Dementia" });
-    await HealthProblemAilment.create({
-      name: "Chronic Obstructive Pulmonary Disease",
-    });
+    await HealthProblemAilment.create({ name: "Heart Disease" });
+    await HealthProblemAilment.create({ name: "Asthma" });
+    await HealthProblemAilment.create({ name: "TB" });
+    await HealthProblemAilment.create({ name: "Stroke" });
+    await HealthProblemAilment.create({ name: "Cancer" });
+    await HealthProblemAilment.create({ name: "Others" });
 
-    // Dental Concerns
     await DentalConcern.create({ name: "Needs Dental Care" });
+    await DentalConcern.create({ name: "Has Dentures" });
+    await DentalConcern.create({ name: "No dental issues" });
+    await DentalConcern.create({ name: "Others" });
 
-    // Visual Concerns
-    await VisualConcern.create({ name: "Eye impairment" });
+    await VisualConcern.create({ name: "Blind" });
     await VisualConcern.create({ name: "Needs eye care" });
+    await VisualConcern.create({ name: "Has eyeglasses" });
+    await VisualConcern.create({ name: "No visual issues" });
+    await VisualConcern.create({ name: "Others" });
 
-    // Aural Concerns
     await AuralConcern.create({ name: "Aural impairment" });
+    await AuralConcern.create({ name: "Has hearing aid" });
+    await AuralConcern.create({ name: "No aural issues" });
+    await AuralConcern.create({ name: "Others" });
 
-    // Emotional / Social Concerns
-    await SocialEmotionalConcern.create({ name: "Feeling neglect/ rejection" });
+    await SocialEmotionalConcern.create({ name: "Feeling neglect/rejection" });
+    await SocialEmotionalConcern.create({ name: "Depression" });
+    await SocialEmotionalConcern.create({ name: "Feeling loneliness/ isolate" });
     await SocialEmotionalConcern.create({
       name: "Feeling helplessness/ worthlessness",
-    });
-    await SocialEmotionalConcern.create({
-      name: "Feeling loneliness/ isolate",
     });
     await SocialEmotionalConcern.create({
       name: "Lack leisure/ recreational activities",
@@ -309,26 +269,22 @@ async function seed() {
       name: "Lack SC friendly environment",
     });
 
-    // Vaccines
     console.log("Seeding vaccines...");
     const flu = await Vaccine.create({ name: "Influenza (Flu)" });
     const pneumo = await Vaccine.create({ name: "Pneumococcal" });
     const covid = await Vaccine.create({ name: "COVID-19" });
-    const shingles = await Vaccine.create({ name: "Shingles" });
+    await Vaccine.create({ name: "Shingles" });
 
-    // Assistances
     console.log("Seeding assistances...");
     const medicalAssistance = await Assistance.create({ name: "Medical Assistance" });
     const financialAssistance = await Assistance.create({ name: "Financial Assistance" });
     const foodAssistance = await Assistance.create({ name: "Food Assistance" });
-    const transportationAssistance = await Assistance.create({ name: "Transportation Assistance" });
+    await Assistance.create({ name: "Transportation Assistance" });
 
-    // Area of Difficulty
     await AreaOfDifficulty.create({ name: "High Cost of medicine" });
     await AreaOfDifficulty.create({ name: "Lack of medicines" });
     await AreaOfDifficulty.create({ name: "Lack of medical attention" });
 
-    // Help Desk Record Categories
     console.log("Seeding Help Desk Record Categories...");
     await HelpDeskRecordCategory.create({ name: "Medical Assistance" });
     await HelpDeskRecordCategory.create({ name: "Financial Aid" });
@@ -340,15 +296,25 @@ async function seed() {
     await HelpDeskRecordCategory.create({ name: "Other" });
 
     console.log("Seeding comprehensive senior data...");
-    
-    // Create a comprehensive senior with all possible data
     const senior = await Senior.create({
-      barangayId: 1, // Astorga
-      createdBy: 1, // Admin user
+      barangayId: 1,
+      createdBy: 1,
     });
 
-    // Identifying Information
-    await IdentifyingInformation.create({
+    await SeniorStatusHistory.create({
+      seniorId: senior.id,
+      status: "Pending",
+      note: "Initial registration",
+      createdBy: 1,
+    });
+    await SeniorStatusHistory.create({
+      seniorId: senior.id,
+      status: "Active",
+      note: "Documents verified and approved",
+      createdBy: 1,
+    });
+
+    await SeniorProfile.create({
       seniorId: senior.id,
       lastname: "Santos",
       firstname: "Maria",
@@ -380,12 +346,6 @@ async function seed() {
       hasPension: true,
       pensionList: "GSIS Pension, SSS Pension",
       capabilityToTravel: true,
-      createdBy: 1,
-    });
-
-    // Family Composition
-    await FamilyComposition.create({
-      seniorId: senior.id,
       spouseLastname: "Santos",
       spouseFirstname: "Juan",
       spouseMiddlename: "Cruz",
@@ -396,249 +356,83 @@ async function seed() {
       motherLastname: "Reyes",
       motherFirstname: "Ana",
       motherMiddlename: "Garcia",
-      createdBy: 1,
-    });
-
-    // Children
-    await Children.create({
-      seniorId: senior.id,
-      name: "Maria Santos Jr.",
-      occupation: "Nurse",
-      income: 25000.00,
-      age: 45,
-      isWorking: "Yes",
-    });
-
-    await Children.create({
-      seniorId: senior.id,
-      name: "Juan Santos Jr.",
-      occupation: "Engineer",
-      income: 35000.00,
-      age: 42,
-      isWorking: "Yes",
-    });
-
-    await Children.create({
-      seniorId: senior.id,
-      name: "Ana Santos",
-      occupation: "Teacher",
-      income: 20000.00,
-      age: 38,
-      isWorking: "Yes",
-    });
-
-    // Dependents
-    await Dependent.create({
-      seniorId: senior.id,
-      name: "Pedro Santos",
-      occupation: "Student",
-      income: 0.00,
-      age: 16,
-      isWorking: false,
-    });
-
-    await Dependent.create({
-      seniorId: senior.id,
-      name: "Maria Santos",
-      occupation: "Housewife",
-      income: 0.00,
-      age: 65,
-      isWorking: false,
-    });
-
-    // Dependency Profile
-    const dependencyProfile = await DependencyProfile.create({
-      seniorId: senior.id,
-      createdBy: 1,
-    });
-
-    // Associate with cohabitants
-    await SeniorCohabitant.create({
-      seniorId: senior.id,
-      cohabitantId: 3, // Spouse
-    });
-
-    await SeniorCohabitant.create({
-      seniorId: senior.id,
-      cohabitantId: 6, // Children
-    });
-
-    await SeniorCohabitant.create({
-      seniorId: senior.id,
-      cohabitantId: 7, // Relative
-    });
-
-    // Associate with living conditions
-    await SeniorLivingCondition.create({
-      seniorId: senior.id,
-      livingConditionId: 1, // No privacy
-    });
-
-    // Education Profile
-    const educationProfile = await EducationProfile.create({
-      seniorId: senior.id,
       sharedSkills: "Teaching, Cooking, Sewing",
-      createdBy: 1,
-    });
-
-    // Associate with educational attainment
-    await SeniorHighestEducationalAttainment.create({
-      seniorId: senior.id,
-      highestEducationalAttainmentId: 8, // College Graduate
-    });
-
-    // Associate with technical skills
-    await SeniorSpecializationTechnicalSkill.create({
-      seniorId: senior.id,
-      specializationTechnicalSkillId: 9, // Teaching
-    });
-
-    await SeniorSpecializationTechnicalSkill.create({
-      seniorId: senior.id,
-      specializationTechnicalSkillId: 10, // Cooking
-    });
-
-    await SeniorSpecializationTechnicalSkill.create({
-      seniorId: senior.id,
-      specializationTechnicalSkillId: 13, // Tailor
-    });
-
-    // Associate with community involvement
-    await SeniorCommunityInvolvement.create({
-      seniorId: senior.id,
-      communityInvolvementId: 1, // Medical
-    });
-
-    await SeniorCommunityInvolvement.create({
-      seniorId: senior.id,
-      communityInvolvementId: 8, // Religious
-    });
-
-    await SeniorCommunityInvolvement.create({
-      seniorId: senior.id,
-      communityInvolvementId: 9, // Counselling/Referral
-    });
-
-    // Economic Profile
-    const economicProfile = await EconomicProfile.create({
-      seniorId: senior.id,
-      createdBy: 1,
-    });
-
-    // Associate with income sources
-    await SeniorIncomeAssistanceSource.create({
-      seniorId: senior.id,
-      incomeAssistanceSourceId: 2, // Own Pension
-    });
-
-    await SeniorIncomeAssistanceSource.create({
-      seniorId: senior.id,
-      incomeAssistanceSourceId: 4, // Dependent on children/relatives
-    });
-
-    // Associate with properties
-    await SeniorRealImmovableProperty.create({
-      seniorId: senior.id,
-      realImmovablePropertyId: 3, // House & Lot
-    });
-
-    await SeniorPersonalMovableProperty.create({
-      seniorId: senior.id,
-      personalMovablePropertieId: 1, // Automobile
-    });
-
-    await SeniorPersonalMovableProperty.create({
-      seniorId: senior.id,
-      personalMovablePropertieId: 7, // Mobile Phones
-    });
-
-    // Associate with monthly income
-    await SeniorMonthlyIncome.create({
-      seniorId: senior.id,
-      monthlyIncomeId: 3, // 20000 to 30000
-    });
-
-    // Associate with problems
-    await SeniorProblemsNeedsCommonlyEncountered.create({
-      seniorId: senior.id,
-      problemsNeedsCommonlyEncounteredId: 1, // Lack of incomes/resource
-    });
-
-    // Health Profile
-    const healthProfile = await HealthProfile.create({
-      seniorId: senior.id,
       bloodType: "A+",
       physicalDisability: "Mild arthritis in hands",
       listMedicines: "Hypertension medication, pain relievers",
       checkUp: true,
       scheduleCheckUp: "Every 3 Months",
+      cohabitantIds: [3, 6, 7],
+      livingConditionIds: [1],
+      highestEducationalAttainmentIds: [8],
+      specializationTechnicalSkillIds: [9, 10, 13],
+      communityInvolvementIds: [1, 8, 9],
+      incomeAssistanceSourceIds: [2, 4],
+      realImmovablePropertyIds: [3],
+      personalMovablePropertyIds: [1, 7],
+      monthlyIncomeIds: [3],
+      problemsNeedsCommonlyEncounteredIds: [1],
+      healthProblemAilmentIds: [1, 2],
+      dentalConcernIds: [1],
+      visualConcernIds: [2],
+      auralConcernIds: [1],
+      socialEmotionalConcernIds: [1, 3],
+      areaOfDifficultyIds: [1, 2],
       createdBy: 1,
     });
 
-    // Associate with health problems
-    await SeniorHealthProblemAilment.create({
+    await Children.create({
       seniorId: senior.id,
-      healthProblemAilmentId: 1, // Hypertension
+      name: "Maria Santos Jr.",
+      occupation: "Nurse",
+      income: 25000.0,
+      age: 45,
+      isWorking: "Yes",
+    });
+    await Children.create({
+      seniorId: senior.id,
+      name: "Juan Santos Jr.",
+      occupation: "Engineer",
+      income: 35000.0,
+      age: 42,
+      isWorking: "Yes",
+    });
+    await Children.create({
+      seniorId: senior.id,
+      name: "Ana Santos",
+      occupation: "Teacher",
+      income: 20000.0,
+      age: 38,
+      isWorking: "Yes",
     });
 
-    await SeniorHealthProblemAilment.create({
+    await Dependent.create({
       seniorId: senior.id,
-      healthProblemAilmentId: 2, // Arthritis/Gout
+      name: "Pedro Santos",
+      occupation: "Student",
+      income: 0.0,
+      age: 16,
+      isWorking: false,
+    });
+    await Dependent.create({
+      seniorId: senior.id,
+      name: "Maria Santos",
+      occupation: "Housewife",
+      income: 0.0,
+      age: 65,
+      isWorking: false,
     });
 
-    // Associate with dental concerns
-    await SeniorDentalConcern.create({
-      seniorId: senior.id,
-      dentalConcernId: 1, // Needs Dental Care
-    });
-
-    // Associate with visual concerns
-    await SeniorVisualConcern.create({
-      seniorId: senior.id,
-      visualConcernId: 2, // Needs eye care
-    });
-
-    // Associate with aural concerns
-    await SeniorAuralConcern.create({
-      seniorId: senior.id,
-      auralConcernId: 1, // Aural impairment
-    });
-
-    // Associate with social/emotional concerns
-    await SeniorSocialEmotionalConcern.create({
-      seniorId: senior.id,
-      socialEmotionalConcernId: 1, // Feeling neglect/rejection
-    });
-
-    await SeniorSocialEmotionalConcern.create({
-      seniorId: senior.id,
-      socialEmotionalConcernId: 3, // Feeling loneliness/isolate
-    });
-
-    // Associate with areas of difficulty
-    await SeniorAreaOfDifficulty.create({
-      seniorId: senior.id,
-      areaOfDifficultyId: 1, // High Cost of medicine
-    });
-
-    await SeniorAreaOfDifficulty.create({
-      seniorId: senior.id,
-      areaOfDifficultyId: 2, // Lack of medicines
-    });
-
-    // Senior Vaccines
     console.log("Seeding senior vaccines...");
     await SeniorVaccine.create({ seniorId: senior.id, vaccineId: flu.id, vaccineDate: new Date("2024-10-01") });
     await SeniorVaccine.create({ seniorId: senior.id, vaccineId: pneumo.id, vaccineDate: new Date("2023-06-15") });
     await SeniorVaccine.create({ seniorId: senior.id, vaccineId: covid.id, vaccineDate: new Date("2025-01-20") });
 
-    // Senior Assistances
     console.log("Seeding senior assistances...");
     await SeniorAssistance.create({ seniorId: senior.id, assistanceId: medicalAssistance.id, assistanceDate: new Date("2024-09-01") });
     await SeniorAssistance.create({ seniorId: senior.id, assistanceId: financialAssistance.id, assistanceDate: new Date("2024-11-05") });
     await SeniorAssistance.create({ seniorId: senior.id, assistanceId: foodAssistance.id, assistanceDate: new Date("2025-02-10") });
 
-    // Help Desk Records
     const helpDeskRecord1 = await HelpDeskRecord.create({
       seniorId: senior.id,
       details: "Request for medical check-up assistance",
@@ -646,9 +440,8 @@ async function seed() {
     });
     await HelpDeskRecordCategoryRecord.create({
       helpDeskRecordId: helpDeskRecord1.id,
-      helpDeskRecordCategoryId: 1, // Medical Assistance
+      helpDeskRecordCategoryId: 1,
     });
-
     const helpDeskRecord2 = await HelpDeskRecord.create({
       seniorId: senior.id,
       details: "Application for senior citizen discount card",
@@ -656,9 +449,8 @@ async function seed() {
     });
     await HelpDeskRecordCategoryRecord.create({
       helpDeskRecordId: helpDeskRecord2.id,
-      helpDeskRecordCategoryId: 2, // Financial Aid
+      helpDeskRecordCategoryId: 2,
     });
-
     const helpDeskRecord3 = await HelpDeskRecord.create({
       seniorId: senior.id,
       details: "Request for food assistance program",
@@ -666,10 +458,8 @@ async function seed() {
     });
     await HelpDeskRecordCategoryRecord.create({
       helpDeskRecordId: helpDeskRecord3.id,
-      helpDeskRecordCategoryId: 7, // Food Assistance
+      helpDeskRecordCategoryId: 7,
     });
-
-    // Example of a record with multiple categories
     const helpDeskRecord4 = await HelpDeskRecord.create({
       seniorId: senior.id,
       details: "Multiple assistance requests - medical and transportation",
@@ -677,36 +467,26 @@ async function seed() {
     });
     await HelpDeskRecordCategoryRecord.create({
       helpDeskRecordId: helpDeskRecord4.id,
-      helpDeskRecordCategoryId: 1, // Medical Assistance
+      helpDeskRecordCategoryId: 1,
     });
     await HelpDeskRecordCategoryRecord.create({
       helpDeskRecordId: helpDeskRecord4.id,
-      helpDeskRecordCategoryId: 5, // Transportation
+      helpDeskRecordCategoryId: 5,
     });
 
-    // Senior Status History
-    await SeniorStatusHistory.create({
-      seniorId: senior.id,
-      status: "Pending",
-      note: "Initial registration",
-      createdBy: 1,
-    });
-
-    await SeniorStatusHistory.create({
-      seniorId: senior.id,
-      status: "Active",
-      note: "Documents verified and approved",
-      createdBy: 1,
-    });
-
-    // Create a Pending senior
+    // Pending senior
     console.log("Seeding pending senior...");
     const pendingSenior = await Senior.create({
-      barangayId: 2, // Balire
+      barangayId: 2,
       createdBy: 1,
     });
-
-    await IdentifyingInformation.create({
+    await SeniorStatusHistory.create({
+      seniorId: pendingSenior.id,
+      status: "Pending",
+      note: "Awaiting document verification",
+      createdBy: 1,
+    });
+    await SeniorProfile.create({
       seniorId: pendingSenior.id,
       lastname: "Reyes",
       firstname: "Juan",
@@ -724,52 +504,31 @@ async function seed() {
       sexAtBirth: "Male",
       contactNumber: "09187654321",
       oscaIdNo: "OSCA-2024-002",
-      createdBy: 1,
-    });
-
-    await FamilyComposition.create({
-      seniorId: pendingSenior.id,
-      createdBy: 1,
-    });
-
-    await DependencyProfile.create({
-      seniorId: pendingSenior.id,
-      createdBy: 1,
-    });
-
-    await EducationProfile.create({
-      seniorId: pendingSenior.id,
-      createdBy: 1,
-    });
-
-    await EconomicProfile.create({
-      seniorId: pendingSenior.id,
-      createdBy: 1,
-    });
-
-    await HealthProfile.create({
-      seniorId: pendingSenior.id,
       bloodType: "O+",
       checkUp: false,
       scheduleCheckUp: "Annually",
       createdBy: 1,
     });
 
-    await SeniorStatusHistory.create({
-      seniorId: pendingSenior.id,
-      status: "Pending",
-      note: "Awaiting document verification",
-      createdBy: 1,
-    });
-
-    // Create a Declined senior
+    // Declined senior
     console.log("Seeding declined senior...");
     const declinedSenior = await Senior.create({
-      barangayId: 3, // Banawang
+      barangayId: 3,
       createdBy: 1,
     });
-
-    await IdentifyingInformation.create({
+    await SeniorStatusHistory.create({
+      seniorId: declinedSenior.id,
+      status: "Pending",
+      note: "Initial application submitted",
+      createdBy: 1,
+    });
+    await SeniorStatusHistory.create({
+      seniorId: declinedSenior.id,
+      status: "Declined",
+      note: "Incomplete documentation - missing valid ID",
+      createdBy: 1,
+    });
+    await SeniorProfile.create({
       seniorId: declinedSenior.id,
       lastname: "Dela Cruz",
       firstname: "Pedro",
@@ -787,59 +546,31 @@ async function seed() {
       sexAtBirth: "Male",
       contactNumber: "09191234567",
       oscaIdNo: "OSCA-2024-003",
-      createdBy: 1,
-    });
-
-    await FamilyComposition.create({
-      seniorId: declinedSenior.id,
-      createdBy: 1,
-    });
-
-    await DependencyProfile.create({
-      seniorId: declinedSenior.id,
-      createdBy: 1,
-    });
-
-    await EducationProfile.create({
-      seniorId: declinedSenior.id,
-      createdBy: 1,
-    });
-
-    await EconomicProfile.create({
-      seniorId: declinedSenior.id,
-      createdBy: 1,
-    });
-
-    await HealthProfile.create({
-      seniorId: declinedSenior.id,
       bloodType: "O+",
       checkUp: false,
       scheduleCheckUp: "Annually",
       createdBy: 1,
     });
 
-    await SeniorStatusHistory.create({
-      seniorId: declinedSenior.id,
-      status: "Pending",
-      note: "Initial application submitted",
-      createdBy: 1,
-    });
-
-    await SeniorStatusHistory.create({
-      seniorId: declinedSenior.id,
-      status: "Declined",
-      note: "Incomplete documentation - missing valid ID",
-      createdBy: 1,
-    });
-
-    // Create another Active senior
+    // Second active senior
     console.log("Seeding another active senior...");
     const activeSenior = await Senior.create({
-      barangayId: 4, // San Antonio
+      barangayId: 4,
       createdBy: 1,
     });
-
-    await IdentifyingInformation.create({
+    await SeniorStatusHistory.create({
+      seniorId: activeSenior.id,
+      status: "Pending",
+      note: "Application received",
+      createdBy: 1,
+    });
+    await SeniorStatusHistory.create({
+      seniorId: activeSenior.id,
+      status: "Active",
+      note: "All requirements met and verified",
+      createdBy: 1,
+    });
+    await SeniorProfile.create({
       seniorId: activeSenior.id,
       lastname: "Lopez",
       firstname: "Rosa",
@@ -857,59 +588,31 @@ async function seed() {
       sexAtBirth: "Female",
       contactNumber: "09201234567",
       oscaIdNo: "OSCA-2024-004",
-      createdBy: 1,
-    });
-
-    await FamilyComposition.create({
-      seniorId: activeSenior.id,
-      createdBy: 1,
-    });
-
-    await DependencyProfile.create({
-      seniorId: activeSenior.id,
-      createdBy: 1,
-    });
-
-    await EducationProfile.create({
-      seniorId: activeSenior.id,
-      createdBy: 1,
-    });
-
-    await EconomicProfile.create({
-      seniorId: activeSenior.id,
-      createdBy: 1,
-    });
-
-    await HealthProfile.create({
-      seniorId: activeSenior.id,
       bloodType: "O+",
       checkUp: false,
       scheduleCheckUp: "Annually",
       createdBy: 1,
     });
 
-    await SeniorStatusHistory.create({
-      seniorId: activeSenior.id,
-      status: "Pending",
-      note: "Application received",
-      createdBy: 1,
-    });
-
-    await SeniorStatusHistory.create({
-      seniorId: activeSenior.id,
-      status: "Active",
-      note: "All requirements met and verified",
-      createdBy: 1,
-    });
-
-    // Create a Deceased senior
+    // Deceased senior
     console.log("Seeding deceased senior...");
     const deceasedSenior = await Senior.create({
-      barangayId: 5, // San Pedro
+      barangayId: 5,
       createdBy: 1,
     });
-
-    await IdentifyingInformation.create({
+    await SeniorStatusHistory.create({
+      seniorId: deceasedSenior.id,
+      status: "Pending",
+      note: "Application submitted",
+      createdBy: 1,
+    });
+    await SeniorStatusHistory.create({
+      seniorId: deceasedSenior.id,
+      status: "Active",
+      note: "Approved and registered",
+      createdBy: 1,
+    });
+    await SeniorProfile.create({
       seniorId: deceasedSenior.id,
       lastname: "Aquino",
       firstname: "Carlos",
@@ -927,57 +630,15 @@ async function seed() {
       sexAtBirth: "Male",
       contactNumber: "09171234567",
       oscaIdNo: "OSCA-2024-005",
-      createdBy: 1,
-    });
-
-    await FamilyComposition.create({
-      seniorId: deceasedSenior.id,
-      createdBy: 1,
-    });
-
-    await DependencyProfile.create({
-      seniorId: deceasedSenior.id,
-      createdBy: 1,
-    });
-
-    await EducationProfile.create({
-      seniorId: deceasedSenior.id,
-      createdBy: 1,
-    });
-
-    await EconomicProfile.create({
-      seniorId: deceasedSenior.id,
-      createdBy: 1,
-    });
-
-    await HealthProfile.create({
-      seniorId: deceasedSenior.id,
       bloodType: "O+",
       checkUp: false,
       scheduleCheckUp: "Annually",
       createdBy: 1,
     });
-
-    await SeniorStatusHistory.create({
-      seniorId: deceasedSenior.id,
-      status: "Pending",
-      note: "Application submitted",
-      createdBy: 1,
-    });
-
-    await SeniorStatusHistory.create({
-      seniorId: deceasedSenior.id,
-      status: "Active",
-      note: "Approved and registered",
-      createdBy: 1,
-    });
-
-    // Create death information
     const deathCertificateBuffer = Buffer.from(
       "DEATH CERTIFICATE - Carlos V. Aquino - Date of Death: 2025-09-15 - This is a placeholder for the actual death certificate document.",
       "utf-8"
     );
-
     await DeathInfo.create({
       seniorId: deceasedSenior.id,
       dateOfDeath: new Date("2025-09-15"),

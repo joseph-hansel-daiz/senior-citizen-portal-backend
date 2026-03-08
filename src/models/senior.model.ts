@@ -4,12 +4,7 @@ import sequelize from "../config/db";
 // Import models for associations
 import Barangay from "./barangay.model";
 import User from "./user.model";
-import IdentifyingInformation from "./identifying-information.model";
-import FamilyComposition from "./family-composition.model";
-import DependencyProfile from "./dependency-profile.model";
-import EducationProfile from "./education-profile.model";
-import EconomicProfile from "./economic-profile.model";
-import HealthProfile from "./health-profile.model";
+import SeniorProfile from "./senior-profile.model";
 import DeathInfo from "./death-info.model";
 import SeniorStatusHistory from "./senior-status-history.model";
 import HelpDeskRecord from "./help-desk-record.model";
@@ -33,12 +28,7 @@ class Senior extends Model<InferAttributes<Senior>, InferCreationAttributes<Seni
   declare deleter?: NonAttribute<User>;
 
   // Profile Associations
-  declare IdentifyingInformation?: NonAttribute<IdentifyingInformation>;
-  declare FamilyComposition?: NonAttribute<FamilyComposition>;
-  declare DependencyProfile?: NonAttribute<DependencyProfile>;
-  declare EducationProfile?: NonAttribute<EducationProfile>;
-  declare EconomicProfile?: NonAttribute<EconomicProfile>;
-  declare HealthProfile?: NonAttribute<HealthProfile>;
+  declare SeniorProfile?: NonAttribute<SeniorProfile>;
   declare DeathInfo?: NonAttribute<DeathInfo>;
   declare SeniorStatusHistories?: NonAttribute<SeniorStatusHistory[]>;
   declare HelpDeskRecords?: NonAttribute<HelpDeskRecord[]>;

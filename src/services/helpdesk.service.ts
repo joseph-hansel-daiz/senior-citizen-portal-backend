@@ -1,4 +1,4 @@
-import { HelpDeskRecord, HelpDeskRecordCategory, Senior, IdentifyingInformation, HelpDeskRecordCategoryRecord } from "@/models";
+import { HelpDeskRecord, HelpDeskRecordCategory, Senior, SeniorProfile, HelpDeskRecordCategoryRecord } from "@/models";
 
 export class HelpdeskService {
   async list(filter?: { barangayId?: number }) {
@@ -12,7 +12,7 @@ export class HelpdeskService {
           required: !!filter?.barangayId,
           include: [
             {
-              model: IdentifyingInformation,
+              model: SeniorProfile,
               attributes: ["firstname", "lastname", "middlename"],
             },
           ],
@@ -31,7 +31,7 @@ export class HelpdeskService {
           attributes: ["id"],
           include: [
             {
-              model: IdentifyingInformation,
+              model: SeniorProfile,
               attributes: ["firstname", "lastname", "middlename"],
             },
           ],

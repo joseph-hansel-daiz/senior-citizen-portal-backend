@@ -1,16 +1,6 @@
 import { Request, Response } from "express";
-import {
-  seniorService,
-  identifyingInformationService,
-  familyCompositionService,
-  dependencyProfileService,
-  educationProfileService,
-  economicProfileService,
-  healthProfileService,
-  deathInfoService,
-} from "@/services";
+import { seniorService, deathInfoService } from "@/services";
 import { TransactionHelper } from "@/utils/transaction";
-import { Children, Dependent } from "@/models";
 
 export const list = async (req: Request, res: Response) => {
   try {
@@ -35,6 +25,18 @@ export const list = async (req: Request, res: Response) => {
   }
 };
 
+export const options = async (req: Request, res: Response) => {
+  try {
+    const status = req.query.status as "active" | "pending" | "all" | undefined;
+    const list = await seniorService.getSeniorOptions(
+      status ? { status } : undefined
+    );
+    res.json(list);
+  } catch (err: any) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 export const detail = async (req: Request, res: Response) => {
   try {
     const senior = await seniorService.getSeniorById(req.params.id);
@@ -50,177 +52,41 @@ export const detail = async (req: Request, res: Response) => {
 
 export const create = async (req: any, res: Response) => {
   try {
-    let requestData;
+    let requestData: any;
     let photoBuffer: Buffer | undefined;
 
-    // Check if request is multipart/form-data (has file upload)
     if (req.file?.buffer) {
-      // Handle multipart/form-data with file upload
-      const { data, photo } = req.body;
-      
-      // Parse the JSON data field
-      requestData = JSON.parse(data);
-      
-      // Get photo from uploaded file
+      try {
+        requestData = typeof req.body.data === "string" ? JSON.parse(req.body.data) : req.body;
+      } catch {
+        return res.status(400).json({ message: "Invalid JSON in data field" });
+      }
       photoBuffer = req.file.buffer as Buffer;
     } else {
-      // Handle regular JSON request
       requestData = req.body;
-      
-      // Handle photo from JSON (base64 or other format)
       const { photo } = requestData;
       if (photo) {
         if (typeof photo === "string" && photo.startsWith("data:")) {
-          // Base64 data URL
           photoBuffer = Buffer.from(
             photo.replace(/^data:[\w/]+;base64,/, ""),
             "base64"
           );
         } else if (photo instanceof Buffer) {
-          // Already a Buffer
           photoBuffer = photo;
         }
       }
     }
 
-    const {
-      barangayId,
-      identifyingInformation,
-      familyComposition,
-      dependencyProfile,
-      educationProfile,
-      economicProfile,
-      healthProfile,
-      children,
-      dependents,
-    } = requestData;
     const createdBy = req.user?.id;
-
-    // Execute all operations within a single transaction
     const completeSenior = await TransactionHelper.executeInTransaction(
       async (transaction) => {
-        // Create the senior first
-        const senior = await seniorService.createSenior(
+        return seniorService.createSenior(
           {
-            barangayId: Number(barangayId),
+            ...requestData,
+            barangayId: Number(requestData.barangayId),
             photo: photoBuffer ? (photoBuffer as unknown as Blob) : undefined,
             createdBy,
           },
-          transaction
-        );
-
-        const seniorId = senior.id;
-
-        // Create all profile associations - always create all profiles
-        const profilePromises = [];
-
-        // Always create IdentifyingInformation (required)
-        profilePromises.push(
-          identifyingInformationService.create(
-            {
-              seniorId,
-              ...identifyingInformation,
-              createdBy,
-            },
-            transaction
-          )
-        );
-
-        // Always create FamilyComposition
-        profilePromises.push(
-          familyCompositionService.create(
-            {
-              seniorId,
-              ...familyComposition,
-              createdBy,
-            },
-            transaction
-          )
-        );
-
-        // Always create DependencyProfile
-        profilePromises.push(
-          dependencyProfileService.create(
-            {
-              seniorId,
-              ...dependencyProfile,
-              createdBy,
-            },
-            transaction
-          )
-        );
-
-        // Always create EducationProfile
-        profilePromises.push(
-          educationProfileService.create(
-            {
-              seniorId,
-              ...educationProfile,
-              createdBy,
-            },
-            transaction
-          )
-        );
-
-        // Always create EconomicProfile
-        profilePromises.push(
-          economicProfileService.create(
-            {
-              seniorId,
-              ...economicProfile,
-              createdBy,
-            },
-            transaction
-          )
-        );
-
-        // Always create HealthProfile
-        profilePromises.push(
-          healthProfileService.create(
-            {
-              seniorId,
-              ...healthProfile,
-              createdBy,
-            },
-            transaction
-          )
-        );
-
-        // Wait for all profile creations to complete
-        await Promise.all(profilePromises);
-
-        // Persist children and dependents if provided
-        if (Array.isArray(children) && children.length > 0) {
-          await Children.bulkCreate(
-            children.map((c: any) => ({
-              seniorId,
-              name: c.name,
-              occupation: c.occupation ?? null,
-              income: c.income ?? null,
-              age: c.age,
-              isWorking: c.isWorking,
-            })),
-            { transaction }
-          );
-        }
-
-        if (Array.isArray(dependents) && dependents.length > 0) {
-          await Dependent.bulkCreate(
-            dependents.map((d: any) => ({
-              seniorId,
-              name: d.name,
-              occupation: d.occupation ?? null,
-              income: d.income ?? null,
-              age: d.age,
-              isWorking: !!d.isWorking,
-            })),
-            { transaction }
-          );
-        }
-
-        // Return the complete senior with all associations
-        return await seniorService.getSeniorById(
-          seniorId.toString(),
           transaction
         );
       }
@@ -239,193 +105,44 @@ export const create = async (req: any, res: Response) => {
 export const update = async (req: any, res: Response) => {
   try {
     const { id } = req.params;
-    let requestData;
+    let requestData: any;
     let photoBuffer: Buffer | undefined;
 
-    // Check if request is multipart/form-data (has file upload)
     if (req.file?.buffer) {
-      // Handle multipart/form-data with file upload
-      const { data, photo } = req.body;
-      
-      // Parse the JSON data field
-      requestData = JSON.parse(data);
-      
-      // Get photo from uploaded file
+      try {
+        requestData = typeof req.body.data === "string" ? JSON.parse(req.body.data) : req.body;
+      } catch {
+        return res.status(400).json({ message: "Invalid JSON in data field" });
+      }
       photoBuffer = req.file.buffer as Buffer;
     } else {
-      // Handle regular JSON request
       requestData = req.body;
-      
-      // Handle photo from JSON (base64 or other format)
       const { photo } = requestData;
       if (photo) {
         if (typeof photo === "string" && photo.startsWith("data:")) {
-          // Base64 data URL
           photoBuffer = Buffer.from(
             photo.replace(/^data:[\w/]+;base64,/, ""),
             "base64"
           );
         } else if (photo instanceof Buffer) {
-          // Already a Buffer
           photoBuffer = photo;
         }
       }
     }
 
-    const {
-      barangayId,
-      identifyingInformation,
-      familyComposition,
-      dependencyProfile,
-      educationProfile,
-      economicProfile,
-      healthProfile,
-      children,
-      dependents,
-    } = requestData;
     const updatedBy = req.user?.id;
-
-    // Execute all operations within a single transaction
     const completeSenior = await TransactionHelper.executeInTransaction(
       async (transaction) => {
-        // Update the senior first
-        const senior = await seniorService.updateSenior(
+        return seniorService.updateSenior(
           id,
           {
-            barangayId: barangayId ? Number(barangayId) : undefined,
+            ...requestData,
+            barangayId: requestData.barangayId != null ? Number(requestData.barangayId) : undefined,
             photo: photoBuffer ? (photoBuffer as unknown as Blob) : undefined,
             updatedBy,
           },
           transaction
         );
-
-        const seniorId = senior.id;
-
-        // Update all profile associations
-        const profilePromises = [];
-
-        // Always accept the same shapes as in create; only update when provided
-        if (identifyingInformation) {
-          profilePromises.push(
-            identifyingInformationService.update(
-              seniorId,
-              {
-                ...identifyingInformation,
-                updatedBy,
-              },
-              transaction
-            )
-          );
-        }
-
-        if (familyComposition) {
-          profilePromises.push(
-            familyCompositionService.update(
-              seniorId,
-              {
-                ...familyComposition,
-                updatedBy,
-              },
-              transaction
-            )
-          );
-        }
-
-        if (dependencyProfile) {
-          profilePromises.push(
-            dependencyProfileService.update(
-              seniorId,
-              {
-                ...dependencyProfile,
-                updatedBy,
-              },
-              transaction
-            )
-          );
-        }
-
-        if (educationProfile) {
-          profilePromises.push(
-            educationProfileService.update(
-              seniorId,
-              {
-                ...educationProfile,
-                updatedBy,
-              },
-              transaction
-            )
-          );
-        }
-
-        if (economicProfile) {
-          profilePromises.push(
-            economicProfileService.update(
-              seniorId,
-              {
-                ...economicProfile,
-                updatedBy,
-              },
-              transaction
-            )
-          );
-        }
-
-        if (healthProfile) {
-          profilePromises.push(
-            healthProfileService.update(
-              seniorId,
-              {
-                ...healthProfile,
-                updatedBy,
-              },
-              transaction
-            )
-          );
-        }
-
-        // Wait for all profile updates to complete
-        await Promise.all(profilePromises);
-
-        // Update children: replace strategy to mirror create shape exactly
-        if (children) {
-          await Children.destroy({ where: { seniorId }, transaction });
-          if (Array.isArray(children) && children.length > 0) {
-            await Children.bulkCreate(
-              children.map((c: any) => ({
-                seniorId,
-                name: c.name,
-                occupation: c.occupation ?? null,
-                income: c.income ?? null,
-                age: c.age,
-                // Normalize to expected DB format ('Yes' | 'No') to accept same shape as create
-                isWorking:
-                  c.isWorking === true || c.isWorking === "Yes" ? "Yes" : "No",
-              })),
-              { transaction }
-            );
-          }
-        }
-
-        if (dependents) {
-          await Dependent.destroy({ where: { seniorId }, transaction });
-          if (Array.isArray(dependents) && dependents.length > 0) {
-            await Dependent.bulkCreate(
-              dependents.map((d: any) => ({
-                seniorId,
-                name: d.name,
-                occupation: d.occupation ?? null,
-                income: d.income ?? null,
-                age: d.age,
-                // Dependents expect boolean
-                isWorking: !!(d.isWorking === true || d.isWorking === "Yes"),
-              })),
-              { transaction }
-            );
-          }
-        }
-
-        // Return the complete senior with all associations
-        return await seniorService.getSeniorById(id, transaction);
       }
     );
 
