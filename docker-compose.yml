@@ -29,17 +29,17 @@ services:
     ports:
       - "8000:8000"
 
-  frontend:
-    build:
-      context: ../senior-citizen-portal
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: http://api.josephhanseldaiz.com
-    restart: unless-stopped
-    depends_on:
-      - app
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build:
+  #     context: ../senior-citizen-portal
+  #     dockerfile: Dockerfile
+  #     args:
+  #       NEXT_PUBLIC_API_URL: http://api.josephhanseldaiz.com
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - app
+  #   ports:
+  #     - "3000:3000"
 
 volumes:
   pgdata:

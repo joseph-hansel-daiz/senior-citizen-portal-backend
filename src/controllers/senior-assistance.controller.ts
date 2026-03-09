@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { seniorService, seniorAssistanceService } from "@/services";
+import { seniorService, seniorAssistanceService, auditLogService } from "@/services";
+import { SeniorAssistance } from "@/models";
 
 export const listBySenior = async (req: Request, res: Response) => {
   try {
@@ -27,7 +28,25 @@ export const upsert = async (req: Request, res: Response) => {
   try {
     const seniorId = Number(req.params.seniorId);
     const { id, assistanceId, assistanceDate } = req.body;
-    const record = await seniorAssistanceService.upsert({ id: id ? Number(id) : undefined, seniorId, assistanceId: Number(assistanceId), assistanceDate: assistanceDate ?? null });
+    const record = await seniorAssistanceService.upsert({
+      id: id ? Number(id) : undefined,
+      seniorId,
+      assistanceId: Number(assistanceId),
+      assistanceDate: assistanceDate ?? null,
+    });
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: id ? "SENIOR_ASSISTANCE_UPDATE" : "SENIOR_ASSISTANCE_CREATE",
+      entityType: "SeniorAssistance",
+      entityId: Number((record as any).id),
+      seniorId,
+      metadata: {
+        assistanceId: Number(assistanceId),
+        assistanceDate: assistanceDate ?? null,
+      },
+    });
+
     res.json(record);
   } catch (err: any) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -38,7 +57,24 @@ export const remove = async (req: Request, res: Response) => {
   try {
     // keep compatibility with vaccines delete pattern (path param is record id)
     const id = Number(req.params.assistanceId ?? req.params.id);
+
+    const existing = await SeniorAssistance.findByPk(id);
     const result = await seniorAssistanceService.delete({ id });
+
+    if (existing) {
+      await auditLogService.log({
+        actorId: (req as any).user?.id ?? null,
+        action: "SENIOR_ASSISTANCE_DELETE",
+        entityType: "SeniorAssistance",
+        entityId: id,
+        seniorId: (existing as any).seniorId ?? null,
+        metadata: {
+          assistanceId: (existing as any).assistanceId,
+          assistanceDate: (existing as any).assistanceDate ?? null,
+        },
+      });
+    }
+
     res.json(result);
   } catch (err: any) {
     res.status(500).json({ message: "Server error", error: err.message });

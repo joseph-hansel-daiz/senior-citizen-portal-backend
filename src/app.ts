@@ -13,6 +13,7 @@ import helpdeskRoutes from "@/routes/helpdesk.routes";
 import seniorVaccineRoutes from "@/routes/senior-vaccines.routes";
 import seniorAssistanceRoutes from "@/routes/senior-assistances.routes";
 import analyticsRoutes from "@/routes/analytics.routes";
+import auditLogRoutes from "@/routes/audit-log.routes";
 import { requireAuthentication } from "./middleware";
 
 dotenv.config();
@@ -45,6 +46,7 @@ app.use("/helpdesk", requireAuthentication, helpdeskRoutes);
 app.use("/senior-vaccines", requireAuthentication, seniorVaccineRoutes);
 app.use("/senior-assistances", requireAuthentication, seniorAssistanceRoutes);
 app.use("/analytics", requireAuthentication, analyticsRoutes);
+app.use("/audit-logs", requireAuthentication, auditLogRoutes);
 
 const PORT = process.env.PORT || 8000;
 

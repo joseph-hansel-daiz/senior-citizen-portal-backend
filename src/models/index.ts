@@ -36,6 +36,7 @@ import Vaccine from "./options/vaccine.model";
 import SeniorVaccine from "./seniorOptions/seniorVaccine.model";
 import Assistance from "./options/assistance.model";
 import SeniorAssistance from "./seniorOptions/seniorAssistance.model";
+import AuditLog from "./audit-log.model";
 
 // Basic Associations
 Barangay.hasMany(User, { foreignKey: "barangayId" });
@@ -44,6 +45,10 @@ User.belongsTo(Barangay, { foreignKey: "barangayId" });
 // Password Reset Code Associations
 User.hasOne(PasswordResetCode, { foreignKey: "userId", onDelete: "CASCADE" });
 PasswordResetCode.belongsTo(User, { foreignKey: "userId" });
+
+// Audit Log Associations
+User.hasMany(AuditLog, { foreignKey: "actorId" });
+AuditLog.belongsTo(User, { foreignKey: "actorId" });
 
 Senior.belongsTo(Barangay, { foreignKey: "barangayId" });
 Senior.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
@@ -105,6 +110,10 @@ Assistance.belongsToMany(Senior, {
 SeniorAssistance.belongsTo(Assistance, { foreignKey: "assistanceId" });
 SeniorAssistance.belongsTo(Senior, { foreignKey: "seniorId" });
 
+// Senior ↔ Audit Log
+Senior.hasMany(AuditLog, { foreignKey: "seniorId" });
+AuditLog.belongsTo(Senior, { foreignKey: "seniorId" });
+
 export {
   AreaOfDifficulty,
   AuralConcern,
@@ -139,4 +148,5 @@ export {
   SeniorVaccine,
   Assistance,
   SeniorAssistance,
+  AuditLog,
 };

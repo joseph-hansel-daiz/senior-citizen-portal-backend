@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { helpdeskService } from "@/services";
+import { helpdeskService, auditLogService } from "@/services";
 
 export const create = async (req: Request, res: Response) => {
   try {
@@ -22,6 +22,18 @@ export const create = async (req: Request, res: Response) => {
       seniorId: Number(seniorId),
       helpDeskRecordCategoryIds: categoryIds,
       details: String(details).slice(0, 100),
+    });
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "HELPDESK_CREATE",
+      entityType: "HelpDeskRecord",
+      entityId: Number((record as any).id),
+      seniorId: Number((record as any).seniorId),
+      metadata: {
+        categoryIds,
+        details: String(details).slice(0, 100),
+      },
     });
 
     return res.status(201).json(record);
@@ -72,8 +84,24 @@ export const update = async (req: Request, res: Response) => {
         : [Number(helpDeskRecordCategoryIds)];
     }
 
-    const updated = await helpdeskService.update(id, { helpDeskRecordCategoryIds: categoryIds, details });
+    const updated = await helpdeskService.update(id, {
+      helpDeskRecordCategoryIds: categoryIds,
+      details,
+    });
     if (!updated) return res.status(404).json({ message: "Not found" });
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "HELPDESK_UPDATE",
+      entityType: "HelpDeskRecord",
+      entityId: Number(id),
+      seniorId: Number((updated as any).seniorId ?? (updated as any).Senior?.id ?? null),
+      metadata: {
+        helpDeskRecordCategoryIds: categoryIds,
+        details,
+      },
+    });
+
     return res.json(updated);
   } catch (err: any) {
     console.error("Error updating help desk record:", err);
@@ -84,8 +112,20 @@ export const update = async (req: Request, res: Response) => {
 export const remove = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const existing = await helpdeskService.detail(id);
     const deleted = await helpdeskService.remove(id);
     if (!deleted) return res.status(404).json({ message: "Not found" });
+
+    if (existing) {
+      await auditLogService.log({
+        actorId: (req as any).user?.id ?? null,
+        action: "HELPDESK_DELETE",
+        entityType: "HelpDeskRecord",
+        entityId: Number(id),
+        seniorId: Number((existing as any).seniorId ?? (existing as any).Senior?.id ?? null),
+      });
+    }
+
     return res.status(204).send();
   } catch (err: any) {
     console.error("Error deleting help desk record:", err);

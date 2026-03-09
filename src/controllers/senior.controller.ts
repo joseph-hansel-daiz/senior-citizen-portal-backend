@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { seniorService, deathInfoService } from "@/services";
+import { seniorService, deathInfoService, auditLogService } from "@/services";
 import { TransactionHelper } from "@/utils/transaction";
 
 export const list = async (req: Request, res: Response) => {
@@ -92,6 +92,17 @@ export const create = async (req: any, res: Response) => {
       }
     );
 
+    await auditLogService.log({
+      actorId: createdBy ?? null,
+      action: "SENIOR_CREATE",
+      entityType: "Senior",
+      entityId: Number(completeSenior.id),
+      seniorId: Number(completeSenior.id),
+      metadata: {
+        barangayId: (completeSenior as any).barangayId ?? undefined,
+      },
+    });
+
     res.status(201).json(completeSenior);
   } catch (err: any) {
     if (err.message.includes("required")) {
@@ -146,6 +157,17 @@ export const update = async (req: any, res: Response) => {
       }
     );
 
+    await auditLogService.log({
+      actorId: updatedBy ?? null,
+      action: "SENIOR_UPDATE",
+      entityType: "Senior",
+      entityId: Number(completeSenior.id),
+      seniorId: Number(completeSenior.id),
+      metadata: {
+        barangayId: (completeSenior as any).barangayId ?? undefined,
+      },
+    });
+
     res.json(completeSenior);
   } catch (err: any) {
     if (err.message === "Senior not found") {
@@ -162,6 +184,13 @@ export const remove = async (req: any, res: Response) => {
     const deletedBy = req.user?.id;
 
     const result = await seniorService.deleteSenior(id, deletedBy);
+    await auditLogService.log({
+      actorId: deletedBy ?? null,
+      action: "SENIOR_DELETE",
+      entityType: "Senior",
+      entityId: Number(id),
+      seniorId: Number(id),
+    });
     res.json(result);
   } catch (err: any) {
     if (err.message === "Senior not found") {
@@ -214,6 +243,17 @@ export const markDeceased = async (req: any, res: Response) => {
       updatedBy: createdBy,
     });
 
+    await auditLogService.log({
+      actorId: createdBy ?? null,
+      action: "SENIOR_MARK_DECEASED",
+      entityType: "DeathInfo",
+      entityId: Number(id),
+      seniorId: Number(id),
+      metadata: {
+        dateOfDeath,
+      },
+    });
+
     res.status(201).json({
       message: "Senior marked as deceased successfully",
       deathInfo,
@@ -248,6 +288,14 @@ export const unmarkDeceased = async (req: any, res: Response) => {
     // Delete death info record
     await deathInfoService.delete(Number(id));
 
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "SENIOR_UNMARK_DECEASED",
+      entityType: "DeathInfo",
+      entityId: Number(id),
+      seniorId: Number(id),
+    });
+
     res.json({
       message: "Senior unmarked as deceased successfully",
     });
@@ -278,6 +326,18 @@ export const approve = async (req: any, res: Response) => {
       }
     );
 
+    await auditLogService.log({
+      actorId: approvedBy ?? null,
+      action: "SENIOR_APPROVE",
+      entityType: "Senior",
+      entityId: Number(id),
+      seniorId: Number(id),
+      metadata: {
+        oscaId,
+        note,
+      },
+    });
+
     res.json({
       message: "Senior approved successfully",
       senior: completeSenior
@@ -305,6 +365,17 @@ export const decline = async (req: any, res: Response) => {
         return await seniorService.declineSenior(id, note, declinedBy, transaction);
       }
     );
+
+    await auditLogService.log({
+      actorId: declinedBy ?? null,
+      action: "SENIOR_DECLINE",
+      entityType: "Senior",
+      entityId: Number(id),
+      seniorId: Number(id),
+      metadata: {
+        note,
+      },
+    });
 
     res.json({
       message: "Senior declined successfully",

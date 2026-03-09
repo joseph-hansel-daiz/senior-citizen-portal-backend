@@ -8,3 +8,4 @@ export { helpdeskService } from './helpdesk.service';
 export { seniorVaccineService } from './senior-vaccine.service';
 export { seniorAssistanceService } from './senior-assistance.service';
 export { analyticsService } from './analytics.service';
+export { auditLogService } from './audit-log.service';

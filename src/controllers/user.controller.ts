@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { userService } from "@/services";
+import { userService, auditLogService } from "@/services";
 
 export const list = async (_req: Request, res: Response) => {
   try {
@@ -78,6 +78,16 @@ export const updateProfile = async (req: any, res: Response) => {
       // cast to Blob for model compatibility
       photoBuffer ? (photoBuffer as unknown as Blob) : undefined
     );
+    await auditLogService.log({
+      actorId: req.user?.id ?? null,
+      action: "USER_PROFILE_UPDATE",
+      entityType: "User",
+      entityId: Number(req.user.id),
+      metadata: {
+        name,
+      },
+    });
+
     res.json(updatedUser);
   } catch (err: any) {
     if (err.message === "User not found") {
@@ -132,6 +142,18 @@ export const register = async (req: any, res: Response) => {
       role,
       barangayId: barangayId ? Number(barangayId) : undefined,
       photo: photoBuffer ? (photoBuffer as unknown as Blob) : undefined,
+    });
+
+    await auditLogService.log({
+      actorId: req.user?.id ?? null,
+      action: "USER_REGISTER",
+      entityType: "User",
+      entityId: Number(result.user.id),
+      metadata: {
+        role: result.user.role,
+        barangayId: result.user.barangayId ?? null,
+        username: result.user.username,
+      },
     });
 
     return res.status(201).json(result);
@@ -190,6 +212,18 @@ export const updateUser = async (req: any, res: Response) => {
       barangayId: barangayId === undefined ? undefined : (barangayId === null ? null : Number(barangayId)),
       photo: photoBuffer ? (photoBuffer as unknown as Blob) : undefined,
     });
+    await auditLogService.log({
+      actorId: req.user?.id ?? null,
+      action: "USER_UPDATE",
+      entityType: "User",
+      entityId: Number(req.params.id),
+      metadata: {
+        name,
+        role,
+        barangayId,
+      },
+    });
+
     return res.json(updated);
   } catch (err: any) {
     if (err.message.includes("Invalid") || err.message.includes("required")) {
@@ -205,6 +239,14 @@ export const updateUser = async (req: any, res: Response) => {
 export const removeUser = async (req: Request, res: Response) => {
   try {
     const result = await userService.deleteUser(req.params.id);
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "USER_DELETE",
+      entityType: "User",
+      entityId: Number(req.params.id),
+    });
+
     return res.json(result);
   } catch (err: any) {
     if (err.message.includes("not found")) {
@@ -218,6 +260,14 @@ export const updateMyPassword = async (req: any, res: Response) => {
   try {
     const { password } = req.body as { password: string };
     const result = await userService.updateMyPassword(req.user.id, password);
+
+     await auditLogService.log({
+      actorId: req.user?.id ?? null,
+      action: "USER_PASSWORD_CHANGE",
+      entityType: "User",
+      entityId: Number(req.user.id),
+    });
+
     return res.json(result);
   } catch (err: any) {
     if (err.message.includes("required")) {
@@ -234,6 +284,14 @@ export const updatePassword = async (req: Request, res: Response) => {
   try {
     const { password } = req.body as { password: string };
     const result = await userService.updateUserPassword(req.params.id, password);
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "USER_PASSWORD_ADMIN_CHANGE",
+      entityType: "User",
+      entityId: Number(req.params.id),
+    });
+
     return res.json(result);
   } catch (err: any) {
     if (err.message.includes("required")) {

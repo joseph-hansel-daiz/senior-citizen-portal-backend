@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { optionService } from "@/services";
+import { optionService, auditLogService } from "@/services";
 
 async function handleOptionRequest(
   res: Response,
@@ -22,6 +22,18 @@ export const createOption = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "'name' is required" });
     }
     const created = await optionService.createOption(key, name.trim());
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "OPTION_CREATE",
+      entityType: "Option",
+      entityId: Number((created as any).id),
+      metadata: {
+        key,
+        name: name.trim(),
+      },
+    });
+
     return res.status(201).json(created);
   } catch (err: any) {
     console.error("Error creating option:", err);
@@ -43,6 +55,18 @@ export const updateOption = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "'name' is required" });
     }
     const updated = await optionService.updateOption(key, id, name.trim());
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "OPTION_UPDATE",
+      entityType: "Option",
+      entityId: id,
+      metadata: {
+        key,
+        name: name.trim(),
+      },
+    });
+
     return res.json(updated);
   } catch (err: any) {
     if (String(err?.message || "").includes("Not found")) {
@@ -66,6 +90,17 @@ export const deleteOption = async (req: Request, res: Response) => {
     if (deleted === 0) {
       return res.status(404).json({ error: "Not found" });
     }
+
+    await auditLogService.log({
+      actorId: (req as any).user?.id ?? null,
+      action: "OPTION_DELETE",
+      entityType: "Option",
+      entityId: id,
+      metadata: {
+        key,
+      },
+    });
+
     return res.status(204).send();
   } catch (err: any) {
     console.error("Error deleting option:", err);
