@@ -24,11 +24,22 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       JWT_SECRET: supersecretkey
+      # Allow browser requests from your frontend domain (required when using a tunnel/domain)
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-    command: npm run dev
+
+  frontend:
+    build:
+      context: ../senior-citizen-portal
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://api.josephhanseldaiz.com
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "3000:3000"
 
 volumes:
   pgdata:

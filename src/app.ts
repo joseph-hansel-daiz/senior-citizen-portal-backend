@@ -19,11 +19,17 @@ dotenv.config();
 
 const app = express();
 
+const frontendOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((url) => url.trim())
+  : [];
+
+console.log(frontendOrigins);
+
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: frontendOrigins.length ? frontendOrigins : false,
     credentials: true,
-  })
+  }),
 );
 
 // Parse JSON and x-www-form-urlencoded bodies
@@ -32,13 +38,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mount routes
 app.use("/auth", authRoutes);
-app.use("/users", requireAuthentication,userRoutes);
-app.use("/options", requireAuthentication,optionsRoutes);
-app.use("/seniors", requireAuthentication,seniorRoutes);
-app.use("/helpdesk", requireAuthentication,helpdeskRoutes);
-app.use("/senior-vaccines", requireAuthentication,seniorVaccineRoutes);
-app.use("/senior-assistances", requireAuthentication,seniorAssistanceRoutes);
-app.use("/analytics", requireAuthentication,analyticsRoutes);
+app.use("/users", requireAuthentication, userRoutes);
+app.use("/options", requireAuthentication, optionsRoutes);
+app.use("/seniors", requireAuthentication, seniorRoutes);
+app.use("/helpdesk", requireAuthentication, helpdeskRoutes);
+app.use("/senior-vaccines", requireAuthentication, seniorVaccineRoutes);
+app.use("/senior-assistances", requireAuthentication, seniorAssistanceRoutes);
+app.use("/analytics", requireAuthentication, analyticsRoutes);
 
 const PORT = process.env.PORT || 8000;
 
